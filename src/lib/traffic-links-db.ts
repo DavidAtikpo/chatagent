@@ -68,10 +68,13 @@ async function enrichTrafficLinksWithStorageImages<
     bySite.set(row.site_id, siteRows);
   }
 
-  for (const [siteId, siteRows] of bySite) {
+  const siteIds = Array.from(bySite.keys());
+  for (let i = 0; i < siteIds.length; i++) {
+    const siteId = siteIds[i];
+    const siteRows = bySite.get(siteId)!;
     const urls = await listTrafficImageUrlsBySlug(admin, siteId);
-    for (const row of siteRows) {
-      row.image_url = urls.get(row.slug) ?? null;
+    for (let j = 0; j < siteRows.length; j++) {
+      siteRows[j].image_url = urls.get(siteRows[j].slug) ?? null;
     }
   }
 
@@ -116,11 +119,18 @@ export async function listTrafficLinksForSites(
   return { ...fallback, data };
 }
 
+export type TrafficLinkPreviewRow = {
+  label: string | null;
+  slug: string;
+  source: string;
+  image_url: string | null;
+};
+
 export async function getTrafficLinkPreviewRow(
   admin: SupabaseClient,
   siteId: string,
   slug: string
-) {
+): Promise<{ data: TrafficLinkPreviewRow | null; error: DbError }> {
   const withImage = await admin
     .from("traffic_links")
     .select("label, slug, image_url, source")
@@ -129,18 +139,18 @@ export async function getTrafficLinkPreviewRow(
     .maybeSingle();
 
   if (!withImage.error) {
-    if (!withImage.data) return withImage;
+    if (!withImage.data) return { data: null, error: null };
     const image_url = await resolveTrafficLinkImageUrl(
       admin,
       siteId,
       slug,
       withImage.data.image_url as string | null | undefined
     );
-    return { ...withImage, data: { ...withImage.data, image_url } };
+    return { data: { ...withImage.data, image_url }, error: null };
   }
 
   if (!isMissingTrafficLinkImageColumn(withImage.error)) {
-    return withImage;
+    return { data: null, error: withImage.error };
   }
 
   const fallback = await admin
@@ -150,9 +160,9 @@ export async function getTrafficLinkPreviewRow(
     .eq("slug", slug)
     .maybeSingle();
 
-  if (fallback.error) return fallback;
-  if (!fallback.data) return fallback;
+  if (fallback.error) return { data: null, error: fallback.error };
+  if (!fallback.data) return { data: null, error: null };
 
   const image_url = await resolveTrafficLinkImageUrl(admin, siteId, slug);
-  return { ...fallback, data: { ...fallback.data, image_url } };
+  return { data: { ...fallback.data, image_url }, error: null };
 }

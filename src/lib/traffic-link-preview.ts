@@ -37,7 +37,7 @@ export async function getTrafficLinkPreview(
       admin,
       site.id,
       slug,
-      link.image_url as string | null | undefined
+      link.image_url
     ));
 
   const imageUrl =
