@@ -20,10 +20,9 @@ export const LOGO_SIZE = {
   sidebar: 48,
 } as const;
 
+import { getAppBaseUrl } from "@/lib/app-url";
+
 export function saasLogoUrl(baseUrl?: string): string {
-  const base = (baseUrl || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(
-    /\/$/,
-    ""
-  );
+  const base = (baseUrl || getAppBaseUrl()).replace(/\/$/, "");
   return `${base}${SAAS_LOGO_PATH}`;
 }

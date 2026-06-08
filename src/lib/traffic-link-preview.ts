@@ -24,21 +24,16 @@ export async function getTrafficLinkPreview(
 
   if (!site) return null;
 
-  const { data: link } = await getTrafficLinkPreviewRow(admin, site.id, slug);
+  const { data: linkRow } = await getTrafficLinkPreviewRow(admin, site.id, slug);
 
   const agentConfig = (site.agent_config ?? {}) as Record<string, unknown>;
   const siteName = site.name || "Assistant";
-  const title = link?.label || `${siteName} — Chat`;
+  const title = linkRow?.label || `${siteName} — Chat`;
   const description = `Discutez avec ${siteName}. Posez vos questions et inscrivez-vous en direct.`;
 
-  const storedImage =
-    link &&
-    (await resolveTrafficLinkImageUrl(
-      admin,
-      site.id,
-      slug,
-      link.image_url
-    ));
+  const storedImage = linkRow
+    ? await resolveTrafficLinkImageUrl(admin, site.id, slug, linkRow.image_url)
+    : null;
 
   const imageUrl =
     storedImage ||

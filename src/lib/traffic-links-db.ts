@@ -146,7 +146,10 @@ export async function getTrafficLinkPreviewRow(
       slug,
       withImage.data.image_url as string | null | undefined
     );
-    return { data: { ...withImage.data, image_url }, error: null };
+    return {
+      data: { ...withImage.data, image_url } as TrafficLinkPreviewRow,
+      error: null,
+    };
   }
 
   if (!isMissingTrafficLinkImageColumn(withImage.error)) {
@@ -164,5 +167,8 @@ export async function getTrafficLinkPreviewRow(
   if (!fallback.data) return { data: null, error: null };
 
   const image_url = await resolveTrafficLinkImageUrl(admin, siteId, slug);
-  return { data: { ...fallback.data, image_url }, error: null };
+  return {
+    data: { ...fallback.data, image_url } as TrafficLinkPreviewRow,
+    error: null,
+  };
 }

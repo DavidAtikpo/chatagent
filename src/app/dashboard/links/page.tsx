@@ -1,5 +1,6 @@
 "use client";
 
+import { trackedLinkUrl } from "@/lib/app-url";
 import { formatDate, sourceLabel, widgetClickLabel, type TrackedLinkInteractionStat } from "@/lib/dashboard-data";
 import { useOrganization } from "@/hooks/use-organization";
 import { useEffect, useRef, useState } from "react";
@@ -146,9 +147,7 @@ export default function LinksPage() {
   }
 
   function trackingUrl(link: TrackedLinkInteractionStat) {
-    const base = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const key = link.widget_key ?? "";
-    return `${base}/c/${link.slug}?key=${key}`;
+    return trackedLinkUrl(link.slug, link.widget_key ?? "");
   }
 
   async function copyUrl(link: TrackedLinkInteractionStat) {
