@@ -46,8 +46,11 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
   useEffect(() => {
     if (!widgetKey) return;
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-    const widgetUrl = process.env.NEXT_PUBLIC_WIDGET_URL || "/widget.js";
+    const apiUrl = `${window.location.origin}/api/backend`;
+    const widgetUrl =
+      process.env.NEXT_PUBLIC_WIDGET_URL?.startsWith("http")
+        ? process.env.NEXT_PUBLIC_WIDGET_URL
+        : `${window.location.origin}${process.env.NEXT_PUBLIC_WIDGET_URL || "/widget.js"}`;
     const SCRIPT_ID = "chatagent-widget-script";
 
     const onReady = () => setStatus("ready");
@@ -87,7 +90,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
       script.setAttribute("data-mode", "page");
 
       script.onerror = () => {
-        setErrorDetail("Fichier widget.js introuvable — lancez: cd widget && npm run build");
+        setErrorDetail("Fichier widget.js introuvable sur ce site");
         setStatus("error");
       };
 
@@ -128,12 +131,11 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
           <div className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
             <p className="font-medium">Chat indisponible</p>
             {errorDetail && <p className="mt-1">{errorDetail}</p>}
-            <p className="mt-2 text-xs">
-              1. API : <code>cd api && py -m uvicorn app.main:app --reload</code>
+            <p className="mt-2 text-xs text-amber-800/80">
+              Vérifiez que l&apos;API Render répond :{" "}
+              <code className="break-all">https://chatagentapi.onrender.com/health</code>
               <br />
-              2. Widget : <code>cd widget && npm run build</code>
-              <br />
-              3. Redémarrez <code>npm run dev</code> dans web/
+              Plan Free : le premier appel peut prendre ~1 min (réveil).
             </p>
           </div>
           <ReloadButton />
