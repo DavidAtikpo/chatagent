@@ -316,9 +316,8 @@ export type CrawlProgress = {
 };
 
 export async function fetchCrawlProgress(siteId: string): Promise<CrawlProgress | null> {
-  const apiUrl = getApiBaseUrl();
   try {
-    const res = await fetch(`${apiUrl}/crawl/${siteId}/progress`, { cache: "no-store" });
+    const res = await fetch(`/api/crawl/${siteId}/progress`, { cache: "no-store" });
     if (!res.ok) return null;
     return (await res.json()) as CrawlProgress;
   } catch {
@@ -329,13 +328,12 @@ export async function fetchCrawlProgress(siteId: string): Promise<CrawlProgress 
 export async function refreshFormations(
   siteId: string
 ): Promise<{ ok: boolean; profiles?: number; error?: string }> {
-  const apiUrl = getApiBaseUrl();
   try {
-    const res = await fetch(`${apiUrl}/crawl/${siteId}/formations`, { method: "POST" });
+    const res = await fetch(`/api/crawl/${siteId}/formations`, { method: "POST" });
+    const data = (await res.json()) as { formation_profiles?: number; error?: string };
     if (!res.ok) {
-      return { ok: false, error: await res.text() };
+      return { ok: false, error: data.error ?? "Erreur API" };
     }
-    const data = (await res.json()) as { formation_profiles?: number };
     return { ok: true, profiles: data.formation_profiles };
   } catch {
     return { ok: false, error: apiUnreachableMessage() };
@@ -345,13 +343,12 @@ export async function refreshFormations(
 export async function refreshSessions(
   siteId: string
 ): Promise<{ ok: boolean; count?: number; error?: string }> {
-  const apiUrl = getApiBaseUrl();
   try {
-    const res = await fetch(`${apiUrl}/crawl/${siteId}/sessions`, { method: "POST" });
+    const res = await fetch(`/api/crawl/${siteId}/sessions`, { method: "POST" });
+    const data = (await res.json()) as { sessions_count?: number; error?: string };
     if (!res.ok) {
-      return { ok: false, error: await res.text() };
+      return { ok: false, error: data.error ?? "Erreur API" };
     }
-    const data = (await res.json()) as { sessions_count?: number };
     return { ok: true, count: data.sessions_count };
   } catch {
     return { ok: false, error: apiUnreachableMessage() };
@@ -359,31 +356,18 @@ export async function refreshSessions(
 }
 
 export async function triggerCrawl(siteId: string): Promise<{ ok: boolean; error?: string }> {
-  const apiUrl = getApiBaseUrl();
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 90000);
-
   try {
-    const res = await fetch(`${apiUrl}/crawl`, {
+    const res = await fetch("/api/crawl", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ site_id: siteId }),
-      signal: controller.signal,
+      body: JSON.stringify({ siteId }),
     });
-    clearTimeout(timeout);
+    const data = (await res.json()) as { error?: string };
     if (!res.ok) {
-      const body = await res.text();
-      return { ok: false, error: body || `Erreur API (${res.status})` };
+      return { ok: false, error: data.error ?? `Erreur API (${res.status})` };
     }
     return { ok: true };
-  } catch (err) {
-    clearTimeout(timeout);
-    if (err instanceof Error && err.name === "AbortError") {
-      return {
-        ok: false,
-        error: "API trop lente — Render (plan Free) peut mettre ~1 min à démarrer, réessayez",
-      };
-    }
+  } catch {
     return { ok: false, error: apiUnreachableMessage() };
   }
 }
