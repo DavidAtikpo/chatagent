@@ -63,7 +63,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       .single();
 
     if (result.error && isMissingTrafficLinkImageColumn(result.error) && "image_url" in updates) {
-      const { image_url: _imageUrl, ...rest } = updates;
+      const rest = { ...updates };
+      delete rest.image_url;
       if (!Object.keys(rest).length) {
         return NextResponse.json(
           {
