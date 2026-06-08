@@ -1,5 +1,6 @@
 "use client";
 
+import { getAppBaseUrl } from "@/lib/app-url";
 import { BrandLogo } from "@/components/brand-logo";
 import { LOGO_SIZE } from "@/lib/branding";
 import { setupAccount } from "@/lib/setup-account";
@@ -29,7 +30,7 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${getAppBaseUrl()}/auth/callback`,
         data: {
           company_name: name,
           site_url: url,
