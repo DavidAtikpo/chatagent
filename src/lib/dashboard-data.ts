@@ -1,3 +1,4 @@
+import { apiUnreachableMessage, getApiBaseUrl, getWidgetScriptUrl } from "@/lib/app-url";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export type Organization = {
@@ -315,7 +316,7 @@ export type CrawlProgress = {
 };
 
 export async function fetchCrawlProgress(siteId: string): Promise<CrawlProgress | null> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  const apiUrl = getApiBaseUrl();
   try {
     const res = await fetch(`${apiUrl}/crawl/${siteId}/progress`, { cache: "no-store" });
     if (!res.ok) return null;
@@ -328,7 +329,7 @@ export async function fetchCrawlProgress(siteId: string): Promise<CrawlProgress 
 export async function refreshFormations(
   siteId: string
 ): Promise<{ ok: boolean; profiles?: number; error?: string }> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  const apiUrl = getApiBaseUrl();
   try {
     const res = await fetch(`${apiUrl}/crawl/${siteId}/formations`, { method: "POST" });
     if (!res.ok) {
@@ -337,14 +338,14 @@ export async function refreshFormations(
     const data = (await res.json()) as { formation_profiles?: number };
     return { ok: true, profiles: data.formation_profiles };
   } catch {
-    return { ok: false, error: "API inaccessible" };
+    return { ok: false, error: apiUnreachableMessage() };
   }
 }
 
 export async function refreshSessions(
   siteId: string
 ): Promise<{ ok: boolean; count?: number; error?: string }> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  const apiUrl = getApiBaseUrl();
   try {
     const res = await fetch(`${apiUrl}/crawl/${siteId}/sessions`, { method: "POST" });
     if (!res.ok) {
@@ -353,14 +354,14 @@ export async function refreshSessions(
     const data = (await res.json()) as { sessions_count?: number };
     return { ok: true, count: data.sessions_count };
   } catch {
-    return { ok: false, error: "API inaccessible" };
+    return { ok: false, error: apiUnreachableMessage() };
   }
 }
 
 export async function triggerCrawl(siteId: string): Promise<{ ok: boolean; error?: string }> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  const apiUrl = getApiBaseUrl();
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), 90000);
 
   try {
     const res = await fetch(`${apiUrl}/crawl`, {
@@ -378,9 +379,12 @@ export async function triggerCrawl(siteId: string): Promise<{ ok: boolean; error
   } catch (err) {
     clearTimeout(timeout);
     if (err instanceof Error && err.name === "AbortError") {
-      return { ok: false, error: "API trop lente — vérifiez qu'uvicorn tourne sur le port 8000" };
+      return {
+        ok: false,
+        error: "API trop lente — Render (plan Free) peut mettre ~1 min à démarrer, réessayez",
+      };
     }
-    return { ok: false, error: "API inaccessible — lancez uvicorn sur le port 8000" };
+    return { ok: false, error: apiUnreachableMessage() };
   }
 }
 
@@ -545,7 +549,7 @@ export function normalizeRelation<T>(rel: T | T[] | null | undefined): T | null 
 }
 
 export function widgetScript(widgetKey: string) {
-  const url = process.env.NEXT_PUBLIC_WIDGET_URL || "http://localhost:8787/widget.js";
-  const api = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  const url = getWidgetScriptUrl();
+  const api = getApiBaseUrl();
   return `<script src="${url}" data-key="${widgetKey}" data-api="${api}" async></script>`;
 }

@@ -160,7 +160,7 @@ export default function SitesPage() {
 
       const crawl = await triggerCrawl(data.site.id);
       if (!crawl.ok) {
-        setError(crawl.error ?? "Crawl non lancé — vérifiez que l'API tourne sur le port 8000");
+        setError(crawl.error ?? "Crawl non lancé — vérifiez l'API (NEXT_PUBLIC_API_URL)");
       }
 
       setNewName("");
