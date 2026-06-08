@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --brand-primary: #c9922a;
+    --brand-primary-hover: #a67a22;
+    --brand-gold: #d4a83a;
+    --brand-gold-light: #e8c96a;
+    --brand-cream: #fdf8ed;
+    --brand-black: #0a0a0a;
+  }
+
   html {
     color-scheme: light;
   }
@@ -10,6 +21,11 @@
   body {
     @apply bg-white text-slate-900 antialiased;
     font-family: var(--font-geist-sans), system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: #faf0d4;
+    color: #5c4510;
   }
 }
 

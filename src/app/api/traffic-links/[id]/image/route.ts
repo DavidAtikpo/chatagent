@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/setup-account-server";
 import { createClient } from "@/lib/supabase/server";
+import { isMissingTrafficLinkImageColumn } from "@/lib/traffic-links-db";
 import { NextResponse } from "next/server";
 
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -90,11 +91,14 @@ export async function POST(request: Request, { params }: { params: { id: string 
       .update({ image_url: imageUrl })
       .eq("id", params.id);
 
-    if (updateError) {
+    if (updateError && !isMissingTrafficLinkImageColumn(updateError)) {
       return NextResponse.json({ error: updateError.message }, { status: 500 });
     }
 
-    return NextResponse.json({ image_url: imageUrl });
+    return NextResponse.json({
+      image_url: imageUrl,
+      storage_only: !!updateError,
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur serveur";
     return NextResponse.json({ error: message }, { status: 500 });

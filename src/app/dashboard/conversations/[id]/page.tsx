@@ -88,7 +88,7 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
   if (error || !conversation) {
     return (
       <div>
-        <Link href="/dashboard/conversations" className="text-sm text-indigo-600 hover:underline">
+        <Link href="/dashboard/conversations" className="text-sm text-brand-600 hover:underline">
           ← Retour
         </Link>
         <p className="mt-2 text-sm text-red-600">{error}</p>
@@ -101,7 +101,7 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
 
   return (
     <div>
-      <Link href="/dashboard/conversations" className="text-sm text-indigo-600 hover:underline">
+      <Link href="/dashboard/conversations" className="text-sm text-brand-600 hover:underline">
         ← Conversations
       </Link>
 
@@ -116,7 +116,7 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
           <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusBadge(conversation.status)}`}>
             {conversation.status}
           </span>
-          <span className="text-base font-bold text-indigo-600">{conversation.lead_score}/100</span>
+          <span className="text-base font-bold text-brand-600">{conversation.lead_score}/100</span>
         </div>
       </div>
 
@@ -133,7 +133,7 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
                     key={msg.id}
                     className={`rounded-md px-3 py-2 text-sm ${
                       msg.role === "user"
-                        ? "ml-8 bg-indigo-50 text-indigo-900"
+                        ? "ml-8 bg-brand-50 text-brand-900"
                         : "mr-8 bg-slate-100 text-slate-800"
                     }`}
                   >
@@ -167,7 +167,7 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
                 </div>
                 <div>
                   <dt className="text-xs text-slate-500">Score</dt>
-                  <dd className="font-bold text-indigo-600">{lead.score}/100</dd>
+                  <dd className="font-bold text-brand-600">{lead.score}/100</dd>
                 </div>
               </dl>
             </div>

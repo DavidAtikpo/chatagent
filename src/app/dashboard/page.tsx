@@ -162,7 +162,7 @@ export default function DashboardPage() {
         </div>
         <Link
           href="/dashboard/sites"
-          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+          className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
           Gérer les sites
         </Link>
@@ -182,7 +182,7 @@ export default function DashboardPage() {
         <div className="rounded-lg border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">Conversations récentes</h2>
-            <Link href="/dashboard/conversations" className="text-xs text-indigo-600 hover:underline">
+            <Link href="/dashboard/conversations" className="text-xs text-brand-600 hover:underline">
               Voir tout
             </Link>
           </div>
@@ -216,7 +216,7 @@ export default function DashboardPage() {
         <div className="rounded-lg border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">Leads récents</h2>
-            <Link href="/dashboard/leads" className="text-xs text-indigo-600 hover:underline">
+            <Link href="/dashboard/leads" className="text-xs text-brand-600 hover:underline">
               Voir tout
             </Link>
           </div>
@@ -231,7 +231,7 @@ export default function DashboardPage() {
                     <p className="text-xs text-slate-500">{l.email ?? "—"}</p>
                   </div>
                   <span
-                    className={`text-sm font-bold ${l.score >= 60 ? "text-indigo-600" : "text-slate-600"}`}
+                    className={`text-sm font-bold ${l.score >= 60 ? "text-brand-600" : "text-slate-600"}`}
                   >
                     {l.score}/100
                   </span>
@@ -265,7 +265,7 @@ export default function DashboardPage() {
       <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="text-sm font-semibold">Performance des liens trackés</h2>
-          <Link href="/dashboard/links" className="text-xs text-indigo-600 hover:underline">
+          <Link href="/dashboard/links" className="text-xs text-brand-600 hover:underline">
             Gérer les liens
           </Link>
         </div>
@@ -276,7 +276,7 @@ export default function DashboardPage() {
         {trackedLinks.length === 0 ? (
           <p className="mt-2 text-sm text-slate-500">
             Aucun lien tracké. Créez un lien Facebook ou Instagram dans{" "}
-            <Link href="/dashboard/links" className="text-indigo-600 hover:underline">
+            <Link href="/dashboard/links" className="text-brand-600 hover:underline">
               Liens trackés
             </Link>{" "}
             puis partagez l&apos;URL sur vos réseaux.
@@ -299,7 +299,7 @@ export default function DashboardPage() {
                     <p className="font-bold text-slate-900">
                       {link.click_count} visite{link.click_count !== 1 ? "s" : ""}
                     </p>
-                    <p className="text-indigo-600">
+                    <p className="text-brand-600">
                       {link.interaction_total} interaction{link.interaction_total !== 1 ? "s" : ""}
                     </p>
                   </div>
@@ -354,7 +354,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-full rounded-full bg-indigo-600 transition-all"
+                    className="h-full rounded-full bg-brand-600 transition-all"
                     style={{
                       width: `${maxCountryCount ? Math.round((row.count / maxCountryCount) * 100) : 0}%`,
                     }}
@@ -378,7 +378,7 @@ export default function DashboardPage() {
           </pre>
           <button
             onClick={copyEmbed}
-            className="mt-2 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
           >
             {copied ? "Copié !" : "Copier le script"}
           </button>

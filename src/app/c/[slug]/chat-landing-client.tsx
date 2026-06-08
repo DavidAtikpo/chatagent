@@ -23,10 +23,21 @@ type Props = {
   slug: string;
   widgetKey: string;
   previewTitle?: string;
-  previewImage?: string | null;
 };
 
-export function ChatLandingClient({ slug, widgetKey, previewTitle, previewImage }: Props) {
+function ReloadButton() {
+  return (
+    <button
+      type="button"
+      onClick={() => window.location.reload()}
+      className="mt-4 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
+    >
+      Recharger
+    </button>
+  );
+}
+
+export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
   const [status, setStatus] = useState<"loading" | "ready" | "error" | "no-key">(
     widgetKey ? "loading" : "no-key"
   );
@@ -104,32 +115,28 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle, previewImage 
 
       {status === "loading" && (
         <div className="w-full max-w-sm text-center">
-          {previewImage && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={previewImage}
-              alt={previewTitle ?? "Aperçu"}
-              className="mx-auto mb-4 h-40 w-full rounded-xl border border-slate-200 object-cover shadow-sm"
-            />
-          )}
           {previewTitle && (
             <p className="mb-2 text-base font-semibold text-slate-900">{previewTitle}</p>
           )}
           <p className="text-sm text-slate-500">Chargement du chat…</p>
+          <ReloadButton />
         </div>
       )}
 
       {status === "error" && (
-        <div className="max-w-md rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          <p className="font-medium">Chat indisponible</p>
-          {errorDetail && <p className="mt-1">{errorDetail}</p>}
-          <p className="mt-2 text-xs">
-            1. API : <code>cd api && py -m uvicorn app.main:app --reload</code>
-            <br />
-            2. Widget : <code>cd widget && npm run build</code>
-            <br />
-            3. Redémarrez <code>npm run dev</code> dans web/
-          </p>
+        <div className="max-w-md text-center">
+          <div className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <p className="font-medium">Chat indisponible</p>
+            {errorDetail && <p className="mt-1">{errorDetail}</p>}
+            <p className="mt-2 text-xs">
+              1. API : <code>cd api && py -m uvicorn app.main:app --reload</code>
+              <br />
+              2. Widget : <code>cd widget && npm run build</code>
+              <br />
+              3. Redémarrez <code>npm run dev</code> dans web/
+            </p>
+          </div>
+          <ReloadButton />
         </div>
       )}
     </div>

@@ -92,7 +92,7 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-indigo-600 py-3 font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="w-full rounded-lg bg-brand-600 py-3 font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
         >
           {loading ? "Création en cours..." : "Créer mon organisation"}
         </button>

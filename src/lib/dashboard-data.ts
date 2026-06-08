@@ -396,7 +396,7 @@ export function formatDate(value: string) {
 export function statusBadge(status: string) {
   const colors: Record<string, string> = {
     active: "bg-green-100 text-green-700",
-    qualified: "bg-indigo-100 text-indigo-700",
+    qualified: "bg-brand-100 text-brand-700",
     handed_off: "bg-amber-100 text-amber-700",
     closed: "bg-slate-100 text-slate-600",
     pending: "bg-yellow-100 text-yellow-700",

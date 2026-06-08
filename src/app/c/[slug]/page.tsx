@@ -16,6 +16,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   return {
     title,
     description,
+    robots: { index: false, follow: false },
     openGraph: {
       title,
       description,
@@ -39,7 +40,6 @@ export default async function ChatLandingPage({ params, searchParams }: PageProp
       slug={params.slug}
       widgetKey={searchParams.key ?? ""}
       previewTitle={preview?.title}
-      previewImage={preview?.imageUrl}
     />
   );
 }

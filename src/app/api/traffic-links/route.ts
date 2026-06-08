@@ -1,6 +1,10 @@
 import { buildTrackedLinkStats } from "@/lib/dashboard-data";
 import { createAdminClient } from "@/lib/setup-account-server";
 import { createClient } from "@/lib/supabase/server";
+import {
+  isMissingTrafficLinkImageColumn,
+  listTrafficLinksForSites,
+} from "@/lib/traffic-links-db";
 import { NextResponse } from "next/server";
 
 async function getUserOrgSiteIds(userId: string) {
@@ -38,11 +42,7 @@ export async function GET() {
     }
 
     const admin = createAdminClient();
-    const { data, error } = await admin
-      .from("traffic_links")
-      .select("id, slug, source, label, image_url, click_count, created_at, site_id, sites(name, widget_key, agent_config)")
-      .in("site_id", siteIds)
-      .order("created_at", { ascending: false });
+    const { data, error } = await listTrafficLinksForSites(admin, siteIds);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -88,19 +88,34 @@ export async function POST(request: Request) {
     }
 
     const admin = createAdminClient();
-    const { data, error } = await admin
+    const insertPayload: Record<string, unknown> = {
+      site_id: siteId,
+      slug,
+      source,
+      label,
+      click_count: 0,
+    };
+    if (imageUrl) insertPayload.image_url = imageUrl;
+
+    let result = await admin
       .from("traffic_links")
-      .insert({
-        site_id: siteId,
-        slug,
-        source,
-        label,
-        image_url: imageUrl,
-        click_count: 0,
-      })
+      .insert(insertPayload)
       .select("id, slug, source, label, image_url, click_count, created_at, sites(name, widget_key)")
       .single();
 
+    if (result.error && isMissingTrafficLinkImageColumn(result.error)) {
+      delete insertPayload.image_url;
+      result = await admin
+        .from("traffic_links")
+        .insert(insertPayload)
+        .select("id, slug, source, label, click_count, created_at, sites(name, widget_key)")
+        .single();
+      if (!result.error && result.data) {
+        result = { ...result, data: { ...result.data, image_url: null } };
+      }
+    }
+
+    const { data, error } = result;
     if (error) {
       if (error.code === "23505") {
         return NextResponse.json({ error: "Ce slug existe déjà pour ce site" }, { status: 409 });

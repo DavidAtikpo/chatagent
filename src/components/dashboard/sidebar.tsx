@@ -1,8 +1,10 @@
 "use client";
 
+import { BrandLogo } from "@/components/brand-logo";
+import { LOGO_SIZE } from "@/lib/branding";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 const NAV = [
   { href: "/dashboard", label: "Vue d'ensemble", exact: true },
@@ -31,9 +33,11 @@ export function DashboardSidebar({ email }: { email?: string }) {
 
   return (
     <aside className="flex h-screen w-56 shrink-0 flex-col overflow-y-auto border-r border-slate-200 bg-white p-4">
-      <Link href="/" className="text-base font-bold text-indigo-600">
-        ChatAgent
-      </Link>
+      <BrandLogo
+        href="/"
+        size={LOGO_SIZE.sidebar}
+        nameClassName="text-base font-bold text-brand-700"
+      />
 
       <nav className="mt-4 flex-1 space-y-0.5">
         {NAV.map((item) => (
@@ -42,7 +46,7 @@ export function DashboardSidebar({ email }: { email?: string }) {
             href={item.href}
             className={`block rounded-md px-2.5 py-1.5 text-sm font-medium ${
               isActive(item.href, item.exact)
-                ? "bg-indigo-50 text-indigo-700"
+                ? "bg-brand-50 text-brand-700"
                 : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
             }`}
           >

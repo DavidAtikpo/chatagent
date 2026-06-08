@@ -1,4 +1,6 @@
+import { saasLogoUrl } from "@/lib/branding";
 import { createAdminClient } from "@/lib/setup-account-server";
+import { getTrafficLinkPreviewRow, resolveTrafficLinkImageUrl } from "@/lib/traffic-links-db";
 
 export type TrafficLinkPreview = {
   title: string;
@@ -22,22 +24,27 @@ export async function getTrafficLinkPreview(
 
   if (!site) return null;
 
-  const { data: link } = await admin
-    .from("traffic_links")
-    .select("label, slug, image_url, source")
-    .eq("site_id", site.id)
-    .eq("slug", slug)
-    .maybeSingle();
+  const { data: link } = await getTrafficLinkPreviewRow(admin, site.id, slug);
 
   const agentConfig = (site.agent_config ?? {}) as Record<string, unknown>;
   const siteName = site.name || "Assistant";
   const title = link?.label || `${siteName} — Chat`;
   const description = `Discutez avec ${siteName}. Posez vos questions et inscrivez-vous en direct.`;
 
+  const storedImage =
+    link &&
+    (await resolveTrafficLinkImageUrl(
+      admin,
+      site.id,
+      slug,
+      link.image_url as string | null | undefined
+    ));
+
   const imageUrl =
-    (link?.image_url as string | null) ||
+    storedImage ||
     (agentConfig.site_image_url as string | undefined) ||
     (agentConfig.logo_url as string | undefined) ||
+    saasLogoUrl() ||
     null;
 
   return { title, description, imageUrl, siteName };

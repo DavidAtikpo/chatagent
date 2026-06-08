@@ -81,7 +81,7 @@ export default function ConversationsPage() {
             onClick={() => setFilter(f.value)}
             className={`rounded-full px-3 py-1 text-xs font-medium ${
               filter === f.value
-                ? "bg-indigo-600 text-white"
+                ? "bg-brand-600 text-white"
                 : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50"
             }`}
           >
@@ -110,7 +110,7 @@ export default function ConversationsPage() {
               {rows.map((row) => (
                 <tr key={row.id} className="border-b border-slate-50 text-slate-800 hover:bg-slate-50">
                   <td className="px-3 py-2">
-                    <Link href={`/dashboard/conversations/${row.id}`} className="font-medium hover:text-indigo-600">
+                    <Link href={`/dashboard/conversations/${row.id}`} className="font-medium hover:text-brand-600">
                       {row.sites?.name ?? "—"}
                     </Link>
                   </td>

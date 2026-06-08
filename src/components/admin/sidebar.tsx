@@ -1,8 +1,10 @@
 "use client";
 
+import { BrandLogo } from "@/components/brand-logo";
+import { LOGO_SIZE } from "@/lib/branding";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 const NAV = [
   { href: "/admin", label: "Vue d'ensemble", exact: true },
@@ -28,10 +30,12 @@ export function AdminSidebar({ email }: { email?: string }) {
   return (
     <aside className="flex h-screen w-56 shrink-0 flex-col overflow-y-auto border-r border-slate-800 bg-slate-900 p-4 text-slate-100">
       <div>
-        <Link href="/admin" className="text-base font-bold text-white">
-          ChatAgent
-        </Link>
-        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-400">
+        <BrandLogo
+          href="/admin"
+          size={LOGO_SIZE.sidebar}
+          nameClassName="text-base font-bold text-brand-300"
+        />
+        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-400">
           Admin plateforme
         </p>
       </div>
@@ -43,7 +47,7 @@ export function AdminSidebar({ email }: { email?: string }) {
             href={item.href}
             className={`block rounded-md px-2.5 py-1.5 text-sm font-medium ${
               isActive(item.href, item.exact)
-                ? "bg-indigo-600 text-white"
+                ? "bg-brand-600 text-white"
                 : "text-slate-300 hover:bg-slate-800 hover:text-white"
             }`}
           >

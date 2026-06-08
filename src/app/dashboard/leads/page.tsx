@@ -84,7 +84,7 @@ export default function LeadsPage() {
             onClick={() => setMinScore(f.value)}
             className={`rounded-full px-3 py-1 text-xs font-medium ${
               minScore === f.value
-                ? "bg-indigo-600 text-white"
+                ? "bg-brand-600 text-white"
                 : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50"
             }`}
           >
@@ -114,7 +114,7 @@ export default function LeadsPage() {
               {rows.map((row) => (
                 <tr key={row.id} className="border-b border-slate-50 text-slate-800 hover:bg-slate-50">
                   <td className="px-3 py-2">
-                    <span className={`font-bold ${row.score >= 60 ? "text-indigo-600" : "text-slate-600"}`}>
+                    <span className={`font-bold ${row.score >= 60 ? "text-brand-600" : "text-slate-600"}`}>
                       {row.score}/100
                     </span>
                   </td>
@@ -131,7 +131,7 @@ export default function LeadsPage() {
                     {row.conversation_id && (
                       <Link
                         href={`/dashboard/conversations/${row.conversation_id}`}
-                        className="text-xs text-indigo-600 hover:underline"
+                        className="text-xs text-brand-600 hover:underline"
                       >
                         Voir conv.
                       </Link>

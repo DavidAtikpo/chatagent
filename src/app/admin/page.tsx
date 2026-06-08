@@ -59,7 +59,7 @@ export default function AdminOverviewPage() {
         </div>
         <Link
           href="/admin/organizations"
-          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+          className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
           Gérer les clients
         </Link>
@@ -95,7 +95,7 @@ export default function AdminOverviewPage() {
         <div className="rounded-lg border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">Derniers clients</h2>
-            <Link href="/admin/organizations" className="text-xs text-indigo-600 hover:underline">
+            <Link href="/admin/organizations" className="text-xs text-brand-600 hover:underline">
               Voir tout
             </Link>
           </div>
@@ -110,7 +110,7 @@ export default function AdminOverviewPage() {
                     <p className="text-xs text-slate-500">{org.owner_email ?? "—"}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-medium text-indigo-600">{planLabel(org.subscription_plan)}</p>
+                    <p className="text-xs font-medium text-brand-600">{planLabel(org.subscription_plan)}</p>
                     <p className="text-xs text-slate-400">{formatDate(org.created_at)}</p>
                   </div>
                 </li>

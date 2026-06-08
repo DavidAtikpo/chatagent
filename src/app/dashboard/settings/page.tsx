@@ -55,7 +55,7 @@ function applySiteConfig(
   setters.setWhatsappNumber(config.contact_whatsapp ?? whatsappFromSite ?? "");
   setters.setContactPhone(config.contact_phone ?? "");
   setters.setContactEmail(config.contact_email ?? "");
-  setters.setPrimaryColor(config.primary_color ?? "#6366f1");
+  setters.setPrimaryColor(config.primary_color ?? "#C9922A");
   setters.setHeaderTitleColor(config.header_title_color ?? "#ffffff");
   setters.setHeaderFont(config.header_font ?? "system-ui, -apple-system, sans-serif");
   setters.setLogoUrl(config.logo_url ?? "");
@@ -74,7 +74,7 @@ export default function SettingsPage() {
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
-  const [primaryColor, setPrimaryColor] = useState("#6366f1");
+  const [primaryColor, setPrimaryColor] = useState("#C9922A");
   const [headerTitleColor, setHeaderTitleColor] = useState("#ffffff");
   const [headerFont, setHeaderFont] = useState("system-ui, -apple-system, sans-serif");
   const [logoUrl, setLogoUrl] = useState("");
@@ -248,7 +248,7 @@ export default function SettingsPage() {
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-sm font-semibold text-slate-900">Contacts rapides</h2>
                 {!proContacts && (
-                  <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">
+                  <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">
                     Plan Pro
                   </span>
                 )}
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                 Boutons WhatsApp, Appel et Email en bas du chat (icônes cliquables).
               </p>
               {!proContacts && (
-                <p className="mt-2 rounded-lg border border-indigo-100 bg-indigo-50 px-3 py-2 text-xs text-indigo-800">
+                <p className="mt-2 rounded-lg border border-brand-100 bg-brand-50 px-3 py-2 text-xs text-brand-800">
                   Réservé au <strong>Plan Pro</strong>. Passez au Pro pour activer WhatsApp, appel et
                   email dans le widget.
                 </p>
@@ -464,7 +464,7 @@ export default function SettingsPage() {
                   <label className="text-xs text-slate-500">
                     URL du CTA (optionnel)
                     {!proContacts && (
-                      <span className="ml-1 text-indigo-600">· Plan Pro</span>
+                      <span className="ml-1 text-brand-600">· Plan Pro</span>
                     )}
                   </label>
                   <input
@@ -494,7 +494,7 @@ export default function SettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
           {saving ? "Enregistrement..." : saved ? "Enregistré !" : "Enregistrer"}
         </button>

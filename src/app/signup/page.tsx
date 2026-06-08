@@ -1,5 +1,7 @@
 "use client";
 
+import { BrandLogo } from "@/components/brand-logo";
+import { LOGO_SIZE } from "@/lib/branding";
 import { setupAccount } from "@/lib/setup-account";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -59,16 +61,16 @@ export default function SignupPage() {
 
   if (emailSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-50 to-slate-50 px-6">
         <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm text-center">
-          <Link href="/" className="text-xl font-bold text-indigo-600">
-            ChatAgent
-          </Link>
+          <div className="flex justify-center">
+            <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
+          </div>
           <h1 className="mt-6 text-2xl font-bold">Vérifiez votre email</h1>
           <p className="mt-3 text-sm text-slate-600">
             Un lien de confirmation a été envoyé à <strong>{email}</strong>.
           </p>
-          <Link href="/login" className="mt-6 inline-block text-sm text-indigo-600 hover:underline">
+          <Link href="/login" className="mt-6 inline-block text-sm text-brand-600 hover:underline">
             Aller à la connexion
           </Link>
         </div>
@@ -77,12 +79,12 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-50 to-slate-50 px-6">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
-        <Link href="/" className="text-xl font-bold text-indigo-600">
-          ChatAgent
-        </Link>
-        <h1 className="mt-6 text-2xl font-bold">Créer votre agent IA</h1>
+        <div className="flex justify-center">
+          <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
+        </div>
+        <h1 className="mt-6 text-center text-2xl font-bold">Créer votre agent IA</h1>
         <p className="mt-2 text-sm text-slate-600">
           Entrez l&apos;URL de votre site. L&apos;analyse démarre automatiquement.
         </p>
@@ -98,7 +100,7 @@ export default function SignupPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-indigo-500"
+              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-brand-500"
               required
             />
           </div>
@@ -108,7 +110,7 @@ export default function SignupPage() {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-indigo-500"
+              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-brand-500"
               placeholder="https://monsite.com"
               required
             />
@@ -119,7 +121,7 @@ export default function SignupPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-indigo-500"
+              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-brand-500"
               required
             />
           </div>
@@ -129,7 +131,7 @@ export default function SignupPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-indigo-500"
+              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-brand-500"
               minLength={6}
               required
             />
@@ -137,7 +139,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-indigo-600 py-3 font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+            className="w-full rounded-lg bg-brand-600 py-3 font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {loading ? "Création en cours..." : "Lancer mon agent"}
           </button>
@@ -145,7 +147,7 @@ export default function SignupPage() {
 
         <p className="mt-6 text-center text-sm text-slate-500">
           Déjà inscrit ?{" "}
-          <Link href="/login" className="text-indigo-600 hover:underline">
+          <Link href="/login" className="text-brand-600 hover:underline">
             Se connecter
           </Link>
         </p>

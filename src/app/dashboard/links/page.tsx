@@ -233,7 +233,7 @@ export default function LinksPage() {
                   type="file"
                   accept="image/png,image/jpeg,image/webp,image/gif"
                   onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-                  className="text-xs text-slate-600 file:mr-2 file:rounded file:border-0 file:bg-indigo-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-indigo-700"
+                  className="text-xs text-slate-600 file:mr-2 file:rounded file:border-0 file:bg-brand-50 file:px-2 file:py-1 file:text-xs file:font-medium file:text-brand-700"
                 />
                 {imagePreview && (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -253,7 +253,7 @@ export default function LinksPage() {
           <button
             type="submit"
             disabled={creating}
-            className="mt-2 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+            className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {creating ? "Création..." : "Créer le lien"}
           </button>
@@ -319,7 +319,7 @@ export default function LinksPage() {
                         type="button"
                         disabled={uploadingId === link.id}
                         onClick={() => editImageRefs.current[link.id]?.click()}
-                        className="text-[10px] text-indigo-600 hover:underline disabled:opacity-50"
+                        className="text-[10px] text-brand-600 hover:underline disabled:opacity-50"
                       >
                         {uploadingId === link.id ? "Envoi…" : link.image_url ? "Changer" : "Ajouter"}
                       </button>
@@ -332,7 +332,7 @@ export default function LinksPage() {
                   <td className="px-3 py-2">{sourceLabel(link.source)}</td>
                   <td className="px-3 py-2 font-medium">{link.click_count}</td>
                   <td className="px-3 py-2">
-                    <div className="font-medium text-indigo-600">{link.interaction_total}</div>
+                    <div className="font-medium text-brand-600">{link.interaction_total}</div>
                     {link.interaction_events.length > 0 && (
                       <div className="mt-1 flex flex-wrap gap-1">
                         {link.interaction_events.map((ev) => (
@@ -351,7 +351,7 @@ export default function LinksPage() {
                       href={trackingUrl(link)}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-indigo-600 hover:underline"
+                      className="text-brand-600 hover:underline"
                     >
                       /c/{link.slug}
                     </a>
@@ -364,7 +364,7 @@ export default function LinksPage() {
                       <button
                         type="button"
                         onClick={() => copyUrl(link)}
-                        className="text-xs text-indigo-600 hover:underline"
+                        className="text-xs text-brand-600 hover:underline"
                       >
                         {copied === link.id ? "Copié !" : "Copier"}
                       </button>

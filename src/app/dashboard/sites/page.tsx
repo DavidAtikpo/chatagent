@@ -28,14 +28,14 @@ function CrawlProgressBar({ progress }: { progress: CrawlProgress }) {
     progress.phase === "embedding" ? "Analyse sémantique (IA)" : "Lecture des pages";
 
   return (
-    <div className="mt-2 rounded-md border border-indigo-100 bg-indigo-50/50 p-2.5">
+    <div className="mt-2 rounded-md border border-brand-100 bg-brand-50/50 p-2.5">
       <div className="flex items-center justify-between gap-2 text-xs text-slate-700">
         <span className="font-medium">{phaseLabel}</span>
         <span>{percent} %</span>
       </div>
       <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
         <div
-          className="h-full rounded-full bg-indigo-600 transition-all duration-500"
+          className="h-full rounded-full bg-brand-600 transition-all duration-500"
           style={{ width: `${Math.max(percent, 4)}%` }}
         />
       </div>
@@ -231,7 +231,7 @@ export default function SitesPage() {
         <button
           type="button"
           onClick={() => setShowForm(!showForm)}
-          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+          className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
           {showForm ? "Annuler" : "+ Ajouter un site"}
         </button>
@@ -269,7 +269,7 @@ export default function SitesPage() {
           <button
             type="submit"
             disabled={creating}
-            className="mt-2 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+            className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {creating ? "Création..." : "Créer et lancer le crawl"}
           </button>
@@ -298,7 +298,7 @@ export default function SitesPage() {
                     href={site.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-sm text-indigo-600 hover:underline"
+                    className="text-sm text-brand-600 hover:underline"
                   >
                     {site.url}
                   </a>
@@ -311,7 +311,7 @@ export default function SitesPage() {
                     type="button"
                     onClick={() => importSessions(site.id)}
                     disabled={refreshingSessions === site.id}
-                    className="rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 hover:bg-indigo-100 disabled:opacity-50"
+                    className="rounded-md bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 hover:bg-brand-100 disabled:opacity-50"
                   >
                     {refreshingSessions === site.id ? "Import…" : "Importer formations"}
                   </button>
@@ -337,12 +337,12 @@ export default function SitesPage() {
                 (progressMap[site.id] ? (
                   <CrawlProgressBar progress={progressMap[site.id]} />
                 ) : (
-                  <div className="mt-2 rounded-md border border-indigo-100 bg-indigo-50/50 p-2.5">
+                  <div className="mt-2 rounded-md border border-brand-100 bg-brand-50/50 p-2.5">
                     <div className="flex items-center justify-between text-xs text-slate-700">
                       <span className="font-medium">Crawl en cours…</span>
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
-                      <div className="h-full w-1/3 animate-pulse rounded-full bg-indigo-400" />
+                      <div className="h-full w-1/3 animate-pulse rounded-full bg-brand-400" />
                     </div>
                     <p className="mt-2 text-xs text-slate-500">
                       Connexion à l&apos;API pour afficher la progression…
@@ -363,7 +363,7 @@ export default function SitesPage() {
                 <button
                   type="button"
                   onClick={() => copySnippet(site.widget_key)}
-                  className="mt-2 rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700"
+                  className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700"
                 >
                   {copied === site.widget_key ? "Copié !" : "Copier le script"}
                 </button>
