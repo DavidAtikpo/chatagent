@@ -161,7 +161,7 @@ export function IntegrationGuide({ config, siteUrl, variant = "dashboard" }: Pro
           <p className="font-medium text-slate-900">Après inscription</p>
           <ul className="mt-2 list-inside list-disc space-y-1 text-xs sm:text-sm">
             <li>Votre clé personnelle <code className="text-xs">wk_…</code> apparaît dans Dashboard → Sites</li>
-            <li>Le domaine de votre site est autorisé automatiquement (pas de CORS à configurer)</li>
+            <li>Le script fonctionne sur n&apos;importe quel domaine (WordPress, React, etc.) — pas de CORS à configurer</li>
             <li>Le script est identique — remplacez seulement la clé</li>
           </ul>
         </div>

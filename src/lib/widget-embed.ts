@@ -46,7 +46,7 @@ export const WIDGET_INTEGRATION_STEPS = [
   },
   {
     title: "Publiez et testez",
-    body: "La bulle apparaît en bas à droite. CORS géré automatiquement pour votre domaine.",
+    body: "La bulle apparaît en bas à droite. Fonctionne sur n'importe quel domaine — aucun réglage CORS.",
   },
 ] as const;
 
