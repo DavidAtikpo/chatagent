@@ -54,9 +54,3 @@ export function WidgetEmbed() {
 
   return null;
 }
-
-declare global {
-  interface Window {
-    ChatAgentBoot?: { key: string; api?: string };
-  }
-}
