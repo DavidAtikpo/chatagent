@@ -3,7 +3,6 @@
 import { hasProFeatures } from "@/lib/plans";
 import { AgentConfig } from "@/lib/dashboard-data";
 import { useOrganization } from "@/hooks/use-organization";
-import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
 const TONES = [
@@ -120,11 +119,28 @@ export default function SettingsPage() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!organization) return;
+
+    const trimmedName = orgName.trim();
+    if (!trimmedName) {
+      setError("Le nom de l'organisation est requis.");
+      return;
+    }
+
     setSaving(true);
     setError(null);
 
-    const supabase = createClient();
-    await supabase.from("organizations").update({ name: orgName }).eq("id", organization.id);
+    const orgRes = await fetch("/api/organization", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: trimmedName }),
+    });
+
+    if (!orgRes.ok) {
+      const data = await orgRes.json();
+      setError(data.error ?? "Impossible de mettre à jour l'organisation");
+      setSaving(false);
+      return;
+    }
 
     if (siteId) {
       const site = sites.find((s) => s.id === siteId);
@@ -162,9 +178,9 @@ export default function SettingsPage() {
         return;
       }
 
-      await refresh({ silent: true });
     }
 
+    await refresh({ silent: true });
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -218,12 +234,21 @@ export default function SettingsPage() {
             />
           </div>
           <div className="mt-3">
-            <label className="text-xs text-slate-500">Nom de l&apos;entreprise</label>
+            <label htmlFor="org-name" className="text-xs text-slate-500">
+              Nom de l&apos;organisation
+            </label>
             <input
+              id="org-name"
               value={orgName}
               onChange={(e) => setOrgName(e.target.value)}
+              placeholder="Ex. CIDES, Mon Agence…"
+              maxLength={120}
+              required
               className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
             />
+            <p className="mt-1 text-xs text-slate-400">
+              Affiché dans le dashboard et l&apos;aperçu du chat ci-dessous.
+            </p>
           </div>
         </div>
 

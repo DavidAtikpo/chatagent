@@ -1,3 +1,4 @@
+import { WidgetEmbed } from "@/components/widget-embed";
 import { SAAS_LOGO_PATH } from "@/lib/branding";
 import {
   SITE_DESCRIPTION,
@@ -94,6 +95,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <WidgetEmbed />
       </body>
     </html>
   );

@@ -46,3 +46,52 @@ export async function GET() {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function PATCH(request: Request) {
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+    }
+
+    let body: { name?: string };
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Corps invalide" }, { status: 400 });
+    }
+
+    const name = String(body.name ?? "").trim();
+    if (!name) {
+      return NextResponse.json({ error: "Le nom est requis" }, { status: 400 });
+    }
+    if (name.length > 120) {
+      return NextResponse.json({ error: "Nom trop long (120 caractères max)" }, { status: 400 });
+    }
+
+    const admin = createAdminClient();
+    const { data: organization, error } = await admin
+      .from("organizations")
+      .update({ name })
+      .eq("owner_id", user.id)
+      .select("id, name, subscription_plan, subscription_status")
+      .maybeSingle();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    if (!organization) {
+      return NextResponse.json({ error: "Organisation introuvable" }, { status: 404 });
+    }
+
+    return NextResponse.json({ organization });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Erreur serveur";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

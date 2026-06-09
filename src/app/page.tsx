@@ -98,6 +98,11 @@ const FAQ = [
     a: "Oui. Copiez le script widget ou le lien tracké depuis le dashboard. Aucune compétence technique requise.",
   },
   {
+    q: "Comment l'intégrer sur mon site (WordPress, Next.js, React…) ?",
+    a: "Un seul script à coller avant </body>. Guides détaillés pour chaque framework sur la page Intégration — consultable avant même de créer un compte.",
+    link: "/integration",
+  },
+  {
     q: "Quelles langues sont supportées ?",
     a: "Français et anglais en priorité. L'agent détecte la langue du visiteur et répond dans la même langue.",
   },
@@ -130,6 +135,9 @@ export default function Home() {
             <a href="#pricing" className="text-slate-600 hover:text-brand-700">
               Tarifs
             </a>
+            <Link href="/integration" className="text-slate-600 hover:text-brand-700">
+              Intégration
+            </Link>
             <a href="#faq" className="text-slate-600 hover:text-brand-700">
               FAQ
             </a>
@@ -377,7 +385,17 @@ export default function Home() {
                     <span className="text-brand-600 transition group-open:rotate-45">+</span>
                   </span>
                 </summary>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.a}</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  {item.a}
+                  {"link" in item && item.link ? (
+                    <>
+                      {" "}
+                      <Link href={item.link} className="font-medium text-brand-600 hover:underline">
+                        Voir le guide d&apos;intégration →
+                      </Link>
+                    </>
+                  ) : null}
+                </p>
               </details>
             ))}
           </div>
@@ -413,6 +431,9 @@ export default function Home() {
             <a href="#pricing" className="hover:text-brand-600">
               Tarifs
             </a>
+            <Link href="/integration" className="hover:text-brand-600">
+              Intégration
+            </Link>
             <Link href="/login" className="hover:text-brand-600">
               Connexion
             </Link>

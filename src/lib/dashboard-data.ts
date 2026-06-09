@@ -1,4 +1,4 @@
-import { apiUnreachableMessage, getApiBaseUrl, getWidgetScriptUrl } from "@/lib/app-url";
+import { apiUnreachableMessage } from "@/lib/app-url";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export type Organization = {
@@ -532,8 +532,4 @@ export function normalizeRelation<T>(rel: T | T[] | null | undefined): T | null 
   return Array.isArray(rel) ? (rel[0] ?? null) : rel;
 }
 
-export function widgetScript(widgetKey: string) {
-  const url = getWidgetScriptUrl();
-  const api = getApiBaseUrl();
-  return `<script src="${url}" data-key="${widgetKey}" data-api="${api}" async></script>`;
-}
+export { widgetEmbedHtml as widgetScript } from "@/lib/widget-embed";

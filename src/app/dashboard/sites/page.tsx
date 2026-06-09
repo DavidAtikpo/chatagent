@@ -1,5 +1,6 @@
 "use client";
 
+import { WidgetIntegration } from "@/components/dashboard/widget-integration";
 import {
   CrawlProgress,
   fetchCrawlProgress,
@@ -7,7 +8,6 @@ import {
   refreshSessions,
   statusBadge,
   triggerCrawl,
-  widgetScript,
 } from "@/lib/dashboard-data";
 import { createClient } from "@/lib/supabase/client";
 import { useOrganization } from "@/hooks/use-organization";
@@ -51,7 +51,6 @@ function CrawlProgressBar({ progress }: { progress: CrawlProgress }) {
 
 export default function SitesPage() {
   const { organization, sites, refresh, loading: orgLoading } = useOrganization();
-  const [copied, setCopied] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [newName, setNewName] = useState("");
   const [newUrl, setNewUrl] = useState("");
@@ -128,12 +127,6 @@ export default function SitesPage() {
       stopProgressPolling();
     };
   }, [sites, startPolling, startProgressPolling, stopPolling, stopProgressPolling]);
-
-  async function copySnippet(widgetKey: string) {
-    await navigator.clipboard.writeText(widgetScript(widgetKey));
-    setCopied(widgetKey);
-    setTimeout(() => setCopied(null), 2000);
-  }
 
   async function addSite(e: React.FormEvent) {
     e.preventDefault();
@@ -350,24 +343,7 @@ export default function SitesPage() {
                   </div>
                 ))}
 
-              <div className="mt-2">
-                <p className="text-xs font-medium text-slate-500">Widget key</p>
-                <code className="mt-1 block rounded bg-slate-100 px-2 py-1 text-xs">{site.widget_key}</code>
-              </div>
-
-              <div className="mt-2">
-                <p className="text-xs font-medium text-slate-500">Script d&apos;intégration</p>
-                <pre className="mt-1 overflow-x-auto rounded bg-slate-900 p-2 text-xs text-green-400">
-                  {widgetScript(site.widget_key)}
-                </pre>
-                <button
-                  type="button"
-                  onClick={() => copySnippet(site.widget_key)}
-                  className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-700"
-                >
-                  {copied === site.widget_key ? "Copié !" : "Copier le script"}
-                </button>
-              </div>
+              <WidgetIntegration widgetKey={site.widget_key} siteUrl={site.url} />
             </div>
           ))}
         </div>
