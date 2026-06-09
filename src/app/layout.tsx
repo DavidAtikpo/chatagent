@@ -95,7 +95,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
-        <WidgetEmbed />
+        <WidgetEmbed embedKey={process.env.NEXT_PUBLIC_EMBED_WIDGET_KEY} />
       </body>
     </html>
   );
