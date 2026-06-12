@@ -142,10 +142,13 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-xl font-semibold text-white">9. Vos droits (RGPD)</h2>
-            <p>Vous disposez des droits d&apos;accès, de rectification, d&apos;effacement, de</p>
             <p>
               limitation, d&apos;opposition et de portabilité. Pour les exercer, contactez
-              l&apos;administrateur de votre organisation ou notre support.
+              l&apos;administrateur de votre organisation ou{" "}
+              <Link href="/delete-account" className="text-[#D4A83A] hover:underline">
+                demandez la suppression de votre compte
+              </Link>
+              .
             </p>
           </section>
 

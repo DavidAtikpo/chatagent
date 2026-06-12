@@ -437,6 +437,9 @@ export default function Home() {
             <Link href="/privacy" className="hover:text-brand-600">
               Confidentialité
             </Link>
+            <Link href="/delete-account" className="hover:text-brand-600">
+              Suppression compte
+            </Link>
             <Link href="/login" className="hover:text-brand-600">
               Connexion
             </Link>
