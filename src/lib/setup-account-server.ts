@@ -41,6 +41,17 @@ export async function setupAccountForUser(
 
     if (orgError) throw orgError;
     organizationId = org.id;
+
+    await admin.from("organization_members").upsert(
+      {
+        organization_id: organizationId,
+        user_id: userId,
+        role: "owner",
+        display_name: companyName,
+        is_available: true,
+      },
+      { onConflict: "organization_id,user_id" }
+    );
   }
 
   const { data: existingSites } = await admin

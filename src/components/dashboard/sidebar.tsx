@@ -10,6 +10,7 @@ const NAV = [
   { href: "/dashboard", label: "Vue d'ensemble", exact: true },
   { href: "/dashboard/conversations", label: "Conversations" },
   { href: "/dashboard/leads", label: "Leads" },
+  { href: "/dashboard/advisors", label: "Conseillers" },
   { href: "/dashboard/sites", label: "Sites" },
   { href: "/dashboard/links", label: "Liens trackés" },
   { href: "/dashboard/settings", label: "Paramètres" },
