@@ -69,7 +69,15 @@ function LoginForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Mot de passe</label>
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-medium text-slate-700">Mot de passe</label>
+              <Link
+                href="/login/forgot-password"
+                className="text-xs text-brand-600 hover:underline"
+              >
+                Mot de passe oublié ?
+              </Link>
+            </div>
             <input
               type="password"
               value={password}

@@ -434,6 +434,9 @@ export default function Home() {
             <Link href="/integration" className="hover:text-brand-600">
               Intégration
             </Link>
+            <Link href="/privacy" className="hover:text-brand-600">
+              Confidentialité
+            </Link>
             <Link href="/login" className="hover:text-brand-600">
               Connexion
             </Link>
