@@ -2,7 +2,6 @@
 
 import {
   formatDate,
-  getDashboardStats,
   sourceLabel,
   statusBadge,
   widgetClickLabel,
@@ -12,7 +11,6 @@ import {
   type TrackedLinkInteractionStat,
   type CountryStat,
 } from "@/lib/dashboard-data";
-import { createClient } from "@/lib/supabase/client";
 import { useOrganization } from "@/hooks/use-organization";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -52,8 +50,21 @@ export default function DashboardPage() {
     }
 
     async function load() {
-      const supabase = createClient();
-      setStats(await getDashboardStats(supabase, organization!.id, siteIds));
+      setStats({ conversations: 0, leads: 0, avgScore: 0, conversionRate: 0 });
+      setRecentConversations([]);
+      setRecentLeads([]);
+
+      try {
+        const overviewRes = await fetch("/api/dashboard/overview", { cache: "no-store" });
+        const overviewData = await overviewRes.json();
+        if (overviewRes.ok) {
+          setStats(overviewData.stats ?? { conversations: 0, leads: 0, avgScore: 0, conversionRate: 0 });
+          setRecentConversations(overviewData.recentConversations ?? []);
+          setRecentLeads(overviewData.recentLeads ?? []);
+        }
+      } catch {
+        /* stats restent à 0 */
+      }
 
       try {
         const widgetRes = await fetch("/api/dashboard/widget-stats", { cache: "no-store" });
@@ -84,24 +95,6 @@ export default function DashboardPage() {
       } catch {
         setCountryStats([]);
       }
-
-      if (siteIds.length) {
-        const { data: convs } = await supabase
-          .from("conversations")
-          .select("id, status, lead_score, updated_at, sites(name)")
-          .in("site_id", siteIds)
-          .order("updated_at", { ascending: false })
-          .limit(5);
-        setRecentConversations((convs as unknown as RecentConversation[]) ?? []);
-      }
-
-      const { data: leads } = await supabase
-        .from("leads")
-        .select("id, score, name, email, created_at")
-        .eq("organization_id", organization!.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
-      setRecentLeads(leads ?? []);
 
       setLoading(false);
     }

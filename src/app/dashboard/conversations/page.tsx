@@ -4,7 +4,7 @@ import { formatDate, statusBadge } from "@/lib/dashboard-data";
 import { useOrganization } from "@/hooks/use-organization";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Conversation = {
   id: string;
@@ -21,35 +21,28 @@ export default function ConversationsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
 
-  async function load(ids: string[]) {
-    if (!ids.length) {
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const qs = filter !== "all" ? `?status=${encodeURIComponent(filter)}` : "";
+      const res = await fetch(`/api/dashboard/conversations${qs}`, { cache: "no-store" });
+      const data = await res.json();
+      if (res.ok) {
+        setRows((data.conversations as Conversation[]) ?? []);
+      } else {
+        setRows([]);
+      }
+    } catch {
       setRows([]);
+    } finally {
       setLoading(false);
-      return;
     }
-    const supabase = createClient();
-    let query = supabase
-      .from("conversations")
-      .select("id, status, lead_score, page_url, updated_at, sites(name)")
-      .in("site_id", ids)
-      .order("updated_at", { ascending: false })
-      .limit(100);
-
-    if (filter !== "all") {
-      query = query.eq("status", filter);
-    }
-
-    const { data } = await query;
-    setRows((data as unknown as Conversation[]) ?? []);
-    setLoading(false);
-  }
+  }, [filter]);
 
   useEffect(() => {
     if (orgLoading) return;
-    setLoading(true);
-    load(siteIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, siteIds, orgLoading]);
+    load();
+  }, [orgLoading, load]);
 
   useEffect(() => {
     if (orgLoading || !siteIds.length) return;
@@ -57,12 +50,13 @@ export default function ConversationsPage() {
     const channel = supabase
       .channel("conversations-list")
       .on("postgres_changes", { event: "*", schema: "public", table: "conversations" }, () =>
-        load(siteIds)
+        load()
       )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [siteIds, orgLoading]);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [siteIds, orgLoading, load]);
 
   return (
     <div>

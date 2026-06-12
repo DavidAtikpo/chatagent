@@ -31,31 +31,22 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
   const [error, setError] = useState<string | null>(null);
 
   async function load() {
-    const supabase = createClient();
-    const { data, error: convError } = await supabase
-      .from("conversations")
-      .select(
-        "id, status, lead_score, page_url, qualification_data, created_at, updated_at, sites(name, url), leads(id, name, email, phone, score)"
-      )
-      .eq("id", params.id)
-      .maybeSingle();
-
-    if (convError || !data) {
+    try {
+      const res = await fetch(`/api/dashboard/conversations/${params.id}`, { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Conversation introuvable.");
+        setLoading(false);
+        return;
+      }
+      setConversation(data.conversation as ConversationDetail);
+      setMessages(data.messages ?? []);
+      setError(null);
+    } catch {
       setError("Conversation introuvable.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setConversation(data as unknown as ConversationDetail);
-
-    const { data: msgs } = await supabase
-      .from("messages")
-      .select("id, role, content, created_at")
-      .eq("conversation_id", params.id)
-      .order("created_at", { ascending: true });
-
-    setMessages(msgs ?? []);
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -134,11 +125,18 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
                     className={`rounded-md px-3 py-2 text-sm ${
                       msg.role === "user"
                         ? "ml-8 bg-brand-50 text-brand-900"
-                        : "mr-8 bg-slate-100 text-slate-800"
+                        : msg.role === "human"
+                          ? "mr-8 bg-blue-50 text-blue-900"
+                          : "mr-8 bg-slate-100 text-slate-800"
                     }`}
                   >
                     <p className="text-xs font-medium uppercase text-slate-500">
-                      {msg.role === "user" ? "Visiteur" : "Agent"} · {formatDate(msg.created_at)}
+                      {msg.role === "user"
+                        ? "Visiteur"
+                        : msg.role === "human"
+                          ? "Conseiller"
+                          : "Agent"}{" "}
+                      · {formatDate(msg.created_at)}
                     </p>
                     <p className="mt-1 whitespace-pre-wrap">{msg.content}</p>
                   </li>

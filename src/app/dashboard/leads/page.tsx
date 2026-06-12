@@ -4,7 +4,7 @@ import { formatDate } from "@/lib/dashboard-data";
 import { useOrganization } from "@/hooks/use-organization";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Lead = {
   id: string;
@@ -24,44 +24,46 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true);
   const [minScore, setMinScore] = useState(0);
 
-  async function load(orgId: string) {
-    const supabase = createClient();
-    let query = supabase
-      .from("leads")
-      .select("id, score, name, email, phone, country, conversation_id, created_at, sites(name)")
-      .eq("organization_id", orgId)
-      .order("created_at", { ascending: false })
-      .limit(100);
-
-    if (minScore > 0) {
-      query = query.gte("score", minScore);
+  const load = useCallback(async () => {
+    if (!organization) {
+      setRows([]);
+      setLoading(false);
+      return;
     }
 
-    const { data } = await query;
-    setRows((data as unknown as Lead[]) ?? []);
-    setLoading(false);
-  }
+    setLoading(true);
+    try {
+      const qs = minScore > 0 ? `?minScore=${minScore}` : "";
+      const res = await fetch(`/api/dashboard/leads${qs}`, { cache: "no-store" });
+      const data = await res.json();
+      if (res.ok) {
+        setRows((data.leads as Lead[]) ?? []);
+      } else {
+        setRows([]);
+      }
+    } catch {
+      setRows([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [organization, minScore]);
 
   useEffect(() => {
     if (orgLoading) return;
-    if (!organization) { setLoading(false); return; }
-    setLoading(true);
-    load(organization.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [minScore, organization?.id, orgLoading]);
+    load();
+  }, [orgLoading, load]);
 
   useEffect(() => {
     if (orgLoading || !organization) return;
     const supabase = createClient();
     const channel = supabase
       .channel("leads-list")
-      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, () =>
-        load(organization.id)
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, () => load())
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organization?.id, orgLoading]);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [organization, orgLoading, load]);
 
   const qualifiedCount = rows.filter((r) => r.score >= 60).length;
 
@@ -69,7 +71,8 @@ export default function LeadsPage() {
     <div>
       <h1 className="text-xl font-bold text-slate-900">Leads</h1>
       <p className="mt-0.5 text-sm text-slate-600">
-        Prospects qualifiés · {qualifiedCount} qualifié{qualifiedCount > 1 ? "s" : ""} (≥ 60)
+        Visiteurs qualifiés par le chatbot (score, contact, pays) · {qualifiedCount} qualifié
+        {qualifiedCount > 1 ? "s" : ""} (≥ 60)
       </p>
 
       <div className="mt-2 flex gap-1.5">
@@ -97,7 +100,10 @@ export default function LeadsPage() {
         {orgLoading || loading ? (
           <p className="p-4 text-sm text-slate-500">Chargement...</p>
         ) : rows.length === 0 ? (
-          <p className="p-4 text-sm text-slate-500">Aucun lead qualifié pour le moment.</p>
+          <p className="p-4 text-sm text-slate-500">
+            Aucun lead pour le moment. Un lead est créé quand un visiteur est bien qualifié par
+            l&apos;assistant (score ≥ 60).
+          </p>
         ) : (
           <table className="w-full text-sm">
             <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
