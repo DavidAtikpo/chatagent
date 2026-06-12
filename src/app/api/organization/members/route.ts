@@ -47,7 +47,10 @@ export async function GET() {
       .order("created_at", { ascending: true });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const msg = error.message.includes("organization_members")
+        ? "Table organization_members absente — exécutez la migration 009_human_handoff.sql dans Supabase (SQL Editor)."
+        : error.message;
+      return NextResponse.json({ error: msg, code: "migration_required" }, { status: 500 });
     }
 
     const enriched: OrgMemberRow[] = [];

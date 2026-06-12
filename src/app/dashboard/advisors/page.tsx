@@ -122,9 +122,19 @@ export default function AdvisorsPage() {
       </div>
 
       {error && (
-        <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </p>
+        <div className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p>{error}</p>
+          {error.includes("organization_members") || error.includes("migration") ? (
+            <ol className="mt-2 list-decimal space-y-1 pl-4 text-red-800">
+              <li>Ouvrez Supabase → <strong>SQL Editor</strong></li>
+              <li>
+                Collez le contenu de{" "}
+                <code className="rounded bg-red-100 px-1">supabase/migrations/009_human_handoff.sql</code>
+              </li>
+              <li>Cliquez <strong>Run</strong>, puis rechargez cette page</li>
+            </ol>
+          ) : null}
+        </div>
       )}
       {success && (
         <p className="mt-3 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
