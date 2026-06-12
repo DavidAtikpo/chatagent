@@ -35,8 +35,6 @@ export async function GET(
       return NextResponse.json({ error: "Conversation introuvable" }, { status: 404 });
     }
 
-    const { site_id: _siteId, ...conv } = conversation;
-
     const { data: messages, error: msgError } = await admin
       .from("messages")
       .select("id, role, content, created_at")
@@ -48,7 +46,7 @@ export async function GET(
     }
 
     return NextResponse.json({
-      conversation: conv,
+      conversation,
       messages: messages ?? [],
     });
   } catch (err) {
