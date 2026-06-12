@@ -9,6 +9,8 @@ type Member = {
   role: string;
   display_name: string | null;
   is_available: boolean;
+  site_id: string | null;
+  site_name?: string | null;
   email?: string | null;
   created_at: string;
 };
@@ -20,14 +22,19 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 export default function AdvisorsPage() {
-  const { organization, loading: orgLoading } = useOrganization();
+  const { organization, sites, loading: orgLoading } = useOrganization();
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [siteId, setSiteId] = useState("");
   const [adding, setAdding] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (sites.length && !siteId) setSiteId(sites[0].id);
+  }, [sites, siteId]);
 
   const loadMembers = useCallback(async () => {
     setLoading(true);
@@ -60,6 +67,7 @@ export default function AdvisorsPage() {
         body: JSON.stringify({
           email: email.trim(),
           display_name: displayName.trim() || undefined,
+          site_id: siteId || undefined,
         }),
       });
       const data = await res.json();
@@ -109,16 +117,18 @@ export default function AdvisorsPage() {
     <div>
       <h1 className="text-xl font-bold text-slate-900">Conseillers</h1>
       <p className="mt-0.5 text-sm text-slate-600">
-        Gérez l&apos;équipe qui reçoit les handoffs et les notifications push sur l&apos;app mobile.
+        Invitez un conseiller par site : il ne verra que les handoffs et notifications de ce
+        chat (lien tracké, widget, page dédiée).
       </p>
 
       <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
-        <p className="font-medium">App mobile conseiller</p>
-        <p className="mt-1 text-blue-800">
-          Chaque conseiller se connecte avec le même email invité ci-dessous. Les notifications
-          Firebase arrivent uniquement si le conseiller est <strong>disponible</strong> et a
-          installé l&apos;app.
-        </p>
+        <p className="font-medium">Comment ça marche</p>
+        <ol className="mt-2 list-decimal space-y-1 pl-4 text-blue-800">
+          <li>Créez un <strong>site</strong> par page / marque (Dashboard → Sites)</li>
+          <li>Installez le widget ou partagez un <strong>lien tracké</strong> (Dashboard → Liens)</li>
+          <li>Invitez un conseiller en choisissant le <strong>site</strong> ci-dessous</li>
+          <li>Il se connecte à l&apos;app mobile avec l&apos;email invité</li>
+        </ol>
       </div>
 
       {error && (
@@ -149,6 +159,25 @@ export default function AdvisorsPage() {
         <h2 className="text-sm font-semibold text-slate-900">Inviter un conseiller</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <div>
+            <label className="text-xs text-slate-500">Site assigné</label>
+            <select
+              required
+              value={siteId}
+              onChange={(e) => setSiteId(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+            >
+              {sites.length === 0 ? (
+                <option value="">Créez d&apos;abord un site</option>
+              ) : (
+                sites.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+          <div>
             <label className="text-xs text-slate-500">Email</label>
             <input
               type="email"
@@ -171,7 +200,7 @@ export default function AdvisorsPage() {
         </div>
         <button
           type="submit"
-          disabled={adding}
+          disabled={adding || !siteId}
           className="mt-3 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
           {adding ? "Envoi…" : "Inviter"}
@@ -199,6 +228,7 @@ export default function AdvisorsPage() {
                   </p>
                   <p className="text-xs text-slate-500">
                     {m.email} · {ROLE_LABELS[m.role] ?? m.role}
+                    {m.site_name ? ` · Site : ${m.site_name}` : m.role === "owner" ? " · Tous les sites" : ""}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

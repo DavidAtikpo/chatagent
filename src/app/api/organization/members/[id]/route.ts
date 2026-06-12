@@ -40,7 +40,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Membre introuvable" }, { status: 404 });
     }
 
-    let body: { display_name?: string; is_available?: boolean; role?: string };
+    let body: { display_name?: string; is_available?: boolean; role?: string; site_id?: string | null };
     try {
       body = await request.json();
     } catch {
@@ -56,6 +56,9 @@ export async function PATCH(
     }
     if (body.role !== undefined && member.role !== "owner") {
       updates.role = body.role === "admin" ? "admin" : "agent";
+    }
+    if (body.site_id !== undefined && member.role !== "owner") {
+      updates.site_id = body.site_id || null;
     }
 
     if (!Object.keys(updates).length) {

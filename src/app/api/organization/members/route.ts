@@ -9,6 +9,8 @@ export type OrgMemberRow = {
   role: string;
   display_name: string | null;
   is_available: boolean;
+  site_id: string | null;
+  site_name?: string | null;
   created_at: string;
   email?: string | null;
 };
@@ -42,7 +44,7 @@ export async function GET() {
     const admin = createAdminClient();
     const { data: members, error } = await admin
       .from("organization_members")
-      .select("id, organization_id, user_id, role, display_name, is_available, created_at")
+      .select("id, organization_id, user_id, role, display_name, is_available, site_id, created_at, sites(name)")
       .eq("organization_id", org.id)
       .order("created_at", { ascending: true });
 
@@ -56,8 +58,11 @@ export async function GET() {
     const enriched: OrgMemberRow[] = [];
     for (const m of members ?? []) {
       const { data: authUser } = await admin.auth.admin.getUserById(m.user_id);
+      const sites = m.sites as { name: string } | { name: string }[] | null;
+      const siteName = Array.isArray(sites) ? sites[0]?.name : sites?.name;
       enriched.push({
         ...m,
+        site_name: siteName ?? null,
         email: authUser.user?.email ?? null,
       });
     }
@@ -84,7 +89,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Organisation introuvable" }, { status: 404 });
     }
 
-    let body: { email?: string; display_name?: string; role?: string };
+    let body: { email?: string; display_name?: string; role?: string; site_id?: string };
     try {
       body = await request.json();
     } catch {
@@ -100,8 +105,26 @@ export async function POST(request: Request) {
 
     const role = body.role === "admin" ? "admin" : "agent";
     const displayName = String(body.display_name ?? "").trim() || email.split("@")[0];
+    const siteId = body.site_id ? String(body.site_id).trim() : null;
 
     const admin = createAdminClient();
+
+    const { data: orgSites } = await admin
+      .from("sites")
+      .select("id")
+      .eq("organization_id", org.id);
+    const validSiteIds = new Set((orgSites ?? []).map((s) => s.id));
+
+    if (role === "agent") {
+      if (!siteId || !validSiteIds.has(siteId)) {
+        return NextResponse.json(
+          { error: "Choisissez un site pour ce conseiller" },
+          { status: 400 }
+        );
+      }
+    } else if (siteId && !validSiteIds.has(siteId)) {
+      return NextResponse.json({ error: "Site invalide" }, { status: 400 });
+    }
 
     let targetUserId: string | null = null;
 
@@ -143,8 +166,9 @@ export async function POST(request: Request) {
         role,
         display_name: displayName,
         is_available: true,
+        site_id: role === "agent" ? siteId : null,
       })
-      .select("id, organization_id, user_id, role, display_name, is_available, created_at")
+      .select("id, organization_id, user_id, role, display_name, is_available, site_id, created_at")
       .single();
 
     if (insertError) {
