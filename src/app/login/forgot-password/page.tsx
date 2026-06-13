@@ -1,9 +1,7 @@
 "use client";
 
 import { BrandLogo } from "@/components/brand-logo";
-import { getAppBaseUrl } from "@/lib/app-url";
 import { LOGO_SIZE } from "@/lib/branding";
-import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -18,15 +16,15 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setError(null);
 
-    const supabase = createClient();
-    const redirectTo = `${getAppBaseUrl()}/auth/callback?next=/login/reset-password`;
-
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo,
+    const res = await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email.trim() }),
     });
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
 
-    if (resetError) {
-      setError(resetError.message);
+    if (!res.ok) {
+      setError(data.error ?? "Impossible d'envoyer l'email. Réessayez plus tard.");
       setLoading(false);
       return;
     }
