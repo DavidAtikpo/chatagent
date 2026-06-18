@@ -77,6 +77,8 @@ export default function AdvisorsPage() {
       setSuccess(
         data.invited
           ? "Invitation envoyée par email — le conseiller pourra se connecter à l'app mobile."
+          : data.updated
+          ? "Site du conseiller mis à jour."
           : "Conseiller ajouté."
       );
       await loadMembers();

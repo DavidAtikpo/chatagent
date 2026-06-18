@@ -149,13 +149,39 @@ export async function POST(request: Request) {
 
     const { data: existingMember } = await admin
       .from("organization_members")
-      .select("id")
+      .select("id, role")
       .eq("organization_id", org.id)
       .eq("user_id", targetUserId)
       .maybeSingle();
 
+    // Membre déjà présent → mise à jour du site et du nom affiché
     if (existingMember) {
-      return NextResponse.json({ error: "Ce conseiller est déjà membre" }, { status: 409 });
+      if (existingMember.role === "owner") {
+        return NextResponse.json(
+          { error: "Ce compte est le propriétaire de l'organisation, vous ne pouvez pas modifier son rôle." },
+          { status: 409 }
+        );
+      }
+      const { data: updated, error: updateError } = await admin
+        .from("organization_members")
+        .update({
+          site_id: role === "agent" ? siteId : null,
+          display_name: displayName,
+          role,
+        })
+        .eq("id", existingMember.id)
+        .select("id, organization_id, user_id, role, display_name, is_available, site_id, created_at")
+        .single();
+
+      if (updateError) {
+        return NextResponse.json({ error: updateError.message }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        member: { ...updated, email },
+        invited: false,
+        updated: true,
+      });
     }
 
     const { data: member, error: insertError } = await admin
