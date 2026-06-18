@@ -124,10 +124,10 @@ export default function ConversationDetailPage({ params }: { params: { id: strin
                     key={msg.id}
                     className={`rounded-md px-3 py-2 text-sm ${
                       msg.role === "user"
-                        ? "ml-8 bg-brand-50 text-brand-900"
+                        ? "ml-0 bg-brand-50 text-brand-900 sm:ml-8"
                         : msg.role === "human"
-                          ? "mr-8 bg-blue-50 text-blue-900"
-                          : "mr-8 bg-slate-100 text-slate-800"
+                          ? "mr-0 bg-blue-50 text-blue-900 sm:mr-8"
+                          : "mr-0 bg-slate-100 text-slate-800 sm:mr-8"
                     }`}
                   >
                     <p className="text-xs font-medium uppercase text-slate-500">

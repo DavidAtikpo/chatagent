@@ -1,6 +1,7 @@
 "use client";
 
 import { trackedLinkUrl } from "@/lib/app-url";
+import { ResponsiveTable } from "@/components/dashboard/responsive-table";
 import { formatDate, sourceLabel, widgetClickLabel, type TrackedLinkInteractionStat } from "@/lib/dashboard-data";
 import { useOrganization } from "@/hooks/use-organization";
 import { useEffect, useRef, useState } from "react";
@@ -271,7 +272,8 @@ export default function LinksPage() {
             Aucun lien tracké. Créez-en un ci-dessus pour obtenir votre URL Facebook.
           </p>
         ) : (
-          <table className="w-full text-sm">
+          <ResponsiveTable>
+            <table className="w-full text-sm">
             <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
               <tr>
                 <th className="px-3 py-2">Image</th>
@@ -379,7 +381,8 @@ export default function LinksPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </ResponsiveTable>
         )}
       </div>
     </div>

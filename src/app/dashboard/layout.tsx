@@ -1,11 +1,19 @@
 "use client";
 
-import { DashboardSidebar } from "@/components/dashboard/sidebar";
+import { DashboardMobileHeader, DashboardSidebar } from "@/components/dashboard/sidebar";
 import { SetupOrganizationForm } from "@/components/dashboard/setup-organization";
 import { OrganizationProvider, useOrganization } from "@/hooks/use-organization";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
   const { email, loading, organization, refresh } = useOrganization();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [pathname]);
 
   if (loading) {
     return (
@@ -28,10 +36,15 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      <DashboardSidebar email={email} />
-      <main className="flex-1 overflow-y-auto bg-slate-50 p-4 text-slate-900 lg:p-5">
-        {children}
+    <div className="flex h-[100dvh] flex-col overflow-hidden bg-slate-50 lg:flex-row">
+      <DashboardMobileHeader onMenuOpen={() => setMobileNavOpen(true)} />
+      <DashboardSidebar
+        email={email}
+        mobileOpen={mobileNavOpen}
+        onMobileClose={() => setMobileNavOpen(false)}
+      />
+      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-slate-50 p-3 text-slate-900 sm:p-4 lg:p-5">
+        <div className="mx-auto w-full max-w-6xl">{children}</div>
       </main>
     </div>
   );

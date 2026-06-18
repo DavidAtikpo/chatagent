@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDate } from "@/lib/dashboard-data";
+import { ResponsiveTable } from "@/components/dashboard/responsive-table";
 import { useOrganization } from "@/hooks/use-organization";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -75,7 +76,7 @@ export default function LeadsPage() {
         {qualifiedCount > 1 ? "s" : ""} (≥ 60)
       </p>
 
-      <div className="mt-2 flex gap-1.5">
+      <div className="mt-2 flex flex-wrap gap-1.5">
         {[
           { value: 0, label: "Tous" },
           { value: 40, label: "≥ 40" },
@@ -105,7 +106,8 @@ export default function LeadsPage() {
             l&apos;assistant (score ≥ 60).
           </p>
         ) : (
-          <table className="w-full text-sm">
+          <ResponsiveTable>
+            <table className="w-full text-sm">
             <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
               <tr>
                 <th className="px-3 py-2">Score</th>
@@ -146,7 +148,8 @@ export default function LeadsPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </ResponsiveTable>
         )}
       </div>
     </div>

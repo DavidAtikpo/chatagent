@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDate, statusBadge } from "@/lib/dashboard-data";
+import { ResponsiveTable } from "@/components/dashboard/responsive-table";
 import { useOrganization } from "@/hooks/use-organization";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -63,7 +64,7 @@ export default function ConversationsPage() {
       <h1 className="text-xl font-bold text-slate-900">Conversations</h1>
       <p className="mt-0.5 text-sm text-slate-600">Toutes les conversations en temps réel.</p>
 
-      <div className="mt-2 flex gap-1.5">
+      <div className="mt-2 flex flex-wrap gap-1.5">
         {[
           { value: "all", label: "Toutes" },
           { value: "active", label: "Actives" },
@@ -90,7 +91,8 @@ export default function ConversationsPage() {
         ) : rows.length === 0 ? (
           <p className="p-4 text-sm text-slate-500">Aucune conversation pour le moment.</p>
         ) : (
-          <table className="w-full text-sm">
+          <ResponsiveTable>
+            <table className="w-full text-sm">
             <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
               <tr>
                 <th className="px-3 py-2">Site</th>
@@ -121,7 +123,8 @@ export default function ConversationsPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </ResponsiveTable>
         )}
       </div>
     </div>

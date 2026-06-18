@@ -59,6 +59,11 @@ export default function ForgotPasswordPage() {
               Si un compte existe pour <strong>{email}</strong>, un email vient d&apos;être envoyé.
               Vérifiez aussi vos spams.
             </div>
+            <div className="rounded-lg bg-slate-50 px-4 py-3 text-xs text-slate-600">
+              <strong>Gmail :</strong> consultez aussi l&apos;onglet <em>Promotions</em> et la
+              recherche « Supabase » ou « Reset password ». Les emails d&apos;auth Supabase sont
+              parfois filtrés par Gmail.
+            </div>
             <Link
               href="/login"
               className="block w-full rounded-lg border border-slate-200 py-3 text-center text-sm font-medium text-slate-700 hover:bg-slate-50"
