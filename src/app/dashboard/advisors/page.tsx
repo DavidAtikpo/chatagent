@@ -111,6 +111,18 @@ export default function AdvisorsPage() {
     }
   }
 
+  const agentsBySite = members.filter((m) => m.role === "agent" && m.site_id);
+  const agentCountForSite = (id: string) =>
+    agentsBySite.filter((m) => m.site_id === id).length;
+
+  const groupedAgents = sites.map((site) => ({
+    site,
+    advisors: members.filter((m) => m.role === "agent" && m.site_id === site.id),
+  }));
+  const otherMembers = members.filter(
+    (m) => m.role === "owner" || m.role === "admin" || (m.role === "agent" && !m.site_id)
+  );
+
   if (orgLoading) {
     return <p className="text-sm text-slate-500">Chargement…</p>;
   }
@@ -119,8 +131,8 @@ export default function AdvisorsPage() {
     <div>
       <h1 className="text-xl font-bold text-slate-900">Conseillers</h1>
       <p className="mt-0.5 text-sm text-slate-600">
-        Invitez un conseiller par site : il ne verra que les handoffs et notifications de ce
-        chat (lien tracké, widget, page dédiée).
+        Invitez <strong>autant de conseillers que nécessaire</strong> sur un même site — ils
+        reçoivent tous les handoffs et le premier disponible prend la conversation.
       </p>
 
       <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
@@ -128,8 +140,14 @@ export default function AdvisorsPage() {
         <ol className="mt-2 list-decimal space-y-1 pl-4 text-blue-800">
           <li>Créez un <strong>site</strong> par page / marque (Dashboard → Sites)</li>
           <li>Installez le widget ou partagez un <strong>lien tracké</strong> (Dashboard → Liens)</li>
-          <li>Invitez un conseiller en choisissant le <strong>site</strong> ci-dessous</li>
-          <li>Il se connecte à l&apos;app mobile avec l&apos;email invité</li>
+          <li>
+            Invitez <strong>un ou plusieurs conseillers</strong> sur le même site (ex. 3
+            personnes pour alibaba si le trafic est fort)
+          </li>
+          <li>
+            Chaque conseiller se connecte à l&apos;app mobile — tous reçoivent la notification,
+            le premier qui répond prend le visiteur
+          </li>
         </ol>
       </div>
 
@@ -171,11 +189,15 @@ export default function AdvisorsPage() {
               {sites.length === 0 ? (
                 <option value="">Créez d&apos;abord un site</option>
               ) : (
-                sites.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))
+                sites.map((s) => {
+                  const n = agentCountForSite(s.id);
+                  return (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                      {n > 0 ? ` — ${n} conseiller${n > 1 ? "s" : ""}` : ""}
+                    </option>
+                  );
+                })
               )}
             </select>
           </div>
@@ -218,48 +240,92 @@ export default function AdvisorsPage() {
         ) : members.length === 0 ? (
           <p className="p-4 text-sm text-slate-500">Aucun conseiller pour l&apos;instant.</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
-            {members.map((m) => (
-              <li
-                key={m.id}
-                className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-              >
-                <div>
-                  <p className="text-sm font-medium text-slate-900">
-                    {m.display_name || m.email || "Conseiller"}
+          <div className="divide-y divide-slate-100">
+            {groupedAgents.map(({ site, advisors }) =>
+              advisors.length > 0 ? (
+                <div key={site.id}>
+                  <p className="bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    {site.name} · {advisors.length} conseiller{advisors.length > 1 ? "s" : ""}
                   </p>
-                  <p className="text-xs text-slate-500">
-                    {m.email} · {ROLE_LABELS[m.role] ?? m.role}
-                    {m.site_name ? ` · Site : ${m.site_name}` : m.role === "owner" ? " · Tous les sites" : ""}
-                  </p>
+                  <ul>
+                    {advisors.map((m) => (
+                      <MemberRow
+                        key={m.id}
+                        member={m}
+                        onToggle={toggleAvailable}
+                        onRemove={removeMember}
+                      />
+                    ))}
+                  </ul>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => toggleAvailable(m)}
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      m.is_available
-                        ? "bg-emerald-100 text-emerald-800"
-                        : "bg-slate-100 text-slate-600"
-                    }`}
-                  >
-                    {m.is_available ? "Disponible" : "Indisponible"}
-                  </button>
-                  {m.role !== "owner" && (
-                    <button
-                      type="button"
-                      onClick={() => removeMember(m)}
-                      className="text-xs text-red-600 hover:underline"
-                    >
-                      Retirer
-                    </button>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+              ) : null
+            )}
+            {otherMembers.length > 0 && (
+              <div>
+                <p className="bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Propriétaire / admin
+                </p>
+                <ul>
+                  {otherMembers.map((m) => (
+                    <MemberRow
+                      key={m.id}
+                      member={m}
+                      onToggle={toggleAvailable}
+                      onRemove={removeMember}
+                    />
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
+  );
+}
+
+function MemberRow({
+  member: m,
+  onToggle,
+  onRemove,
+}: {
+  member: Member;
+  onToggle: (m: Member) => void;
+  onRemove: (m: Member) => void;
+}) {
+  return (
+    <li className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+      <div>
+        <p className="text-sm font-medium text-slate-900">
+          {m.display_name || m.email || "Conseiller"}
+        </p>
+        <p className="text-xs text-slate-500">
+          {m.email} · {ROLE_LABELS[m.role] ?? m.role}
+          {m.site_name ? ` · Site : ${m.site_name}` : m.role === "owner" ? " · Tous les sites" : ""}
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onToggle(m)}
+          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+            m.is_available
+              ? "bg-emerald-100 text-emerald-800"
+              : "bg-slate-100 text-slate-600"
+          }`}
+        >
+          {m.is_available ? "Disponible" : "Indisponible"}
+        </button>
+        {m.role !== "owner" && (
+          <button
+            type="button"
+            onClick={() => onRemove(m)}
+            className="text-xs text-red-600 hover:underline"
+          >
+            Retirer
+          </button>
+        )}
+      </div>
+    </li>
   );
 }
