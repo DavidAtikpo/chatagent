@@ -45,6 +45,23 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
     window.addEventListener("chatagent:ready", onReady);
     window.addEventListener("chatagent:error", onError);
 
+    const visitKey = `chatagent_visit_${widgetKey}_${slug}`;
+    if (!sessionStorage.getItem(visitKey)) {
+      sessionStorage.setItem(visitKey, "1");
+      fetch(`${apiUrl}/widget/event`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          widget_key: widgetKey,
+          event_type: "open",
+          placement: "dock",
+          page_url: window.location.href,
+          traffic_slug: slug,
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    }
+
     window.ChatAgentBoot = {
       key: widgetKey,
       api: apiUrl,
