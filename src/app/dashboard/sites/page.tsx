@@ -57,6 +57,7 @@ export default function SitesPage() {
   const [creating, setCreating] = useState(false);
   const [crawling, setCrawling] = useState<string | null>(null);
   const [refreshingSessions, setRefreshingSessions] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progressMap, setProgressMap] = useState<Record<string, CrawlProgress>>({});
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -210,6 +211,29 @@ export default function SitesPage() {
     await refresh();
   }
 
+  async function deleteSite(siteId: string, siteName: string) {
+    const confirmed = window.confirm(
+      `Supprimer « ${siteName} » ?\n\nCette action est irréversible : conversations, leads, liens trackés et données du widget seront supprimés.`
+    );
+    if (!confirmed) return;
+
+    setDeleting(siteId);
+    setError(null);
+    try {
+      const res = await fetch(`/api/sites/${siteId}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Impossible de supprimer le site");
+        return;
+      }
+      await refresh({ silent: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur inattendue");
+    } finally {
+      setDeleting(null);
+    }
+  }
+
   if (orgLoading) {
     return <p className="text-sm text-slate-500">Chargement...</p>;
   }
@@ -322,6 +346,14 @@ export default function SitesPage() {
                     className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 hover:bg-slate-200"
                   >
                     {site.is_active ? "Désactiver" : "Activer"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteSite(site.id, site.name)}
+                    disabled={deleting === site.id}
+                    className="rounded-md bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700 hover:bg-red-100 disabled:opacity-50"
+                  >
+                    {deleting === site.id ? "Suppression…" : "Supprimer"}
                   </button>
                 </div>
               </div>
