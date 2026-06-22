@@ -38,6 +38,10 @@ export type AgentConfig = {
   header_font?: string;
   logo_url?: string | null;
   widget_click_stats?: Partial<Record<string, number>>;
+  embed_widget_stats?: {
+    opens?: number;
+    clicks?: Partial<Record<string, number>>;
+  };
   tracked_link_interactions?: Record<string, Partial<Record<string, number>>>;
 };
 
@@ -57,6 +61,37 @@ export type TrafficStat = {
 export type WidgetClickStat = {
   event_type: string;
   count: number;
+};
+
+export type EmbedWidgetStats = {
+  opens: number;
+  conversations: number;
+  visitor_messages: number;
+  clicks: WidgetClickStat[];
+};
+
+export type EmbedWidgetSiteStats = EmbedWidgetStats & {
+  site_id: string;
+  site_name: string;
+  site_url: string;
+};
+
+export type EmbedTimeseriesPoint = {
+  period: string;
+  label: string;
+  opens: number;
+  conversations: number;
+  visitor_messages: number;
+  clicks: number;
+};
+
+export type EmbedMetricKey = "conversations" | "visitor_messages" | "opens" | "clicks";
+
+export const EMBED_METRIC_LABELS: Record<EmbedMetricKey, string> = {
+  conversations: "Conversations",
+  visitor_messages: "Messages visiteurs",
+  opens: "Ouvertures du chat",
+  clicks: "Clics (WhatsApp, session…)",
 };
 
 export type CountryStat = {
@@ -411,6 +446,7 @@ export function sourceLabel(source: string) {
 
 export function widgetClickLabel(eventType: string) {
   const labels: Record<string, string> = {
+    open: "Ouvertures du chat",
     whatsapp: "WhatsApp",
     phone: "Appel",
     email: "Email",
@@ -421,7 +457,14 @@ export function widgetClickLabel(eventType: string) {
   return labels[eventType] ?? eventType;
 }
 
-export const WIDGET_CLICK_ORDER = ["whatsapp", "phone", "email", "signup", "session", "link"] as const;
+export const WIDGET_CLICK_ORDER = [
+  "whatsapp",
+  "phone",
+  "email",
+  "signup",
+  "session",
+  "link",
+] as const;
 
 export type TrackedLinkInteractionStat = {
   id: string;
@@ -505,7 +548,10 @@ export function aggregateWidgetClickStats(
   const counts = new Map<string, number>();
 
   for (const site of sites) {
-    const raw = site.agent_config?.widget_click_stats;
+    const config = site.agent_config as AgentConfig | null | undefined;
+    const raw =
+      config?.embed_widget_stats?.clicks ??
+      config?.widget_click_stats;
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) continue;
     for (const [eventType, value] of Object.entries(raw as Record<string, unknown>)) {
       if (typeof value !== "number" || value <= 0) continue;
@@ -525,6 +571,308 @@ export function aggregateWidgetClickStats(
   });
 
   return stats;
+}
+
+function parseEmbedClickStats(
+  config: AgentConfig | null | undefined
+): WidgetClickStat[] {
+  const raw = config?.embed_widget_stats?.clicks ?? config?.widget_click_stats;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    return WIDGET_CLICK_ORDER.map((event_type) => ({ event_type, count: 0 }));
+  }
+  return WIDGET_CLICK_ORDER.map((event_type) => ({
+    event_type,
+    count: typeof raw[event_type] === "number" ? raw[event_type]! : 0,
+  })).filter((e) => e.count > 0);
+}
+
+function embedOpensFromConfig(config: AgentConfig | null | undefined): number {
+  const opens = config?.embed_widget_stats?.opens;
+  return typeof opens === "number" ? opens : 0;
+}
+
+export async function fetchEmbedWidgetStats(
+  admin: SupabaseClient,
+  siteIds: string[]
+): Promise<{ totals: EmbedWidgetStats; sites: EmbedWidgetSiteStats[] }> {
+  const empty: EmbedWidgetStats = {
+    opens: 0,
+    conversations: 0,
+    visitor_messages: 0,
+    clicks: [],
+  };
+
+  if (!siteIds.length) {
+    return { totals: empty, sites: [] };
+  }
+
+  const { data: siteRows } = await admin
+    .from("sites")
+    .select("id, name, url, agent_config")
+    .in("id", siteIds);
+
+  const { data: convRows } = await admin
+    .from("conversations")
+    .select("id, site_id")
+    .in("site_id", siteIds)
+    .is("traffic_link_id", null);
+
+  const convs = convRows ?? [];
+  const convIds = convs.map((c) => c.id);
+
+  let visitorMessages = 0;
+  if (convIds.length) {
+    const { count } = await admin
+      .from("messages")
+      .select("id", { count: "exact", head: true })
+      .in("conversation_id", convIds)
+      .eq("role", "user");
+    visitorMessages = count ?? 0;
+  }
+
+  const convsBySite = new Map<string, string[]>();
+  for (const conv of convs) {
+    const list = convsBySite.get(conv.site_id) ?? [];
+    list.push(conv.id);
+    convsBySite.set(conv.site_id, list);
+  }
+
+  const sites: EmbedWidgetSiteStats[] = [];
+  let totalOpens = 0;
+  let totalConversations = 0;
+  const clickTotals = new Map<string, number>();
+
+  for (const site of siteRows ?? []) {
+    const config = site.agent_config as AgentConfig | null | undefined;
+    const opens = embedOpensFromConfig(config);
+    const siteConvIds = convsBySite.get(site.id) ?? [];
+    const clicks = parseEmbedClickStats(config);
+
+    let siteMessages = 0;
+    if (siteConvIds.length) {
+      const { count } = await admin
+        .from("messages")
+        .select("id", { count: "exact", head: true })
+        .in("conversation_id", siteConvIds)
+        .eq("role", "user");
+      siteMessages = count ?? 0;
+    }
+
+    totalOpens += opens;
+    totalConversations += siteConvIds.length;
+    for (const c of clicks) {
+      clickTotals.set(c.event_type, (clickTotals.get(c.event_type) ?? 0) + c.count);
+    }
+
+    sites.push({
+      site_id: site.id,
+      site_name: site.name,
+      site_url: site.url,
+      opens,
+      conversations: siteConvIds.length,
+      visitor_messages: siteMessages,
+      clicks,
+    });
+  }
+
+  sites.sort((a, b) => b.conversations - a.conversations);
+
+  const totals: EmbedWidgetStats = {
+    opens: totalOpens,
+    conversations: totalConversations,
+    visitor_messages: visitorMessages,
+    clicks: WIDGET_CLICK_ORDER.map((event_type) => ({
+      event_type,
+      count: clickTotals.get(event_type) ?? 0,
+    })).filter((c) => c.count > 0),
+  };
+
+  return { totals, sites };
+}
+
+function toDayKey(iso: string): string {
+  return iso.slice(0, 10);
+}
+
+function toMonthKey(iso: string): string {
+  return iso.slice(0, 7);
+}
+
+function buildDayRange(days: number): { key: string; label: string }[] {
+  const out: { key: string; label: string }[] = [];
+  const now = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - i));
+    const key = d.toISOString().slice(0, 10);
+    const label = d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", timeZone: "UTC" });
+    out.push({ key, label });
+  }
+  return out;
+}
+
+function buildMonthRange(months: number): { key: string; label: string }[] {
+  const out: { key: string; label: string }[] = [];
+  const now = new Date();
+  for (let i = months - 1; i >= 0; i--) {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i, 1));
+    const key = d.toISOString().slice(0, 7);
+    const label = d.toLocaleDateString("fr-FR", { month: "short", year: "2-digit", timeZone: "UTC" });
+    out.push({ key, label });
+  }
+  return out;
+}
+
+function emptyTimeseries(
+  range: { key: string; label: string }[]
+): EmbedTimeseriesPoint[] {
+  return range.map(({ key, label }) => ({
+    period: key,
+    label,
+    opens: 0,
+    conversations: 0,
+    visitor_messages: 0,
+    clicks: 0,
+  }));
+}
+
+function incrementBucket(
+  map: Map<string, EmbedTimeseriesPoint>,
+  key: string,
+  label: string,
+  field: keyof Pick<
+    EmbedTimeseriesPoint,
+    "opens" | "conversations" | "visitor_messages" | "clicks"
+  >
+) {
+  const row = map.get(key) ?? {
+    period: key,
+    label,
+    opens: 0,
+    conversations: 0,
+    visitor_messages: 0,
+    clicks: 0,
+  };
+  row[field] += 1;
+  map.set(key, row);
+}
+
+export async function fetchEmbedWidgetTimeseries(
+  admin: SupabaseClient,
+  siteIds: string[]
+): Promise<{ daily: EmbedTimeseriesPoint[]; monthly: EmbedTimeseriesPoint[] }> {
+  const dayRange = buildDayRange(30);
+  const monthRange = buildMonthRange(12);
+
+  if (!siteIds.length) {
+    return {
+      daily: emptyTimeseries(dayRange),
+      monthly: emptyTimeseries(monthRange),
+    };
+  }
+
+  const yearAgo = new Date();
+  yearAgo.setUTCFullYear(yearAgo.getUTCFullYear() - 1);
+  const since = yearAgo.toISOString();
+
+  const dayKeys = new Set(dayRange.map((d) => d.key));
+  const monthKeys = new Set(monthRange.map((m) => m.key));
+  const dayLabels = new Map(dayRange.map((d) => [d.key, d.label]));
+  const monthLabels = new Map(monthRange.map((m) => [m.key, m.label]));
+
+  const dailyMap = new Map<string, EmbedTimeseriesPoint>();
+  const monthlyMap = new Map<string, EmbedTimeseriesPoint>();
+
+  const { data: convRows } = await admin
+    .from("conversations")
+    .select("id, created_at")
+    .in("site_id", siteIds)
+    .is("traffic_link_id", null)
+    .gte("created_at", since);
+
+  const convIds: string[] = [];
+  for (const row of convRows ?? []) {
+    if (!row.created_at) continue;
+    convIds.push(row.id);
+    const day = toDayKey(row.created_at);
+    const month = toMonthKey(row.created_at);
+    if (dayKeys.has(day)) {
+      incrementBucket(dailyMap, day, dayLabels.get(day) ?? day, "conversations");
+    }
+    if (monthKeys.has(month)) {
+      incrementBucket(monthlyMap, month, monthLabels.get(month) ?? month, "conversations");
+    }
+  }
+
+  if (convIds.length) {
+    const batchSize = 500;
+    for (let i = 0; i < convIds.length; i += batchSize) {
+      const batch = convIds.slice(i, i + batchSize);
+      const { data: msgRows } = await admin
+        .from("messages")
+        .select("created_at")
+        .in("conversation_id", batch)
+        .eq("role", "user")
+        .gte("created_at", since);
+
+      for (const row of msgRows ?? []) {
+        if (!row.created_at) continue;
+        const day = toDayKey(row.created_at);
+        const month = toMonthKey(row.created_at);
+        if (dayKeys.has(day)) {
+          incrementBucket(dailyMap, day, dayLabels.get(day) ?? day, "visitor_messages");
+        }
+        if (monthKeys.has(month)) {
+          incrementBucket(
+            monthlyMap,
+            month,
+            monthLabels.get(month) ?? month,
+            "visitor_messages"
+          );
+        }
+      }
+    }
+  }
+
+  const { data: eventRows, error: eventsError } = await admin
+    .from("widget_click_events")
+    .select("event_type, created_at")
+    .in("site_id", siteIds)
+    .gte("created_at", since);
+
+  if (!eventsError) {
+    for (const row of eventRows ?? []) {
+      if (!row.created_at) continue;
+      const day = toDayKey(row.created_at);
+      const month = toMonthKey(row.created_at);
+      const field = row.event_type === "open" ? "opens" : "clicks";
+      if (dayKeys.has(day)) {
+        incrementBucket(dailyMap, day, dayLabels.get(day) ?? day, field);
+      }
+      if (monthKeys.has(month)) {
+        incrementBucket(monthlyMap, month, monthLabels.get(month) ?? month, field);
+      }
+    }
+  }
+
+  const daily = dayRange.map(({ key, label }) => dailyMap.get(key) ?? {
+    period: key,
+    label,
+    opens: 0,
+    conversations: 0,
+    visitor_messages: 0,
+    clicks: 0,
+  });
+
+  const monthly = monthRange.map(({ key, label }) => monthlyMap.get(key) ?? {
+    period: key,
+    label,
+    opens: 0,
+    conversations: 0,
+    visitor_messages: 0,
+    clicks: 0,
+  });
+
+  return { daily, monthly };
 }
 
 export function normalizeRelation<T>(rel: T | T[] | null | undefined): T | null {

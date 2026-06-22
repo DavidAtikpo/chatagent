@@ -7,13 +7,18 @@ import {
   widgetClickLabel,
   WIDGET_CLICK_ORDER,
   widgetScript,
-  type WidgetClickStat,
+  EMBED_METRIC_LABELS,
   type TrackedLinkInteractionStat,
   type CountryStat,
+  type EmbedWidgetStats,
+  type EmbedWidgetSiteStats,
+  type EmbedTimeseriesPoint,
+  type EmbedMetricKey,
 } from "@/lib/dashboard-data";
+import { EmbedStatsChart } from "@/components/dashboard/embed-stats-chart";
 import { useOrganization } from "@/hooks/use-organization";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type RecentConversation = {
   id: string;
@@ -34,7 +39,17 @@ type RecentLead = {
 export default function DashboardPage() {
   const { organization, sites, siteIds, loading: orgLoading } = useOrganization();
   const [stats, setStats] = useState({ conversations: 0, leads: 0, avgScore: 0, conversionRate: 0 });
-  const [widgetClicks, setWidgetClicks] = useState<WidgetClickStat[]>([]);
+  const [embedStats, setEmbedStats] = useState<EmbedWidgetStats>({
+    opens: 0,
+    conversations: 0,
+    visitor_messages: 0,
+    clicks: [],
+  });
+  const [embedSites, setEmbedSites] = useState<EmbedWidgetSiteStats[]>([]);
+  const [embedDaily, setEmbedDaily] = useState<EmbedTimeseriesPoint[]>([]);
+  const [embedMonthly, setEmbedMonthly] = useState<EmbedTimeseriesPoint[]>([]);
+  const [embedPeriod, setEmbedPeriod] = useState<"day" | "month">("day");
+  const [embedMetric, setEmbedMetric] = useState<EmbedMetricKey>("conversations");
   const [trackedLinks, setTrackedLinks] = useState<TrackedLinkInteractionStat[]>([]);
   const [countryStats, setCountryStats] = useState<CountryStat[]>([]);
   const [recentConversations, setRecentConversations] = useState<RecentConversation[]>([]);
@@ -67,13 +82,26 @@ export default function DashboardPage() {
       }
 
       try {
-        const widgetRes = await fetch("/api/dashboard/widget-stats", { cache: "no-store" });
-        const widgetData = await widgetRes.json();
-        if (widgetRes.ok) {
-          setWidgetClicks((widgetData.stats as WidgetClickStat[]) ?? []);
+        const embedRes = await fetch("/api/dashboard/embed-stats", { cache: "no-store" });
+        const embedData = await embedRes.json();
+        if (embedRes.ok) {
+          setEmbedStats(
+            embedData.totals ?? {
+              opens: 0,
+              conversations: 0,
+              visitor_messages: 0,
+              clicks: [],
+            }
+          );
+          setEmbedSites((embedData.sites as EmbedWidgetSiteStats[]) ?? []);
+          setEmbedDaily((embedData.daily as EmbedTimeseriesPoint[]) ?? []);
+          setEmbedMonthly((embedData.monthly as EmbedTimeseriesPoint[]) ?? []);
         }
       } catch {
-        setWidgetClicks([]);
+        setEmbedStats({ opens: 0, conversations: 0, visitor_messages: 0, clicks: [] });
+        setEmbedSites([]);
+        setEmbedDaily([]);
+        setEmbedMonthly([]);
       }
 
       try {
@@ -102,6 +130,12 @@ export default function DashboardPage() {
     setLoading(true);
     load();
   }, [organization, siteIds, orgLoading]);
+
+  const embedChartPoints = embedPeriod === "day" ? embedDaily : embedMonthly;
+  const embedChartTotal = useMemo(
+    () => embedChartPoints.reduce((sum, p) => sum + p[embedMetric], 0),
+    [embedChartPoints, embedMetric]
+  );
 
   const firstSite = sites[0];
 
@@ -134,13 +168,13 @@ export default function DashboardPage() {
     { label: "Taux conversion", value: `${stats.conversionRate}%`, hint: "Leads / conv." },
   ];
 
-  const widgetClickMap = new Map(widgetClicks.map((s) => [s.event_type, s.count]));
-  const widgetClickCards = WIDGET_CLICK_ORDER.map((type) => ({
+  const embedClickMap = new Map(embedStats.clicks.map((s) => [s.event_type, s.count]));
+  const embedClickCards = WIDGET_CLICK_ORDER.map((type) => ({
     type,
     label: widgetClickLabel(type),
-    count: widgetClickMap.get(type) ?? 0,
+    count: embedClickMap.get(type) ?? 0,
   }));
-  const totalWidgetClicks = widgetClickCards.reduce((sum, c) => sum + c.count, 0);
+  const totalEmbedClicks = embedClickCards.reduce((sum, c) => sum + c.count, 0);
   const totalCountryVisitors = countryStats.reduce((sum, c) => sum + c.count, 0);
   const maxCountryCount = countryStats[0]?.count ?? 0;
 
@@ -237,22 +271,127 @@ export default function DashboardPage() {
 
       <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-sm font-semibold">Interactions chat widget</h2>
+          <h2 className="text-sm font-semibold">Widget intégré sur votre site</h2>
           <p className="text-xs text-slate-500">
-            {totalWidgetClicks} clic{totalWidgetClicks !== 1 ? "s" : ""} au total
+            Script collé dans le layout · hors liens trackés Facebook / Instagram
           </p>
         </div>
         <p className="mt-0.5 text-xs text-slate-500">
-          WhatsApp, appel, email, inscription et liens proposés par l&apos;assistant.
+          Statistiques du chatbot affiché sur votre site web après installation du code embed.
         </p>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {widgetClickCards.map((c) => (
-            <div key={c.type} className="rounded-md bg-slate-50 p-2.5">
-              <p className="text-xs text-slate-500">{c.label}</p>
-              <p className="text-xl font-bold text-slate-900">{c.count}</p>
-            </div>
-          ))}
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-md bg-brand-50 p-3 ring-1 ring-brand-100">
+            <p className="text-xs text-brand-800">Ouvertures du chat</p>
+            <p className="text-2xl font-bold text-brand-900">{embedStats.opens}</p>
+          </div>
+          <div className="rounded-md bg-slate-50 p-3">
+            <p className="text-xs text-slate-500">Conversations démarrées</p>
+            <p className="text-2xl font-bold text-slate-900">{embedStats.conversations}</p>
+          </div>
+          <div className="rounded-md bg-slate-50 p-3">
+            <p className="text-xs text-slate-500">Messages visiteurs</p>
+            <p className="text-2xl font-bold text-slate-900">{embedStats.visitor_messages}</p>
+          </div>
+          <div className="rounded-md bg-slate-50 p-3">
+            <p className="text-xs text-slate-500">Clics (WhatsApp, session…)</p>
+            <p className="text-2xl font-bold text-slate-900">{totalEmbedClicks}</p>
+          </div>
         </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+          <div className="flex flex-wrap gap-1">
+            {(Object.keys(EMBED_METRIC_LABELS) as EmbedMetricKey[]).map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setEmbedMetric(key)}
+                className={
+                  embedMetric === key
+                    ? "rounded-full bg-brand-600 px-3 py-1 text-xs font-medium text-white"
+                    : "rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
+                }
+              >
+                {EMBED_METRIC_LABELS[key]}
+              </button>
+            ))}
+          </div>
+          <div className="flex rounded-lg bg-slate-100 p-0.5">
+            <button
+              type="button"
+              onClick={() => setEmbedPeriod("day")}
+              className={
+                embedPeriod === "day"
+                  ? "rounded-md bg-white px-3 py-1 text-xs font-medium text-slate-900 shadow-sm"
+                  : "px-3 py-1 text-xs font-medium text-slate-600"
+              }
+            >
+              30 jours
+            </button>
+            <button
+              type="button"
+              onClick={() => setEmbedPeriod("month")}
+              className={
+                embedPeriod === "month"
+                  ? "rounded-md bg-white px-3 py-1 text-xs font-medium text-slate-900 shadow-sm"
+                  : "px-3 py-1 text-xs font-medium text-slate-600"
+              }
+            >
+              12 mois
+            </button>
+          </div>
+        </div>
+        <p className="mt-2 text-xs text-slate-500">
+          Total sur la période :{" "}
+          <span className="font-semibold text-slate-800">{embedChartTotal}</span>{" "}
+          {EMBED_METRIC_LABELS[embedMetric].toLowerCase()}
+        </p>
+        <EmbedStatsChart
+          points={embedChartPoints}
+          metric={embedMetric}
+          metricLabel={`${EMBED_METRIC_LABELS[embedMetric]} — ${embedPeriod === "day" ? "par jour" : "par mois"}`}
+        />
+        {embedClickCards.some((c) => c.count > 0) && (
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {embedClickCards
+              .filter((c) => c.count > 0)
+              .map((c) => (
+                <div key={c.type} className="rounded-md bg-slate-50 p-2.5">
+                  <p className="text-xs text-slate-500">{c.label}</p>
+                  <p className="text-xl font-bold text-slate-900">{c.count}</p>
+                </div>
+              ))}
+          </div>
+        )}
+        {embedSites.length > 1 && (
+          <div className="mt-4 border-t border-slate-100 pt-3">
+            <p className="text-xs font-medium text-slate-600">Par site</p>
+            <ul className="mt-2 space-y-2">
+              {embedSites.map((site) => (
+                <li
+                  key={site.site_id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-slate-50 px-3 py-2 text-sm"
+                >
+                  <div>
+                    <p className="font-medium text-slate-900">{site.site_name}</p>
+                    <p className="text-xs text-slate-500">{site.site_url}</p>
+                  </div>
+                  <div className="flex flex-wrap gap-3 text-xs text-slate-600">
+                    <span>{site.opens} ouverture{site.opens !== 1 ? "s" : ""}</span>
+                    <span>{site.conversations} conv.</span>
+                    <span>{site.visitor_messages} msg.</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {embedStats.opens === 0 &&
+          embedStats.conversations === 0 &&
+          totalEmbedClicks === 0 && (
+            <p className="mt-3 text-sm text-slate-500">
+              Aucune activité embed pour le moment. Vérifiez que le script widget est bien installé
+              sur votre site (voir section « Déploiement rapide » ci-dessous).
+            </p>
+          )}
       </div>
 
       <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
