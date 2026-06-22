@@ -26,6 +26,17 @@ async function proxy(request: Request, pathSegments: string[]) {
     const accept = request.headers.get("accept");
     if (accept) headers.set("Accept", accept);
 
+    for (const name of [
+      "x-vercel-ip-country",
+      "cf-ipcountry",
+      "x-country-code",
+      "cloudfront-viewer-country",
+      "x-appengine-country",
+    ]) {
+      const value = request.headers.get(name);
+      if (value) headers.set(name, value);
+    }
+
     const init: RequestInit = {
       method: request.method,
       headers,

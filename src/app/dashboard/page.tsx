@@ -452,6 +452,18 @@ export default function DashboardPage() {
                     Pas encore d&apos;interaction (WhatsApp, session, etc.) sur ce lien.
                   </p>
                 )}
+                {link.countries.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {link.countries.map((row) => (
+                      <span
+                        key={row.country}
+                        className="rounded-full bg-blue-50 px-2.5 py-1 text-xs text-blue-800 ring-1 ring-blue-100"
+                      >
+                        {row.country} · {row.count}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -469,7 +481,7 @@ export default function DashboardPage() {
           )}
         </div>
         <p className="mt-0.5 text-xs text-slate-500">
-          Pays indiqués par les visiteurs lors de la qualification dans le chat.
+          Pays détectés à l&apos;ouverture du lien tracké ou lors de la qualification dans le chat.
         </p>
         {countryStats.length === 0 ? (
           <p className="mt-2 text-sm text-slate-500">

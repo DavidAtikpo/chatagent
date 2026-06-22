@@ -81,6 +81,26 @@ export async function GET() {
       }
     }
 
+    const { data: sites } = await admin
+      .from("sites")
+      .select("agent_config")
+      .in("id", siteIds);
+
+    for (const site of sites ?? []) {
+      const byLink = (site.agent_config as Record<string, unknown> | null)?.tracked_link_countries;
+      if (!byLink || typeof byLink !== "object") continue;
+      for (const slugStats of Object.values(byLink as Record<string, unknown>)) {
+        if (!slugStats || typeof slugStats !== "object") continue;
+        for (const [country, count] of Object.entries(slugStats as Record<string, unknown>)) {
+          const label = normalizeCountryLabel(country);
+          const n = typeof count === "number" ? count : 0;
+          if (label && n > 0) {
+            for (let i = 0; i < n; i += 1) countries.push(label);
+          }
+        }
+      }
+    }
+
     return NextResponse.json({ stats: aggregateCountryStats(countries) });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur serveur";

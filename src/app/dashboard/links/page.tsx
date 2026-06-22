@@ -280,6 +280,7 @@ export default function LinksPage() {
                 <th className="px-3 py-2">Label / Slug</th>
                 <th className="px-3 py-2">Source</th>
                 <th className="px-3 py-2">Visites</th>
+                <th className="px-3 py-2">Pays</th>
                 <th className="px-3 py-2">Interactions</th>
                 <th className="px-3 py-2">URL</th>
                 <th className="px-3 py-2">Créé</th>
@@ -332,6 +333,22 @@ export default function LinksPage() {
                   </td>
                   <td className="px-3 py-2">{sourceLabel(link.source)}</td>
                   <td className="px-3 py-2 font-medium">{link.click_count}</td>
+                  <td className="px-3 py-2">
+                    {link.countries.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {link.countries.map((row) => (
+                          <span
+                            key={row.country}
+                            className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] text-blue-800"
+                          >
+                            {row.country} {row.count}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-xs text-slate-400">—</span>
+                    )}
+                  </td>
                   <td className="px-3 py-2">
                     <div className="font-medium text-brand-600">{link.interaction_total}</div>
                     {link.interaction_events.length > 0 && (

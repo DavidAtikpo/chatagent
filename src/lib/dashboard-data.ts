@@ -43,6 +43,7 @@ export type AgentConfig = {
     clicks?: Partial<Record<string, number>>;
   };
   tracked_link_interactions?: Record<string, Partial<Record<string, number>>>;
+  tracked_link_countries?: Record<string, Record<string, number>>;
 };
 
 export type DashboardStats = {
@@ -478,7 +479,18 @@ export type TrackedLinkInteractionStat = {
   created_at?: string;
   interaction_total: number;
   interaction_events: WidgetClickStat[];
+  countries: CountryStat[];
 };
+
+export function parseLinkCountryStats(
+  raw: Record<string, number> | null | undefined
+): CountryStat[] {
+  if (!raw || typeof raw !== "object") return [];
+  return Object.entries(raw)
+    .filter(([, count]) => typeof count === "number" && count > 0)
+    .map(([country, count]) => ({ country, count: count as number }))
+    .sort((a, b) => b.count - a.count || a.country.localeCompare(b.country));
+}
 
 export function parseLinkInteractionStats(
   raw: Partial<Record<string, number>> | null | undefined
@@ -525,6 +537,7 @@ export function buildTrackedLinkStats(
     const agentConfig = site?.agent_config as AgentConfig | null | undefined;
     const raw = agentConfig?.tracked_link_interactions?.[link.slug];
     const { total, events } = parseLinkInteractionStats(raw);
+    const countries = parseLinkCountryStats(agentConfig?.tracked_link_countries?.[link.slug]);
 
     return {
       id: link.id,
@@ -538,6 +551,7 @@ export function buildTrackedLinkStats(
       created_at: link.created_at,
       interaction_total: total,
       interaction_events: events,
+      countries,
     };
   });
 }
