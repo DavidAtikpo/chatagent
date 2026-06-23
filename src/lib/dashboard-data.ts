@@ -44,6 +44,12 @@ export type AgentConfig = {
   };
   tracked_link_interactions?: Record<string, Partial<Record<string, number>>>;
   tracked_link_countries?: Record<string, Record<string, number>>;
+  crawl_error?: {
+    code: string;
+    message: string;
+    detail?: string | null;
+    at?: string;
+  };
 };
 
 export type DashboardStats = {
@@ -348,8 +354,27 @@ export type CrawlProgress = {
   chunks_total: number;
   current_url?: string | null;
   message: string;
+  error_code?: string | null;
   updated_at?: string | null;
 };
+
+export function crawlErrorLabel(code: string) {
+  const labels: Record<string, string> = {
+    cloudflare: "Cloudflare / anti-bot",
+    anti_bot: "Anti-bot / captcha",
+    robots_txt: "robots.txt",
+    http_forbidden: "Accès refusé (403)",
+    http_error: "Erreur HTTP",
+    timeout: "Délai dépassé",
+    network: "Erreur réseau",
+    js_render: "JavaScript requis",
+    empty_content: "Contenu vide",
+    playwright_unavailable: "Playwright indisponible",
+    wrong_url: "URL incorrecte",
+    unknown: "Erreur inconnue",
+  };
+  return labels[code] ?? code;
+}
 
 export async function fetchCrawlProgress(siteId: string): Promise<CrawlProgress | null> {
   try {

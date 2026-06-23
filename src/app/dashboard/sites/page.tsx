@@ -3,6 +3,7 @@
 import { WidgetIntegration } from "@/components/dashboard/widget-integration";
 import {
   CrawlProgress,
+  crawlErrorLabel,
   fetchCrawlProgress,
   refreshFormations,
   refreshSessions,
@@ -101,7 +102,7 @@ export default function SitesPage() {
 
     setProgressMap((prev) => ({ ...prev, ...next }));
 
-    if (Object.values(next).some((p) => p.status === "completed")) {
+    if (Object.values(next).some((p) => p.status === "completed" || p.status === "failed")) {
       await refresh({ silent: true });
     }
   }, [sites, refresh, stopProgressPolling]);
@@ -374,6 +375,32 @@ export default function SitesPage() {
                     </p>
                   </div>
                 ))}
+
+              {site.crawl_status === "failed" && (
+                <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-3">
+                  <p className="text-sm font-medium text-red-800">Échec du crawl</p>
+                  <p className="mt-1 text-sm text-red-700">
+                    {site.agent_config?.crawl_error?.message ??
+                      progressMap[site.id]?.message ??
+                      "Impossible de lire le site — vérifiez l'URL ou réessayez."}
+                  </p>
+                  {(site.agent_config?.crawl_error?.code ?? progressMap[site.id]?.error_code) && (
+                    <p className="mt-2 text-xs text-red-600">
+                      Cause :{" "}
+                      {crawlErrorLabel(
+                        site.agent_config?.crawl_error?.code ??
+                          progressMap[site.id]?.error_code ??
+                          "unknown"
+                      )}
+                    </p>
+                  )}
+                  {site.agent_config?.crawl_error?.detail && (
+                    <p className="mt-1 truncate text-xs text-red-500" title={site.agent_config.crawl_error.detail}>
+                      {site.agent_config.crawl_error.detail}
+                    </p>
+                  )}
+                </div>
+              )}
 
               <WidgetIntegration widgetKey={site.widget_key} siteUrl={site.url} />
             </div>
