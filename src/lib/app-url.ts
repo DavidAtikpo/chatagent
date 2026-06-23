@@ -1,3 +1,5 @@
+import { getApiHealthUrl, resolveApiUrl } from "@/lib/render-api";
+
 /** URL publique du dashboard (liens trackés, SEO, Open Graph). */
 export function getAppBaseUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_APP_URL?.trim();
@@ -15,9 +17,7 @@ export function trackedLinkUrl(slug: string, widgetKey: string): string {
 }
 
 export function getApiBaseUrl(): string {
-  const fromEnv = process.env.NEXT_PUBLIC_API_URL?.trim();
-  if (fromEnv) return fromEnv.replace(/\/$/, "");
-  return "http://localhost:8000/api/v1";
+  return resolveApiUrl(process.env.NEXT_PUBLIC_API_URL);
 }
 
 /** URL absolue du widget.js (pour embed sur sites clients). */
@@ -36,5 +36,5 @@ export function apiUnreachableMessage(): string {
   if (api.includes("localhost")) {
     return "API inaccessible — lancez uvicorn sur le port 8000 ou définissez NEXT_PUBLIC_API_URL";
   }
-  return `API inaccessible — vérifiez ${api}/health (Render peut mettre ~1 min à démarrer)`;
+  return `API inaccessible — vérifiez ${getApiHealthUrl(api)} (Render peut mettre ~1 min à démarrer)`;
 }

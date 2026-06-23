@@ -1,5 +1,6 @@
 "use client";
 
+import { getApiHealthUrl } from "@/lib/render-api";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -25,6 +26,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
     widgetKey ? "loading" : "no-key"
   );
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
+  const apiHealthUrl = getApiHealthUrl();
 
   useEffect(() => {
     if (!widgetKey) return;
@@ -133,7 +135,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
             {errorDetail && <p className="mt-1">{errorDetail}</p>}
             <p className="mt-2 text-xs text-amber-800/80">
               Vérifiez que l&apos;API Render répond :{" "}
-              <code className="break-all">https://chatagentapi.onrender.com/health</code>
+              <code className="break-all">{apiHealthUrl}</code>
               <br />
               Plan Free : le premier appel peut prendre ~1 min (réveil).
             </p>
