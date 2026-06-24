@@ -73,10 +73,10 @@ export function OverviewSummaryPanel({
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <StatGrid items={statItems} />
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-2 lg:grid-cols-2">
         <DashboardPanel
           title={t("dashboard.overview.recentConversations")}
           action={
@@ -93,7 +93,7 @@ export function OverviewSummaryPanel({
                 <li key={c.id}>
                   <Link
                     href={`/dashboard/conversations/${c.id}`}
-                    className="flex items-center justify-between gap-2 py-2.5 hover:bg-slate-50"
+                    className="flex items-center justify-between gap-2 py-2 hover:bg-slate-50"
                   >
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium text-slate-900">
@@ -213,10 +213,10 @@ export function OverviewWidgetPanel({
       <StatGrid items={metricItems} />
 
       {noActivity ? (
-        <p className="mt-4 text-sm text-slate-500">{t("dashboard.overview.embed.noActivityTab")}</p>
+        <p className="mt-2 text-sm text-slate-500">{t("dashboard.overview.embed.noActivityTab")}</p>
       ) : (
         <>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2">
             <div className="flex flex-wrap gap-1">
               {EMBED_METRIC_KEYS.map((key) => (
                 <button
@@ -272,7 +272,7 @@ export function OverviewWidgetPanel({
           />
 
           {embedClickCards.length > 0 && (
-            <div className="mt-4 overflow-x-auto border-t border-slate-100 pt-4">
+            <div className="mt-2 overflow-x-auto border-t border-slate-100 pt-2">
               <p className="mb-2 text-xs font-medium text-slate-600">
                 {t("dashboard.overview.embed.clickBreakdown")}
               </p>
@@ -296,7 +296,7 @@ export function OverviewWidgetPanel({
           )}
 
           {embedSites.length > 1 && (
-            <div className="mt-4 border-t border-slate-100 pt-4">
+            <div className="mt-2 border-t border-slate-100 pt-2">
               <p className="text-xs font-medium text-slate-600">{t("dashboard.overview.embed.bySite")}</p>
               <div className="mt-2 overflow-x-auto">
                 <table className="w-full min-w-[420px] text-left text-sm">
@@ -348,9 +348,9 @@ export function OverviewLinksPanel({ trackedLinks }: { trackedLinks: TrackedLink
       {trackedLinks.length === 0 ? (
         <p className="text-sm text-slate-500">{t("dashboard.overview.trackedLinks.empty")}</p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {trackedLinks.map((link) => (
-            <article key={link.id} className="rounded-lg border border-slate-100 bg-slate-50/80 p-3">
+            <article key={link.id} className="rounded-md border border-slate-100 bg-slate-50/80 p-2.5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="font-medium text-slate-900">
@@ -434,7 +434,7 @@ export function OverviewAudiencePanel({ countryStats }: { countryStats: CountryS
       {countryStats.length === 0 ? (
         <p className="text-sm text-slate-500">{t("dashboard.overview.country.empty")}</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-2">
           {countryStats.map((row) => {
             const pct = maxCountryCount ? Math.round((row.count / maxCountryCount) * 100) : 0;
             const share =
@@ -483,13 +483,13 @@ export function OverviewDeployPanel({
       title={t("dashboard.overview.quickDeploy.title", { name: siteName })}
       description={t("dashboard.overview.quickDeploy.hint")}
     >
-      <pre className="overflow-x-auto rounded-lg bg-slate-900 p-4 text-xs leading-relaxed text-green-400">
+      <pre className="overflow-x-auto rounded-md bg-slate-900 p-3 text-xs leading-relaxed text-green-400">
         {widgetScript(widgetKey)}
       </pre>
       <button
         type="button"
         onClick={onCopy}
-        className="mt-3 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+        className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
       >
         {copied ? t("common.copied") : t("dashboard.overview.copyScript")}
       </button>

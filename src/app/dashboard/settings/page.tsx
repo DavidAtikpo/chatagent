@@ -221,8 +221,8 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-slate-900">{t("dashboard.settings.title")}</h1>
-      <p className="mt-0.5 text-sm text-slate-600">{t("dashboard.settings.subtitle")}</p>
+      <h1 className="text-lg font-bold text-slate-900">{t("dashboard.settings.title")}</h1>
+      <p className="text-sm text-slate-600">{t("dashboard.settings.subtitle")}</p>
 
       {error && (
         <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -230,7 +230,7 @@ export default function SettingsPage() {
         </p>
       )}
 
-      <form onSubmit={handleSave} className="mt-4 max-w-2xl space-y-4">
+      <form onSubmit={handleSave} className="mt-2 max-w-2xl space-y-2">
         <DashboardTabs tabs={settingsTabs} active={activeTab} onChange={setActiveTab} />
 
         {activeTab === "account" && (

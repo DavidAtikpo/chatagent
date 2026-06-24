@@ -181,9 +181,9 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">{t("dashboard.overview.title")}</h1>
+          <h1 className="text-lg font-bold text-slate-900">{t("dashboard.overview.title")}</h1>
           <p className="mt-0.5 text-sm text-slate-600">
             {organization.name} ·{" "}
             {t("dashboard.overview.plan", { plan: organization.subscription_plan ?? "starter" })}
@@ -197,9 +197,9 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      <DashboardTabs tabs={tabs} active={activeTab} onChange={setActiveTab} className="mt-4" />
+      <DashboardTabs tabs={tabs} active={activeTab} onChange={setActiveTab} className="mt-2" />
 
-      <div className="mt-4" role="tabpanel">
+      <div className="mt-2" role="tabpanel">
         {activeTab === "summary" && (
           <OverviewSummaryPanel
             stats={stats}

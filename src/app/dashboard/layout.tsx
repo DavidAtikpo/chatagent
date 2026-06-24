@@ -1,22 +1,13 @@
 "use client";
 
-import { LanguageSwitcher } from "@/components/language-switcher";
-import { DashboardMobileHeader, DashboardSidebar } from "@/components/dashboard/sidebar";
+import { DashboardHeader } from "@/components/dashboard/sidebar";
 import { SetupOrganizationForm } from "@/components/dashboard/setup-organization";
 import { useT } from "@/i18n/context";
 import { OrganizationProvider, useOrganization } from "@/hooks/use-organization";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
   const { email, loading, organization, refresh } = useOrganization();
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const pathname = usePathname();
   const t = useT();
-
-  useEffect(() => {
-    setMobileNavOpen(false);
-  }, [pathname]);
 
   if (loading) {
     return (
@@ -28,7 +19,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
 
   if (!organization) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
         <SetupOrganizationForm
           onComplete={async () => {
             await refresh();
@@ -39,17 +30,9 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-[100dvh] flex-col overflow-hidden bg-slate-50 lg:flex-row">
-      <DashboardMobileHeader onMenuOpen={() => setMobileNavOpen(true)} />
-      <DashboardSidebar
-        email={email}
-        mobileOpen={mobileNavOpen}
-        onMobileClose={() => setMobileNavOpen(false)}
-      />
-      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-slate-50 p-3 text-slate-900 sm:p-4 lg:p-5">
-        <div className="mx-auto mb-3 flex w-full max-w-6xl justify-end">
-          <LanguageSwitcher />
-        </div>
+    <div className="flex h-[100dvh] flex-col overflow-hidden bg-slate-50">
+      <DashboardHeader email={email} />
+      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 py-2 text-slate-900 sm:px-3">
         <div className="mx-auto w-full max-w-6xl">{children}</div>
       </main>
     </div>
