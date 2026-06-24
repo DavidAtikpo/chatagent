@@ -86,6 +86,23 @@ export async function PATCH(
         welcome_message_lang: null,
         welcome_auto_generated: false,
       };
+    } else if (!welcomeCustomized) {
+      const introLang = (prevConfig.welcome_intro_lang as string) ?? "";
+      const msgLang = (prevConfig.welcome_message_lang as string) ?? "";
+      if (
+        (introLang && introLang !== newLang) ||
+        (msgLang && msgLang !== newLang)
+      ) {
+        agentConfig = {
+          ...agentConfig,
+          welcome_intro: null,
+          welcome_intro_lang: null,
+          welcome_intros: {},
+          welcome_message: null,
+          welcome_message_lang: null,
+          welcome_auto_generated: false,
+        };
+      }
     }
 
     const { error } = await admin
