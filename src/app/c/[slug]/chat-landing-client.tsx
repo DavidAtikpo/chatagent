@@ -1,6 +1,6 @@
 "use client";
 
-import { getApiHealthUrl } from "@/lib/render-api";
+import { getDisplayApiHealthUrl } from "@/lib/render-api";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -26,7 +26,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
     widgetKey ? "loading" : "no-key"
   );
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
-  const apiHealthUrl = getApiHealthUrl();
+  const apiHealthUrl = getDisplayApiHealthUrl();
 
   useEffect(() => {
     if (!widgetKey) return;

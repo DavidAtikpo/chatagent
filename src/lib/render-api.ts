@@ -16,6 +16,20 @@ export function resolveApiUrl(raw?: string | null): string {
   return trimmed;
 }
 
+/** URL affichée dans les messages d'erreur (client). */
+export function getDisplayApiHealthUrl(): string {
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1") {
+      const local = resolveApiUrl(process.env.NEXT_PUBLIC_API_URL);
+      if (local.includes("localhost")) {
+        return "http://localhost:8000/health (ou utilisez Render dans .env.local)";
+      }
+    }
+  }
+  return getApiHealthUrl(RENDER_API_URL);
+}
+
 export function getApiHealthUrl(apiUrl?: string): string {
   const base = resolveApiUrl(apiUrl ?? process.env.NEXT_PUBLIC_API_URL).replace(
     /\/api\/v1\/?$/,
