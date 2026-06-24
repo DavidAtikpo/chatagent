@@ -83,7 +83,56 @@
       "copyScript": "Copier le script",
       "periodDay": "Jour",
       "periodMonth": "Mois",
-      "noData": "Aucune donnée pour l'instant."
+      "noData": "Aucune donnée pour l'instant.",
+      "plan": "Plan {plan}",
+      "manageSites": "Gérer les sites",
+      "noConversations": "Aucune conversation pour le moment.",
+      "noLeads": "Aucun lead pour le moment.",
+      "siteFallback": "Site",
+      "notConfiguredTitle": "Compte non configuré",
+      "notConfiguredBody": "Votre organisation n'a pas encore été créée. Contactez le support ou réinscrivez-vous.",
+      "embed": {
+        "title": "Widget intégré sur votre site",
+        "hint": "Script collé dans le layout · hors liens trackés Facebook / Instagram",
+        "desc": "Statistiques du chatbot affiché sur votre site web après installation du code embed.",
+        "opens": "Ouvertures du chat",
+        "conversationsStarted": "Conversations démarrées",
+        "visitorMessages": "Messages visiteurs",
+        "clicks": "Clics (WhatsApp, session…)",
+        "period30Days": "30 jours",
+        "period12Months": "12 mois",
+        "totalPeriod": "Total sur la période :",
+        "perDay": "par jour",
+        "perMonth": "par mois",
+        "bySite": "Par site",
+        "openCount": "{count} ouverture",
+        "openCountPlural": "{count} ouvertures",
+        "convAbbr": "conv.",
+        "msgAbbr": "msg.",
+        "noActivity": "Aucune activité embed pour le moment. Vérifiez que le script widget est bien installé sur votre site (voir section « Déploiement rapide » ci-dessous)."
+      },
+      "trackedLinks": {
+        "title": "Performance des liens trackés",
+        "manage": "Gérer les liens",
+        "desc": "Pour chaque lien créé (Facebook, Instagram…), voyez qui a ouvert le chat et où ils ont cliqué (WhatsApp, session, inscription…).",
+        "empty": "Aucun lien tracké. Créez un lien Facebook ou Instagram dans Liens trackés puis partagez l'URL sur vos réseaux.",
+        "visit": "{count} visite",
+        "visitPlural": "{count} visites",
+        "interaction": "{count} interaction",
+        "interactionPlural": "{count} interactions",
+        "noInteraction": "Pas encore d'interaction (WhatsApp, session, etc.) sur ce lien."
+      },
+      "country": {
+        "title": "Répartition par pays",
+        "visitor": "{count} visiteur qualifié",
+        "visitorPlural": "{count} visiteurs qualifiés",
+        "desc": "Pays détectés à l'ouverture du lien tracké ou lors de la qualification dans le chat.",
+        "empty": "Aucune donnée pays pour le moment. Les pays apparaissent quand l'assistant qualifie un visiteur (question sur le pays d'origine)."
+      },
+      "quickDeploy": {
+        "title": "Déploiement rapide — {name}",
+        "hint": "Collez ce script avant la balise </body> de votre site :"
+      }
     },
     "sites": {
       "title": "Sites",
@@ -114,7 +163,14 @@
       "crawlCause": "Cause",
       "crawlApiCheck": "Vérifiez que l'API Render répond :",
       "crawlFreePlanHint": "Plan Free : le premier appel peut prendre ~1 min (réveil).",
-      "reload": "Recharger"
+      "reload": "Recharger",
+      "createFailed": "Impossible de créer le site",
+      "crawlNotStarted": "Crawl non lancé — vérifiez l'API (NEXT_PUBLIC_API_URL)",
+      "crawlFailedShort": "Crawl non lancé",
+      "formationsFailed": "Indexation formations échouée",
+      "sessionsFailed": "Import sessions échoué",
+      "deleteFailed": "Impossible de supprimer le site",
+      "crawlPrefix": "Crawl :"
     },
     "links": {
       "title": "Liens trackés",
@@ -132,6 +188,28 @@
       "copyUrl": "Copier l'URL",
       "deleteConfirm": "Supprimer ce lien tracké ?",
       "noLinks": "Aucun lien tracké.",
+      "subtitleExtended": "Créez des liens pour vos campagnes Facebook, Instagram, Google Ads, etc. Ajoutez une image d'aperçu visible quand le lien est partagé (WhatsApp, Facebook…).",
+      "siteLabel": "Site",
+      "slugHint": "Slug (ex: facebook-ads)",
+      "labelOptional": "Label (optionnel)",
+      "previewImage": "Image d'aperçu du slug (recommandé 1200×630)",
+      "previewAlt": "Aperçu",
+      "previewHint": "Cette image s'affiche dans WhatsApp, Facebook et Messenger quand vous partagez le lien /c/{slug}.",
+      "noSiteYet": "Ajoutez d'abord un site dans Sites pour créer des liens trackés.",
+      "loadFailed": "Impossible de charger les liens",
+      "createFailed": "Impossible de créer le lien",
+      "imageFailed": "Impossible d'envoyer l'image",
+      "imageUpdateFailed": "Impossible de mettre à jour l'image",
+      "deleteFailed": "Impossible de supprimer",
+      "emptyTable": "Aucun lien tracké. Créez-en un ci-dessus pour obtenir votre URL Facebook.",
+      "colImage": "Image",
+      "colLabel": "Label / Slug",
+      "colUrl": "URL",
+      "colCreated": "Créé",
+      "noImage": "Aucune",
+      "changeImage": "Changer",
+      "addImage": "Ajouter",
+      "deleteShort": "Suppr.",
       "sources": {
         "facebook": "Facebook",
         "instagram": "Instagram",
@@ -149,7 +227,12 @@
       "contact": "Contact",
       "country": "Pays",
       "date": "Date",
-      "noLeads": "Aucun lead pour l'instant."
+      "noLeads": "Aucun lead pour l'instant.",
+      "subtitleExtended": "Visiteurs qualifiés par le chatbot (score, contact, pays) · {count} qualifié{plural} (≥ 60)",
+      "filterAll": "Tous",
+      "site": "Site",
+      "seeConv": "Voir conv.",
+      "emptyHint": "Aucun lead pour le moment. Un lead est créé quand un visiteur est bien qualifié par l'assistant (score ≥ 60)."
     },
     "conversations": {
       "title": "Conversations",
@@ -161,7 +244,12 @@
       "statusClosed": "Fermées",
       "notFound": "Conversation introuvable.",
       "advisor": "Conseiller",
-      "visitor": "Visiteur"
+      "visitor": "Visiteur",
+      "subtitleRealtime": "Toutes les conversations en temps réel.",
+      "status": "Statut",
+      "page": "Page",
+      "lastActivity": "Dernière activité",
+      "empty": "Aucune conversation pour le moment."
     },
     "advisors": {
       "title": "Conseillers",
@@ -176,7 +264,31 @@
       "unavailable": "Indisponible",
       "inviteSent": "Invitation envoyée par email — le conseiller pourra se connecter à l'app mobile.",
       "siteUpdated": "Site du conseiller mis à jour.",
-      "advisorAdded": "Conseiller ajouté."
+      "advisorAdded": "Conseiller ajouté.",
+      "subtitleExtended": "Invitez autant de conseillers que nécessaire sur un même site — ils reçoivent tous les handoffs et le premier disponible prend la conversation.",
+      "howItWorks": "Comment ça marche",
+      "step1": "Créez un site par page / marque (Dashboard → Sites)",
+      "step2": "Installez le widget ou partagez un lien tracké (Dashboard → Liens)",
+      "step3": "Invitez un ou plusieurs conseillers sur le même site",
+      "step4": "Chaque conseiller se connecte à l'app mobile — tous reçoivent la notification, le premier qui répond prend le visiteur",
+      "inviteTitle": "Inviter un conseiller",
+      "assignedSite": "Site assigné",
+      "createSiteFirst": "Créez d'abord un site",
+      "advisorCount": "{count} conseiller",
+      "advisorCountPlural": "{count} conseillers",
+      "displayNameOptional": "Nom affiché (optionnel)",
+      "invite": "Inviter",
+      "inviting": "Envoi…",
+      "team": "Équipe ({count})",
+      "noAdvisors": "Aucun conseiller pour l'instant.",
+      "ownerAdmin": "Propriétaire / admin",
+      "allSites": "Tous les sites",
+      "siteLabel": "Site : {name}",
+      "remove": "Retirer",
+      "removeConfirm": "Retirer {name} ?",
+      "loadFailed": "Chargement impossible",
+      "addFailed": "Ajout impossible",
+      "removeFailed": "Suppression impossible"
     },
     "settings": {
       "title": "Paramètres",
@@ -225,6 +337,74 @@
         "trebuchet": "Trebuchet MS",
         "verdana": "Verdana",
         "courier": "Courier — monospace"
+      },
+      "account": "Compte",
+      "orgNameHint": "Affiché dans le dashboard et l'aperçu du chat ci-dessous.",
+      "noSitesTitle": "Aucun site configuré",
+      "noSitesBody": "Ajoutez d'abord un site dans Sites pour configurer l'agent, les contacts et l'apparence du chat.",
+      "quickContacts": "Contacts rapides",
+      "planPro": "Plan Pro",
+      "quickContactsHint": "Boutons WhatsApp, Appel et Email en bas du chat (icônes cliquables).",
+      "proOnlyHint": "Réservé au Plan Pro. Passez au Pro pour activer WhatsApp, appel et email dans le widget.",
+      "siteToConfigure": "Site à configurer",
+      "phoneCall": "Téléphone (appel)",
+      "widgetAppearance": "Apparence du chat (widget)",
+      "widgetAppearanceHint": "Logo, couleurs et police affiches dans l'en-tete du chat sur votre site.",
+      "companyLogo": "Logo entreprise",
+      "headerBgColor": "Couleur fond header",
+      "headerNameColor": "Couleur nom entreprise",
+      "headerFontLabel": "Police du header",
+      "agentIa": "Agent IA"
+    },
+    "labels": {
+      "sources": {
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "google_ads": "Google Ads",
+        "whatsapp": "WhatsApp",
+        "qr_code": "QR Code",
+        "direct_link": "Lien direct",
+        "widget": "Site web",
+        "other": "Autre"
+      },
+      "widgetClicks": {
+        "open": "Ouvertures du chat",
+        "whatsapp": "WhatsApp",
+        "phone": "Appel",
+        "email": "Email",
+        "signup": "S'inscrire",
+        "session": "Sessions (inscription)",
+        "link": "Liens assistant"
+      },
+      "statuses": {
+        "active": "Active",
+        "qualified": "Qualifiée",
+        "handed_off": "Transférée",
+        "closed": "Fermée",
+        "pending": "En attente",
+        "running": "En cours",
+        "completed": "Terminé",
+        "failed": "Échec"
+      },
+      "crawlErrors": {
+        "cloudflare": "Cloudflare / anti-bot",
+        "anti_bot": "Anti-bot / captcha",
+        "robots_txt": "robots.txt",
+        "http_forbidden": "Accès refusé (403)",
+        "http_error": "Erreur HTTP",
+        "timeout": "Délai dépassé",
+        "network": "Erreur réseau",
+        "js_render": "JavaScript requis",
+        "empty_content": "Contenu vide",
+        "playwright_unavailable": "Playwright indisponible",
+        "wrong_url": "URL incorrecte",
+        "unknown": "Erreur inconnue"
+      },
+      "embedMetrics": {
+        "conversations": "Conversations",
+        "visitor_messages": "Messages visiteurs",
+        "opens": "Ouvertures du chat",
+        "clicks": "Clics (WhatsApp, session…)"
       }
     }
   },
@@ -239,27 +419,41 @@
       "error": "Erreur de connexion. Réessayez."
     },
     "signup": {
-      "title": "Créer un compte",
+      "title": "Créer votre agent IA",
+      "subtitle": "Entrez l'URL de votre site. L'analyse démarre automatiquement.",
       "companyName": "Nom de l'entreprise",
-      "siteUrl": "URL de votre site",
-      "submit": "Créer mon compte",
-      "submitting": "Création...",
-      "hasAccount": "Déjà un compte ?",
+      "siteUrl": "URL du site",
+      "submit": "Lancer mon agent",
+      "submitting": "Création en cours...",
+      "hasAccount": "Déjà inscrit ?",
       "loginLink": "Se connecter",
       "emailConfirmTitle": "Vérifiez votre email",
-      "emailConfirmBody": "Un lien de confirmation a été envoyé. Cliquez dessus pour activer votre compte.",
+      "emailConfirmBody": "Un lien de confirmation a été envoyé à {email}.",
+      "goToLogin": "Aller à la connexion",
       "setupError": "Erreur lors de la création du compte"
     },
     "forgotPassword": {
       "title": "Mot de passe oublié",
-      "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation.",
+      "subtitle": "Entrez votre email — nous vous enverrons un lien pour choisir un nouveau mot de passe.",
       "submit": "Envoyer le lien",
-      "backToLogin": "Retour à la connexion"
+      "submitting": "Envoi...",
+      "backToLogin": "Retour à la connexion",
+      "sendFailed": "Impossible d'envoyer l'email. Réessayez plus tard.",
+      "sentBody": "Si un compte existe pour {email}, un email vient d'être envoyé. Vérifiez aussi vos spams.",
+      "gmailHint": "Gmail : consultez aussi l'onglet Promotions et la recherche « Supabase » ou « Reset password ». Les emails d'auth Supabase sont parfois filtrés par Gmail."
     },
     "resetPassword": {
       "title": "Nouveau mot de passe",
-      "submit": "Mettre à jour",
-      "passwordMismatch": "Les mots de passe ne correspondent pas."
+      "submit": "Enregistrer",
+      "submitting": "Enregistrement...",
+      "passwordMismatch": "Les mots de passe ne correspondent pas.",
+      "passwordMin": "Le mot de passe doit contenir au moins 8 caractères.",
+      "checking": "Vérification du lien...",
+      "invalidLink": "Lien invalide ou expiré. Demandez un nouveau lien de réinitialisation.",
+      "forgotLink": "Mot de passe oublié",
+      "success": "Mot de passe mis à jour. Redirection vers le dashboard...",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe"
     }
   },
   "home": {
@@ -291,6 +485,55 @@
     "howItWorks": {
       "title": "Comment ça marche",
       "subtitle": "De l'inscription au premier lead qualifié — suivez le parcours en direct."
+    },
+    "demo": {
+      "chatPreview": {
+        "assistantTitle": "Assistant {saasName}",
+        "online": "En ligne",
+        "welcome": "Bonjour ! Je suis l'assistant de votre entreprise. Quelle formation vous intéresse ?",
+        "userMessage": "Cordiste IRATA au Togo, prochaine session ?",
+        "replyIntro": "Voici les sessions à venir :",
+        "sessionCta": "Mars 2026 — Inscription",
+        "footer": "Démo en direct — comme sur votre site"
+      },
+      "signupFlow": {
+        "steps": [
+          {
+            "title": "Connectez votre site",
+            "desc": "Inscription + crawl automatique de vos pages."
+          },
+          {
+            "title": "Déployez partout",
+            "desc": "Widget prêt à coller sur votre site."
+          },
+          {
+            "title": "Convertissez",
+            "desc": "Premier lead qualifié dans le dashboard."
+          }
+        ],
+        "demoName": "Mon Centre de Formation",
+        "phases": {
+          "creatingAccount": "Création du compte",
+          "configuringAgent": "Configuration de l'agent",
+          "deploying": "Déploiement",
+          "dashboard": "Dashboard",
+          "demoTitle": "Démo {saasName}"
+        },
+        "live": "En direct",
+        "signup": "Inscription",
+        "submitting": "Création en cours…",
+        "submit": "Créer mon agent IA",
+        "crawlPages": "Lecture des pages",
+        "crawlEmbedding": "Analyse sémantique (IA)",
+        "pageProgress": "Page {current}/{total} analysée",
+        "indexing": "Indexation des connaissances pour le chat…",
+        "agentReady": "Agent prêt — widget généré",
+        "scriptHint": "Script à coller sur votre site",
+        "newLead": "Nouveau lead qualifié",
+        "leadDetail": "Togo · Formation cordiste · Budget OK",
+        "leadScore": "Score 80/100 — notification envoyée",
+        "footer": "Parcours réel après inscription — environ 5 minutes"
+      }
     },
     "features": {
       "title": "Fonctionnalités clés",
@@ -432,8 +675,10 @@
     "unavailable": "Chat indisponible",
     "missingKey": "Lien incomplet : il manque la clé widget (?key=...). Copiez l'URL depuis Dashboard → Liens trackés → Copier.",
     "widgetMissing": "Fichier widget.js introuvable sur ce site",
+    "loadError": "Erreur de chargement",
     "apiCheck": "Vérifiez que l'API Render répond :",
-    "freePlanHint": "Plan Free : le premier appel peut prendre ~1 min (réveil)."
+    "freePlanHint": "Plan Free : le premier appel peut prendre ~1 min (réveil).",
+    "reload": "Recharger"
   },
   "integration": {
     "title": "Intégration",
@@ -447,8 +692,11 @@
     "subtitle": "Demandez la suppression définitive de votre compte et de vos données."
   },
   "setupOrg": {
-    "title": "Configurer votre organisation",
-    "subtitle": "Dernière étape pour accéder au dashboard.",
-    "submit": "Continuer"
+    "title": "Finalisez votre compte",
+    "subtitle": "Votre compte existe mais l'organisation n'a pas encore été créée. Entrez les informations de votre entreprise pour continuer.",
+    "submit": "Créer mon organisation",
+    "submitting": "Création en cours...",
+    "sessionExpired": "Session expirée — reconnectez-vous.",
+    "createFailed": "Impossible de créer l'organisation"
   }
 }

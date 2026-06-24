@@ -2,12 +2,9 @@
 
 import {
   formatDate,
-  sourceLabel,
   statusBadge,
-  widgetClickLabel,
   WIDGET_CLICK_ORDER,
   widgetScript,
-  EMBED_METRIC_LABELS,
   type TrackedLinkInteractionStat,
   type CountryStat,
   type EmbedWidgetStats,
@@ -16,9 +13,13 @@ import {
   type EmbedMetricKey,
 } from "@/lib/dashboard-data";
 import { EmbedStatsChart } from "@/components/dashboard/embed-stats-chart";
+import { useT } from "@/i18n/context";
+import { useDashboardLabels } from "@/i18n/use-dashboard-labels";
 import { useOrganization } from "@/hooks/use-organization";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+
+const EMBED_METRIC_KEYS: EmbedMetricKey[] = ["conversations", "visitor_messages", "opens", "clicks"];
 
 type RecentConversation = {
   id: string;
@@ -38,6 +39,8 @@ type RecentLead = {
 
 export default function DashboardPage() {
   const { organization, sites, siteIds, loading: orgLoading } = useOrganization();
+  const t = useT();
+  const { widgetClickLabel, sourceLabel, statusLabel, embedMetricLabel } = useDashboardLabels();
   const [stats, setStats] = useState({ conversations: 0, leads: 0, avgScore: 0, conversionRate: 0 });
   const [embedStats, setEmbedStats] = useState<EmbedWidgetStats>({
     opens: 0,
@@ -147,25 +150,45 @@ export default function DashboardPage() {
   }
 
   if (orgLoading || loading) {
-    return <p className="text-sm text-slate-500">Chargement...</p>;
+    return <p className="text-sm text-slate-500">{t("common.loading")}</p>;
   }
 
   if (!organization) {
     return (
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-        <h1 className="text-base font-semibold text-amber-900">Compte non configuré</h1>
-        <p className="mt-1 text-sm text-amber-800">
-          Votre organisation n&apos;a pas encore été créée. Contactez le support ou réinscrivez-vous.
-        </p>
+        <h1 className="text-base font-semibold text-amber-900">
+          {t("dashboard.overview.notConfiguredTitle")}
+        </h1>
+        <p className="mt-1 text-sm text-amber-800">{t("dashboard.overview.notConfiguredBody")}</p>
       </div>
     );
   }
 
   const statCards = [
-    { label: "Conversations", value: stats.conversations, hint: "Total" },
-    { label: "Leads qualifiés", value: stats.leads, hint: "Tous scores" },
-    { label: "Score moyen", value: `${stats.avgScore}`, hint: "Sur 100" },
-    { label: "Taux conversion", value: `${stats.conversionRate}%`, hint: "Leads / conv." },
+    {
+      key: "conversations",
+      label: t("dashboard.overview.kpiConversations"),
+      value: stats.conversations,
+      hint: t("common.total"),
+    },
+    {
+      key: "leads",
+      label: t("dashboard.overview.kpiLeads"),
+      value: stats.leads,
+      hint: t("dashboard.overview.hintAllScores"),
+    },
+    {
+      key: "avgScore",
+      label: t("dashboard.overview.kpiAvgScore"),
+      value: `${stats.avgScore}`,
+      hint: t("dashboard.overview.hintOutOf100"),
+    },
+    {
+      key: "conversion",
+      label: t("dashboard.overview.kpiConversion"),
+      value: `${stats.conversionRate}%`,
+      hint: t("dashboard.overview.hintLeadsPerConv"),
+    },
   ];
 
   const embedClickMap = new Map(embedStats.clicks.map((s) => [s.event_type, s.count]));
@@ -182,22 +205,23 @@ export default function DashboardPage() {
     <div>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Vue d&apos;ensemble</h1>
+          <h1 className="text-xl font-bold text-slate-900">{t("dashboard.overview.title")}</h1>
           <p className="mt-0.5 text-sm text-slate-600">
-            {organization.name} · Plan {organization.subscription_plan ?? "starter"}
+            {organization.name} ·{" "}
+            {t("dashboard.overview.plan", { plan: organization.subscription_plan ?? "starter" })}
           </p>
         </div>
         <Link
           href="/dashboard/sites"
           className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
-          Gérer les sites
+          {t("dashboard.overview.manageSites")}
         </Link>
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
-          <div key={stat.label} className="rounded-lg bg-white p-3 shadow-sm">
+          <div key={stat.key} className="rounded-lg bg-white p-3 shadow-sm">
             <p className="text-xs text-slate-500">{stat.label}</p>
             <p className="mt-1 text-2xl font-bold text-slate-900">{stat.value}</p>
             <p className="text-xs text-slate-400">{stat.hint}</p>
@@ -208,13 +232,13 @@ export default function DashboardPage() {
       <div className="mt-4 grid gap-3 lg:grid-cols-2">
         <div className="rounded-lg border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold">Conversations récentes</h2>
+            <h2 className="text-sm font-semibold">{t("dashboard.overview.recentConversations")}</h2>
             <Link href="/dashboard/conversations" className="text-xs text-brand-600 hover:underline">
-              Voir tout
+              {t("dashboard.overview.seeAll")}
             </Link>
           </div>
           {recentConversations.length === 0 ? (
-            <p className="mt-2 text-sm text-slate-500">Aucune conversation pour le moment.</p>
+            <p className="mt-2 text-sm text-slate-500">{t("dashboard.overview.noConversations")}</p>
           ) : (
             <ul className="mt-2 divide-y divide-slate-100">
               {recentConversations.map((c) => (
@@ -224,12 +248,14 @@ export default function DashboardPage() {
                     className="flex items-center justify-between py-2 hover:bg-slate-50"
                   >
                     <div>
-                      <p className="text-sm font-medium">{c.sites?.name ?? "Site"}</p>
+                      <p className="text-sm font-medium">
+                        {c.sites?.name ?? t("dashboard.overview.siteFallback")}
+                      </p>
                       <p className="text-xs text-slate-500">{formatDate(c.updated_at)}</p>
                     </div>
                     <div className="text-right">
                       <span className={`rounded-full px-2 py-0.5 text-xs ${statusBadge(c.status)}`}>
-                        {c.status}
+                        {statusLabel(c.status)}
                       </span>
                       <p className="mt-1 text-xs text-slate-500">{c.lead_score}/100</p>
                     </div>
@@ -242,19 +268,21 @@ export default function DashboardPage() {
 
         <div className="rounded-lg border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold">Leads récents</h2>
+            <h2 className="text-sm font-semibold">{t("dashboard.overview.recentLeads")}</h2>
             <Link href="/dashboard/leads" className="text-xs text-brand-600 hover:underline">
-              Voir tout
+              {t("dashboard.overview.seeAll")}
             </Link>
           </div>
           {recentLeads.length === 0 ? (
-            <p className="mt-2 text-sm text-slate-500">Aucun lead pour le moment.</p>
+            <p className="mt-2 text-sm text-slate-500">{t("dashboard.overview.noLeads")}</p>
           ) : (
             <ul className="mt-2 divide-y divide-slate-100">
               {recentLeads.map((l) => (
                 <li key={l.id} className="flex items-center justify-between py-2">
                   <div>
-                    <p className="text-sm font-medium">{l.name ?? "Visiteur anonyme"}</p>
+                    <p className="text-sm font-medium">
+                      {l.name ?? t("common.anonymousVisitor")}
+                    </p>
                     <p className="text-xs text-slate-500">{l.email ?? "—"}</p>
                   </div>
                   <span
@@ -271,35 +299,31 @@ export default function DashboardPage() {
 
       <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-sm font-semibold">Widget intégré sur votre site</h2>
-          <p className="text-xs text-slate-500">
-            Script collé dans le layout · hors liens trackés Facebook / Instagram
-          </p>
+          <h2 className="text-sm font-semibold">{t("dashboard.overview.embed.title")}</h2>
+          <p className="text-xs text-slate-500">{t("dashboard.overview.embed.hint")}</p>
         </div>
-        <p className="mt-0.5 text-xs text-slate-500">
-          Statistiques du chatbot affiché sur votre site web après installation du code embed.
-        </p>
+        <p className="mt-0.5 text-xs text-slate-500">{t("dashboard.overview.embed.desc")}</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-md bg-brand-50 p-3 ring-1 ring-brand-100">
-            <p className="text-xs text-brand-800">Ouvertures du chat</p>
+            <p className="text-xs text-brand-800">{t("dashboard.overview.embed.opens")}</p>
             <p className="text-2xl font-bold text-brand-900">{embedStats.opens}</p>
           </div>
           <div className="rounded-md bg-slate-50 p-3">
-            <p className="text-xs text-slate-500">Conversations démarrées</p>
+            <p className="text-xs text-slate-500">{t("dashboard.overview.embed.conversationsStarted")}</p>
             <p className="text-2xl font-bold text-slate-900">{embedStats.conversations}</p>
           </div>
           <div className="rounded-md bg-slate-50 p-3">
-            <p className="text-xs text-slate-500">Messages visiteurs</p>
+            <p className="text-xs text-slate-500">{t("dashboard.overview.embed.visitorMessages")}</p>
             <p className="text-2xl font-bold text-slate-900">{embedStats.visitor_messages}</p>
           </div>
           <div className="rounded-md bg-slate-50 p-3">
-            <p className="text-xs text-slate-500">Clics (WhatsApp, session…)</p>
+            <p className="text-xs text-slate-500">{t("dashboard.overview.embed.clicks")}</p>
             <p className="text-2xl font-bold text-slate-900">{totalEmbedClicks}</p>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
           <div className="flex flex-wrap gap-1">
-            {(Object.keys(EMBED_METRIC_LABELS) as EmbedMetricKey[]).map((key) => (
+            {EMBED_METRIC_KEYS.map((key) => (
               <button
                 key={key}
                 type="button"
@@ -310,7 +334,7 @@ export default function DashboardPage() {
                     : "rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200"
                 }
               >
-                {EMBED_METRIC_LABELS[key]}
+                {embedMetricLabel(key)}
               </button>
             ))}
           </div>
@@ -324,7 +348,7 @@ export default function DashboardPage() {
                   : "px-3 py-1 text-xs font-medium text-slate-600"
               }
             >
-              30 jours
+              {t("dashboard.overview.embed.period30Days")}
             </button>
             <button
               type="button"
@@ -335,19 +359,19 @@ export default function DashboardPage() {
                   : "px-3 py-1 text-xs font-medium text-slate-600"
               }
             >
-              12 mois
+              {t("dashboard.overview.embed.period12Months")}
             </button>
           </div>
         </div>
         <p className="mt-2 text-xs text-slate-500">
-          Total sur la période :{" "}
+          {t("dashboard.overview.embed.totalPeriod")}{" "}
           <span className="font-semibold text-slate-800">{embedChartTotal}</span>{" "}
-          {EMBED_METRIC_LABELS[embedMetric].toLowerCase()}
+          {embedMetricLabel(embedMetric).toLowerCase()}
         </p>
         <EmbedStatsChart
           points={embedChartPoints}
           metric={embedMetric}
-          metricLabel={`${EMBED_METRIC_LABELS[embedMetric]} — ${embedPeriod === "day" ? "par jour" : "par mois"}`}
+          metricLabel={`${embedMetricLabel(embedMetric)} — ${embedPeriod === "day" ? t("dashboard.overview.embed.perDay") : t("dashboard.overview.embed.perMonth")}`}
         />
         {embedClickCards.some((c) => c.count > 0) && (
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -363,7 +387,7 @@ export default function DashboardPage() {
         )}
         {embedSites.length > 1 && (
           <div className="mt-4 border-t border-slate-100 pt-3">
-            <p className="text-xs font-medium text-slate-600">Par site</p>
+            <p className="text-xs font-medium text-slate-600">{t("dashboard.overview.embed.bySite")}</p>
             <ul className="mt-2 space-y-2">
               {embedSites.map((site) => (
                 <li
@@ -375,9 +399,17 @@ export default function DashboardPage() {
                     <p className="text-xs text-slate-500">{site.site_url}</p>
                   </div>
                   <div className="flex flex-wrap gap-3 text-xs text-slate-600">
-                    <span>{site.opens} ouverture{site.opens !== 1 ? "s" : ""}</span>
-                    <span>{site.conversations} conv.</span>
-                    <span>{site.visitor_messages} msg.</span>
+                    <span>
+                      {site.opens === 1
+                        ? t("dashboard.overview.embed.openCount", { count: site.opens })
+                        : t("dashboard.overview.embed.openCountPlural", { count: site.opens })}
+                    </span>
+                    <span>
+                      {site.conversations} {t("dashboard.overview.embed.convAbbr")}
+                    </span>
+                    <span>
+                      {site.visitor_messages} {t("dashboard.overview.embed.msgAbbr")}
+                    </span>
                   </div>
                 </li>
               ))}
@@ -387,32 +419,20 @@ export default function DashboardPage() {
         {embedStats.opens === 0 &&
           embedStats.conversations === 0 &&
           totalEmbedClicks === 0 && (
-            <p className="mt-3 text-sm text-slate-500">
-              Aucune activité embed pour le moment. Vérifiez que le script widget est bien installé
-              sur votre site (voir section « Déploiement rapide » ci-dessous).
-            </p>
+            <p className="mt-3 text-sm text-slate-500">{t("dashboard.overview.embed.noActivity")}</p>
           )}
       </div>
 
       <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-sm font-semibold">Performance des liens trackés</h2>
+          <h2 className="text-sm font-semibold">{t("dashboard.overview.trackedLinks.title")}</h2>
           <Link href="/dashboard/links" className="text-xs text-brand-600 hover:underline">
-            Gérer les liens
+            {t("dashboard.overview.trackedLinks.manage")}
           </Link>
         </div>
-        <p className="mt-0.5 text-xs text-slate-500">
-          Pour chaque lien créé (Facebook, Instagram…), voyez qui a ouvert le chat et où ils ont
-          cliqué (WhatsApp, session, inscription…).
-        </p>
+        <p className="mt-0.5 text-xs text-slate-500">{t("dashboard.overview.trackedLinks.desc")}</p>
         {trackedLinks.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">
-            Aucun lien tracké. Créez un lien Facebook ou Instagram dans{" "}
-            <Link href="/dashboard/links" className="text-brand-600 hover:underline">
-              Liens trackés
-            </Link>{" "}
-            puis partagez l&apos;URL sur vos réseaux.
-          </p>
+          <p className="mt-2 text-sm text-slate-500">{t("dashboard.overview.trackedLinks.empty")}</p>
         ) : (
           <div className="mt-2 space-y-2">
             {trackedLinks.map((link) => (
@@ -429,10 +449,18 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-right text-sm">
                     <p className="font-bold text-slate-900">
-                      {link.click_count} visite{link.click_count !== 1 ? "s" : ""}
+                      {link.click_count === 1
+                        ? t("dashboard.overview.trackedLinks.visit", { count: link.click_count })
+                        : t("dashboard.overview.trackedLinks.visitPlural", { count: link.click_count })}
                     </p>
                     <p className="text-brand-600">
-                      {link.interaction_total} interaction{link.interaction_total !== 1 ? "s" : ""}
+                      {link.interaction_total === 1
+                        ? t("dashboard.overview.trackedLinks.interaction", {
+                            count: link.interaction_total,
+                          })
+                        : t("dashboard.overview.trackedLinks.interactionPlural", {
+                            count: link.interaction_total,
+                          })}
                     </p>
                   </div>
                 </div>
@@ -449,7 +477,7 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   <p className="mt-2 text-xs text-slate-400">
-                    Pas encore d&apos;interaction (WhatsApp, session, etc.) sur ce lien.
+                    {t("dashboard.overview.trackedLinks.noInteraction")}
                   </p>
                 )}
                 {link.countries.length > 0 && (
@@ -472,22 +500,18 @@ export default function DashboardPage() {
 
       <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-sm font-semibold">Répartition par pays</h2>
+          <h2 className="text-sm font-semibold">{t("dashboard.overview.country.title")}</h2>
           {totalCountryVisitors > 0 && (
             <p className="text-xs text-slate-500">
-              {totalCountryVisitors} visiteur{totalCountryVisitors !== 1 ? "s" : ""} qualifié
-              {totalCountryVisitors !== 1 ? "s" : ""}
+              {totalCountryVisitors === 1
+                ? t("dashboard.overview.country.visitor", { count: totalCountryVisitors })
+                : t("dashboard.overview.country.visitorPlural", { count: totalCountryVisitors })}
             </p>
           )}
         </div>
-        <p className="mt-0.5 text-xs text-slate-500">
-          Pays détectés à l&apos;ouverture du lien tracké ou lors de la qualification dans le chat.
-        </p>
+        <p className="mt-0.5 text-xs text-slate-500">{t("dashboard.overview.country.desc")}</p>
         {countryStats.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">
-            Aucune donnée pays pour le moment. Les pays apparaissent quand l&apos;assistant qualifie
-            un visiteur (question sur le pays d&apos;origine).
-          </p>
+          <p className="mt-2 text-sm text-slate-500">{t("dashboard.overview.country.empty")}</p>
         ) : (
           <ul className="mt-2 space-y-2">
             {countryStats.map((row) => (
@@ -512,11 +536,10 @@ export default function DashboardPage() {
 
       {firstSite && (
         <div className="mt-4 rounded-lg bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold">Déploiement rapide — {firstSite.name}</h2>
-          <p className="mt-1 text-xs text-slate-600">
-            Collez ce script avant la balise{" "}
-            <code className="rounded bg-slate-100 px-1">&lt;/body&gt;</code> de votre site :
-          </p>
+          <h2 className="text-sm font-semibold">
+            {t("dashboard.overview.quickDeploy.title", { name: firstSite.name })}
+          </h2>
+          <p className="mt-1 text-xs text-slate-600">{t("dashboard.overview.quickDeploy.hint")}</p>
           <pre className="mt-2 overflow-x-auto rounded-md bg-slate-900 p-3 text-xs text-green-400">
             {widgetScript(firstSite.widget_key)}
           </pre>
@@ -524,7 +547,7 @@ export default function DashboardPage() {
             onClick={copyEmbed}
             className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
           >
-            {copied ? "Copié !" : "Copier le script"}
+            {copied ? t("common.copied") : t("dashboard.overview.copyScript")}
           </button>
         </div>
       )}

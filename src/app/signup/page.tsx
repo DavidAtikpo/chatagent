@@ -3,6 +3,7 @@
 import { getAppBaseUrl } from "@/lib/app-url";
 import { BrandLogo } from "@/components/brand-logo";
 import { LOGO_SIZE } from "@/lib/branding";
+import { useT } from "@/i18n/context";
 import { setupAccount } from "@/lib/setup-account";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -11,6 +12,7 @@ import { useState } from "react";
 
 export default function SignupPage() {
   const router = useRouter();
+  const t = useT();
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -55,7 +57,7 @@ export default function SignupPage() {
       router.push("/dashboard");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur lors de la création du compte");
+      setError(err instanceof Error ? err.message : t("auth.signup.setupError"));
       setLoading(false);
     }
   }
@@ -67,12 +69,12 @@ export default function SignupPage() {
           <div className="flex justify-center">
             <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
           </div>
-          <h1 className="mt-6 text-2xl font-bold">Vérifiez votre email</h1>
+          <h1 className="mt-6 text-2xl font-bold">{t("auth.signup.emailConfirmTitle")}</h1>
           <p className="mt-3 text-sm text-slate-600">
-            Un lien de confirmation a été envoyé à <strong>{email}</strong>.
+            {t("auth.signup.emailConfirmBody", { email })}
           </p>
           <Link href="/login" className="mt-6 inline-block text-sm text-brand-600 hover:underline">
-            Aller à la connexion
+            {t("auth.signup.goToLogin")}
           </Link>
         </div>
       </div>
@@ -85,10 +87,8 @@ export default function SignupPage() {
         <div className="flex justify-center">
           <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
         </div>
-        <h1 className="mt-6 text-center text-2xl font-bold">Créer votre agent IA</h1>
-        <p className="mt-2 text-sm text-slate-600">
-          Entrez l&apos;URL de votre site. L&apos;analyse démarre automatiquement.
-        </p>
+        <h1 className="mt-6 text-center text-2xl font-bold">{t("auth.signup.title")}</h1>
+        <p className="mt-2 text-sm text-slate-600">{t("auth.signup.subtitle")}</p>
 
         {error && (
           <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
@@ -96,7 +96,9 @@ export default function SignupPage() {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700">Nom de l&apos;entreprise</label>
+            <label className="block text-sm font-medium text-slate-700">
+              {t("auth.signup.companyName")}
+            </label>
             <input
               type="text"
               value={name}
@@ -106,7 +108,9 @@ export default function SignupPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">URL du site</label>
+            <label className="block text-sm font-medium text-slate-700">
+              {t("auth.signup.siteUrl")}
+            </label>
             <input
               type="url"
               value={url}
@@ -117,7 +121,7 @@ export default function SignupPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Email</label>
+            <label className="block text-sm font-medium text-slate-700">{t("common.email")}</label>
             <input
               type="email"
               value={email}
@@ -127,7 +131,7 @@ export default function SignupPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Mot de passe</label>
+            <label className="block text-sm font-medium text-slate-700">{t("common.password")}</label>
             <input
               type="password"
               value={password}
@@ -142,14 +146,14 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full rounded-lg bg-brand-600 py-3 font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
           >
-            {loading ? "Création en cours..." : "Lancer mon agent"}
+            {loading ? t("auth.signup.submitting") : t("auth.signup.submit")}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-500">
-          Déjà inscrit ?{" "}
+          {t("auth.signup.hasAccount")}{" "}
           <Link href="/login" className="text-brand-600 hover:underline">
-            Se connecter
+            {t("auth.signup.loginLink")}
           </Link>
         </p>
       </div>

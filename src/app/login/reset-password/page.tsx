@@ -1,6 +1,7 @@
 "use client";
 
 import { BrandLogo } from "@/components/brand-logo";
+import { useT } from "@/i18n/context";
 import { LOGO_SIZE } from "@/lib/branding";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -9,6 +10,7 @@ import { useEffect, useState } from "react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const t = useT();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,11 +44,11 @@ export default function ResetPasswordPage() {
     setError(null);
 
     if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
+      setError(t("auth.resetPassword.passwordMin"));
       return;
     }
     if (password !== confirm) {
-      setError("Les mots de passe ne correspondent pas.");
+      setError(t("auth.resetPassword.passwordMismatch"));
       return;
     }
 
@@ -79,31 +81,31 @@ export default function ResetPasswordPage() {
             className="flex-col gap-2"
           />
         </div>
-        <h1 className="mt-6 text-center text-2xl font-bold">Nouveau mot de passe</h1>
+        <h1 className="mt-6 text-center text-2xl font-bold">{t("auth.resetPassword.title")}</h1>
 
         {checkingSession ? (
-          <p className="mt-6 text-center text-sm text-slate-500">Vérification du lien...</p>
+          <p className="mt-6 text-center text-sm text-slate-500">{t("auth.resetPassword.checking")}</p>
         ) : !hasSession ? (
           <div className="mt-6 space-y-4">
             <div className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
-              Lien invalide ou expiré. Demandez un nouveau lien de réinitialisation.
+              {t("auth.resetPassword.invalidLink")}
             </div>
             <Link
               href="/login/forgot-password"
               className="block w-full rounded-lg bg-brand-600 py-3 text-center font-semibold text-white hover:bg-brand-700"
             >
-              Mot de passe oublié
+              {t("auth.resetPassword.forgotLink")}
             </Link>
             <Link
               href="/login"
               className="block text-center text-sm text-brand-600 hover:underline"
             >
-              Retour à la connexion
+              {t("auth.forgotPassword.backToLogin")}
             </Link>
           </div>
         ) : done ? (
           <div className="mt-6 rounded-lg bg-green-50 px-4 py-3 text-center text-sm text-green-800">
-            Mot de passe mis à jour. Redirection vers le dashboard...
+            {t("auth.resetPassword.success")}
           </div>
         ) : (
           <>
@@ -113,7 +115,7 @@ export default function ResetPasswordPage() {
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700">
-                  Nouveau mot de passe
+                  {t("auth.resetPassword.newPassword")}
                 </label>
                 <input
                   type="password"
@@ -127,7 +129,7 @@ export default function ResetPasswordPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700">
-                  Confirmer le mot de passe
+                  {t("auth.resetPassword.confirmPassword")}
                 </label>
                 <input
                   type="password"
@@ -144,7 +146,7 @@ export default function ResetPasswordPage() {
                 disabled={loading}
                 className="w-full rounded-lg bg-brand-600 py-3 font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
               >
-                {loading ? "Enregistrement..." : "Enregistrer"}
+                {loading ? t("auth.resetPassword.submitting") : t("auth.resetPassword.submit")}
               </button>
             </form>
           </>

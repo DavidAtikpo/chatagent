@@ -21,7 +21,7 @@
     "no": "Não",
     "error": "Erro",
     "unexpectedError": "Erro inesperado",
-    "email": "Email",
+    "email": "E-mail",
     "password": "Senha",
     "name": "Nome",
     "url": "URL",
@@ -42,7 +42,7 @@
     "useCases": "Casos de uso",
     "pricing": "Preços",
     "integration": "Integração",
-    "faq": "FAQ",
+    "faq": "Perguntas frequentes",
     "login": "Entrar",
     "signup": "Cadastrar",
     "freeTrial": "Teste grátis",
@@ -58,9 +58,9 @@
     "nav": {
       "overview": "Visão geral",
       "conversations": "Conversas",
-      "leads": "Leads",
+      "leads": "Pistas",
       "advisors": "Consultores",
-      "sites": "Sites",
+      "sites": "Locais",
       "trackedLinks": "Links rastreados",
       "settings": "Configurações"
     },
@@ -73,7 +73,7 @@
       "kpiConversion": "Taxa de conversão",
       "hintAllScores": "Todas as pontuações",
       "hintOutOf100": "De 100",
-      "hintLeadsPerConv": "Leads / conv.",
+      "hintLeadsPerConv": "Leads/conv.",
       "recentConversations": "Conversas recentes",
       "recentLeads": "Leads recentes",
       "seeAll": "Ver tudo",
@@ -83,10 +83,59 @@
       "copyScript": "Copiar o script",
       "periodDay": "Dia",
       "periodMonth": "Mês",
-      "noData": "Nenhum dado por enquanto."
+      "noData": "Nenhum dado por enquanto.",
+      "plan": "Mapa {plan}",
+      "manageSites": "Gerenciar sites",
+      "noConversations": "Nenhuma conversa ainda.",
+      "noLeads": "Nenhuma pista ainda.",
+      "siteFallback": "Site",
+      "notConfiguredTitle": "Conta não configurada",
+      "notConfiguredBody": "Sua organização ainda não foi criada. Entre em contato com o suporte ou registre-se novamente.",
+      "embed": {
+        "title": "Widget integrado ao seu site",
+        "hint": "Script colado no layout · excluindo links rastreados do Facebook/Instagram",
+        "desc": "Estatísticas do chatbot exibidas em seu site após a instalação do código incorporado.",
+        "opens": "Aberturas de bate-papo",
+        "conversationsStarted": "Conversas iniciadas",
+        "visitorMessages": "Mensagens dos visitantes",
+        "clicks": "Cliques (WhatsApp, sessão, etc.)",
+        "period30Days": "30 dias",
+        "period12Months": "12 meses",
+        "totalPeriod": "Total no período:",
+        "perDay": "por dia",
+        "perMonth": "por mês",
+        "bySite": "Por site",
+        "openCount": "{count} abertura",
+        "openCountPlural": "{count} aberturas",
+        "convAbbr": "conv.",
+        "msgAbbr": "mensagem.",
+        "noActivity": "Nenhuma atividade de incorporação no momento. Verifique se o script do widget está instalado em seu site (consulte a seção “Implantação rápida” abaixo)."
+      },
+      "trackedLinks": {
+        "title": "Desempenho de links rastreados",
+        "manage": "Gerenciar links",
+        "desc": "Para cada link criado (Facebook, Instagram, etc.), veja quem abriu o chat e onde clicou (WhatsApp, sessão, cadastro, etc.).",
+        "empty": "Nenhum link rastreado. Crie um link do Facebook ou Instagram em Tracked Links e compartilhe a URL em suas redes.",
+        "visit": "{count} visite",
+        "visitPlural": "{count} visitas",
+        "interaction": "interação {count}",
+        "interactionPlural": "{count} interações",
+        "noInteraction": "Ainda não há interação (WhatsApp, sessão, etc.) neste link."
+      },
+      "country": {
+        "title": "Distribuição por país",
+        "visitor": "{count} visitante qualificado",
+        "visitorPlural": "{count} visitantes qualificados",
+        "desc": "Países detectados ao abrir o link rastreado ou ao se qualificar no chat.",
+        "empty": "Não há dados do país no momento. Os países aparecem quando o assistente qualifica um visitante (pergunta sobre país de origem)."
+      },
+      "quickDeploy": {
+        "title": "Implantação rápida — {name}",
+        "hint": "Cole este script antes da tag </body> do seu site:"
+      }
     },
     "sites": {
-      "title": "Sites",
+      "title": "Locais",
       "subtitle": "Seus sites e chaves de widget para integração.",
       "addSite": "+ Adicionar um site",
       "cancelAdd": "Cancelar",
@@ -97,10 +146,10 @@
       "createAndCrawl": "Criar e iniciar o crawl",
       "creating": "Criando...",
       "noSites": "Nenhum site. Clique em « + Adicionar um site » para começar.",
-      "crawlStatus": "Crawl",
+      "crawlStatus": "Arrastar",
       "importFormations": "Importar formações",
       "importing": "Importando…",
-      "recrawl": "Re-crawler",
+      "recrawl": "Rastrear novamente",
       "recrawling": "Reiniciando...",
       "activate": "Ativar",
       "deactivate": "Desativar",
@@ -114,13 +163,20 @@
       "crawlCause": "Causa",
       "crawlApiCheck": "Verifique se a API Render responde:",
       "crawlFreePlanHint": "Plano Free: a primeira chamada pode levar ~1 min (inicialização).",
-      "reload": "Recarregar"
+      "reload": "Recarregar",
+      "createFailed": "Não foi possível criar o site",
+      "crawlNotStarted": "O rastreamento não foi iniciado – verifique a API (NEXT_PUBLIC_API_URL)",
+      "crawlFailedShort": "Rastreamento não iniciado",
+      "formationsFailed": "Falha na indexação do treinamento",
+      "sessionsFailed": "Falha na importação de sessões",
+      "deleteFailed": "Não foi possível excluir o site",
+      "crawlPrefix": "Arrastar:"
     },
     "links": {
       "title": "Links rastreados",
       "subtitle": "Crie links por campanha (Facebook, Instagram…) e acompanhe as visitas.",
       "newLink": "Novo link",
-      "slug": "Slug",
+      "slug": "Lesma",
       "source": "Fonte",
       "campaignName": "Nome da campanha",
       "campaignPlaceholder": "Campanha verão 2026",
@@ -132,24 +188,51 @@
       "copyUrl": "Copiar URL",
       "deleteConfirm": "Excluir este link rastreado?",
       "noLinks": "Nenhum link rastreado.",
+      "subtitleExtended": "Crie links para suas campanhas do Facebook, Instagram, Google Ads, etc. Adicione uma imagem de visualização visível quando o link for compartilhado (WhatsApp, Facebook, etc.).",
+      "siteLabel": "Site",
+      "slugHint": "Slug (por exemplo: anúncios do Facebook)",
+      "labelOptional": "Etiqueta (opcional)",
+      "previewImage": "Imagem de visualização do Slug (recomendado 1200×630)",
+      "previewAlt": "Visualização",
+      "previewHint": "Esta imagem é exibida no WhatsApp, Facebook e Messenger quando você compartilha o link /c/{slug}.",
+      "noSiteYet": "Primeiro adicione um site no Sites para criar links rastreados.",
+      "loadFailed": "Não foi possível carregar links",
+      "createFailed": "Não foi possível criar o link",
+      "imageFailed": "Não foi possível enviar a imagem",
+      "imageUpdateFailed": "Não foi possível atualizar a imagem",
+      "deleteFailed": "Não foi possível excluir",
+      "emptyTable": "Nenhum link rastreado. Crie um acima para obter seu URL do Facebook.",
+      "colImage": "Foto",
+      "colLabel": "Etiqueta / Slug",
+      "colUrl": "URL",
+      "colCreated": "Criado",
+      "noImage": "Nenhum",
+      "changeImage": "Para mudar",
+      "addImage": "Adicionar",
+      "deleteShort": "Excluir",
       "sources": {
         "facebook": "Facebook",
         "instagram": "Instagram",
-        "google_ads": "Google Ads",
+        "google_ads": "Anúncios do Google",
         "whatsapp": "WhatsApp",
-        "qr_code": "QR Code",
+        "qr_code": "Código QR",
         "direct_link": "Link direto",
         "other": "Outro"
       }
     },
     "leads": {
-      "title": "Leads",
+      "title": "Pistas",
       "subtitle": "Prospects qualificados pelo agente.",
       "score": "Pontuação",
       "contact": "Contato",
       "country": "País",
       "date": "Data",
-      "noLeads": "Nenhum lead por enquanto."
+      "noLeads": "Nenhum lead por enquanto.",
+      "subtitleExtended": "Visitantes qualificados pelo chatbot (pontuação, contato, país) · {count} qualificados{plural} (≥ 60)",
+      "filterAll": "Todos",
+      "site": "Site",
+      "seeConv": "Consulte conv.",
+      "emptyHint": "Nenhuma pista ainda. Um lead é criado quando um visitante é bem qualificado pelo assistente (pontuação ≥ 60)."
     },
     "conversations": {
       "title": "Conversas",
@@ -161,7 +244,12 @@
       "statusClosed": "Encerradas",
       "notFound": "Conversa não encontrada.",
       "advisor": "Consultor",
-      "visitor": "Visitante"
+      "visitor": "Visitante",
+      "subtitleRealtime": "Todas as conversas em tempo real.",
+      "status": "Status",
+      "page": "Página",
+      "lastActivity": "Última atividade",
+      "empty": "Nenhuma conversa ainda."
     },
     "advisors": {
       "title": "Consultores",
@@ -170,13 +258,37 @@
       "displayName": "Nome exibido",
       "namePlaceholder": "Maria Silva",
       "roleOwner": "Proprietário",
-      "roleAdmin": "Admin",
+      "roleAdmin": "Administrador",
       "roleAgent": "Consultor",
       "available": "Disponível",
       "unavailable": "Indisponível",
       "inviteSent": "Convite enviado por email — o consultor poderá se conectar ao app mobile.",
       "siteUpdated": "Site do consultor atualizado.",
-      "advisorAdded": "Consultor adicionado."
+      "advisorAdded": "Consultor adicionado.",
+      "subtitleExtended": "Convide quantos consultores forem necessários para o mesmo site – eles recebem todas as transferências e o primeiro disponível assume a conversa.",
+      "howItWorks": "Como funciona",
+      "step1": "Crie um site por página/marca (Painel → Sites)",
+      "step2": "Instale o widget ou compartilhe um link rastreado (Painel → Links)",
+      "step3": "Convide um ou mais consultores para o mesmo site",
+      "step4": "Cada consultor se conecta ao aplicativo móvel – todos recebem a notificação, o primeiro a responder leva o visitante",
+      "inviteTitle": "Convide um consultor",
+      "assignedSite": "Site atribuído",
+      "createSiteFirst": "Primeiro crie um site",
+      "advisorCount": "{count} consultor",
+      "advisorCountPlural": "conselheiros {count}",
+      "displayNameOptional": "Nome de exibição (opcional)",
+      "invite": "Convidar",
+      "inviting": "Enviando…",
+      "team": "Equipe ({count})",
+      "noAdvisors": "Ainda não há conselheiros.",
+      "ownerAdmin": "Proprietário/administrador",
+      "allSites": "Todos os sites",
+      "siteLabel": "Site: {name}",
+      "remove": "Retirar",
+      "removeConfirm": "Remover {name}?",
+      "loadFailed": "Não foi possível carregar",
+      "addFailed": "Não foi possível adicionar",
+      "removeFailed": "Não foi possível excluir"
     },
     "settings": {
       "title": "Configurações",
@@ -192,7 +304,7 @@
       "primaryColor": "Cor principal",
       "headerTitleColor": "Cor do título",
       "headerFont": "Fonte do título",
-      "logo": "Logo",
+      "logo": "Logotipo",
       "chooseImage": "Escolher uma imagem",
       "uploading": "Enviando…",
       "logoUrlPlaceholder": "Ou URL do logo (https://…)",
@@ -220,11 +332,79 @@
       },
       "fonts": {
         "system": "Sistema (padrão)",
-        "georgia": "Georgia — serif",
+        "georgia": "Geórgia - serifa",
         "arial": "Arial",
         "trebuchet": "Trebuchet MS",
         "verdana": "Verdana",
-        "courier": "Courier — monospace"
+        "courier": "Correio – minivan"
+      },
+      "account": "Conta",
+      "orgNameHint": "Mostrado no painel e na visualização do chat abaixo.",
+      "noSitesTitle": "Nenhum site configurado",
+      "noSitesBody": "Primeiro adicione um site no Sites para configurar o agente, os contatos e a aparência do chat.",
+      "quickContacts": "Contatos rápidos",
+      "planPro": "Plano Profissional",
+      "quickContactsHint": "Botões WhatsApp, Chamada e E-mail na parte inferior do chat (ícones clicáveis).",
+      "proOnlyHint": "Reservado para o Plano Pro. Atualize para Pro para ativar WhatsApp, chamadas e e-mail no widget.",
+      "siteToConfigure": "Site para configurar",
+      "phoneCall": "Telefone (chamada)",
+      "widgetAppearance": "Aparência do bate-papo (widget)",
+      "widgetAppearanceHint": "Logotipo, cores e fonte exibidos no cabeçalho do chat do seu site.",
+      "companyLogo": "Logotipo da empresa",
+      "headerBgColor": "Cor de fundo do cabeçalho",
+      "headerNameColor": "Cor do nome da empresa",
+      "headerFontLabel": "Fonte do cabeçalho",
+      "agentIa": "Agente de IA"
+    },
+    "labels": {
+      "sources": {
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "google_ads": "Anúncios do Google",
+        "whatsapp": "WhatsApp",
+        "qr_code": "Código QR",
+        "direct_link": "Link direto",
+        "widget": "Site",
+        "other": "Outro"
+      },
+      "widgetClicks": {
+        "open": "Aberturas de bate-papo",
+        "whatsapp": "WhatsApp",
+        "phone": "Chamar",
+        "email": "E-mail",
+        "signup": "Cadastre-se",
+        "session": "Sessões (inscrição)",
+        "link": "Links do assistente"
+      },
+      "statuses": {
+        "active": "Ativo",
+        "qualified": "Qualificado",
+        "handed_off": "Transferido",
+        "closed": "Fechado",
+        "pending": "Em espera",
+        "running": "Em andamento",
+        "completed": "Finalizado",
+        "failed": "Falha"
+      },
+      "crawlErrors": {
+        "cloudflare": "Cloudflare/anti-bot",
+        "anti_bot": "Antibot/captcha",
+        "robots_txt": "robôs.txt",
+        "http_forbidden": "Acesso negado (403)",
+        "http_error": "Erro HTTP",
+        "timeout": "Prazo excedido",
+        "network": "Erro de rede",
+        "js_render": "JavaScript necessário",
+        "empty_content": "Conteúdo vazio",
+        "playwright_unavailable": "Dramaturgo indisponível",
+        "wrong_url": "URL incorreto",
+        "unknown": "Erro desconhecido"
+      },
+      "embedMetrics": {
+        "conversations": "Conversas",
+        "visitor_messages": "Mensagens dos visitantes",
+        "opens": "Aberturas de bate-papo",
+        "clicks": "Cliques (WhatsApp, sessão, etc.)"
       }
     }
   },
@@ -240,6 +420,7 @@
     },
     "signup": {
       "title": "Criar uma conta",
+      "subtitle": "Insira o URL do seu site. A análise inicia automaticamente.",
       "companyName": "Nome da empresa",
       "siteUrl": "URL do seu site",
       "submit": "Criar minha conta",
@@ -248,18 +429,31 @@
       "loginLink": "Entrar",
       "emailConfirmTitle": "Verifique o seu e-mail",
       "emailConfirmBody": "Um link de confirmação foi enviado. Clique nele para ativar a sua conta.",
+      "goToLogin": "Ir para login",
       "setupError": "Erro ao criar a conta"
     },
     "forgotPassword": {
       "title": "Esqueceu a senha",
       "subtitle": "Insira o seu e-mail para receber um link de redefinição.",
       "submit": "Enviar o link",
-      "backToLogin": "Voltar ao login"
+      "submitting": "Enviando...",
+      "backToLogin": "Voltar ao login",
+      "sendFailed": "Não foi possível enviar e-mail. Tente novamente mais tarde.",
+      "sentBody": "Se existir uma conta para {email}, um email acabou de ser enviado. Verifique também seu spam.",
+      "gmailHint": "Gmail: consulte também a aba Promoções e pesquise por “Supabase” ou “Redefinir senha”. Os e-mails de autenticação da Supabase às vezes são filtrados pelo Gmail."
     },
     "resetPassword": {
       "title": "Nova senha",
       "submit": "Atualizar",
-      "passwordMismatch": "As senhas não coincidem."
+      "submitting": "Registro...",
+      "passwordMismatch": "As senhas não coincidem.",
+      "passwordMin": "A senha deve conter pelo menos 8 caracteres.",
+      "checking": "Verificando o link...",
+      "invalidLink": "Link inválido ou expirado. Solicite um novo link de redefinição.",
+      "forgotLink": "Esqueci a senha",
+      "success": "Senha atualizada. Redirecionamento para o painel...",
+      "newPassword": "Nova Senha",
+      "confirmPassword": "Confirme sua senha"
     }
   },
   "home": {
@@ -275,7 +469,7 @@
       "goLive": "Publicação online",
       "availability": "Disponibilidade",
       "widgetLight": "Widget leve",
-      "leadScore": "Score lead"
+      "leadScore": "Pontuação de leads"
     },
     "preview": {
       "title": "Um assistente que conhece",
@@ -291,6 +485,55 @@
     "howItWorks": {
       "title": "Como funciona",
       "subtitle": "Da inscrição ao primeiro lead qualificado — acompanhe o percurso em direto."
+    },
+    "demo": {
+      "chatPreview": {
+        "assistantTitle": "Assistente {saasName}",
+        "online": "On-line",
+        "welcome": "Bom dia ! Sou assistente da sua empresa. Em qual treinamento você está interessado?",
+        "userMessage": "Técnico de acesso por corda da IRATA no Togo, próxima sessão?",
+        "replyIntro": "Aqui estão as próximas sessões:",
+        "sessionCta": "Março de 2026 – Inscrição",
+        "footer": "Demonstração ao vivo – assim como no seu site"
+      },
+      "signupFlow": {
+        "steps": [
+          {
+            "title": "Conecte seu site",
+            "desc": "Cadastro + rastreamento automático de suas páginas."
+          },
+          {
+            "title": "Implante em qualquer lugar",
+            "desc": "Widget pronto para colar no seu site."
+          },
+          {
+            "title": "Converter",
+            "desc": "Primeiro lead qualificado no painel."
+          }
+        ],
+        "demoName": "Meu Centro de Treinamento",
+        "phases": {
+          "creatingAccount": "Criação de conta",
+          "configuringAgent": "Configuração do agente",
+          "deploying": "Implantação",
+          "dashboard": "Painel",
+          "demoTitle": "Demonstração {saasName}"
+        },
+        "live": "Ao vivo",
+        "signup": "Cadastro",
+        "submitting": "Criação em andamento…",
+        "submit": "Criar meu agente de IA",
+        "crawlPages": "Lendo páginas",
+        "crawlEmbedding": "Análise Semântica (IA)",
+        "pageProgress": "Página {current}/{total} analisada",
+        "indexing": "Indexação de conhecimento para chat…",
+        "agentReady": "Agente pronto – widget gerado",
+        "scriptHint": "Script para colar no seu site",
+        "newLead": "Novo lead qualificado",
+        "leadDetail": "Togo · Treinamento em corda · Orçamento OK",
+        "leadScore": "Pontuação 80/100 — notificação enviada",
+        "footer": "Rota real após o registro — aproximadamente 5 minutos"
+      }
     },
     "features": {
       "title": "Funcionalidades principais",
@@ -344,7 +587,7 @@
       "subtitle": "KPIs, conversas, leads, distribuição por país, desempenho dos links rastreados e interações widget — tudo num só lugar.",
       "tags": [
         "Conversas em direto",
-        "Score lead 0–100",
+        "Pontuação de lead 0–100",
         "Estatísticas por país",
         "Cliques WhatsApp / sessão",
         "Links Facebook & Instagram",
@@ -359,22 +602,22 @@
       "choosePlan": "Escolher {plan}",
       "plans": [
         {
-          "name": "Starter",
+          "name": "Iniciante",
           "price": "29",
           "features": [
-            "1 site",
+            "1 local",
             "500 conversas/mês",
-            "Widget embed",
+            "Incorporar widget",
             "Scoring de leads",
-            "Dashboard KPIs"
+            "KPIs do painel"
           ]
         },
         {
-          "name": "Pro",
+          "name": "Pró",
           "price": "79",
           "popular": true,
           "features": [
-            "5 sites",
+            "5 locais",
             "Conversas ilimitadas",
             "Links rastreados + imagem de pré-visualização",
             "WhatsApp, chamada & email",
@@ -383,7 +626,7 @@
           ]
         },
         {
-          "name": "Agency",
+          "name": "Agência",
           "price": "199",
           "features": [
             "Sites ilimitados",
@@ -432,8 +675,10 @@
     "unavailable": "Chat indisponível",
     "missingKey": "Link incompleto: falta a chave do widget (?key=...). Copie o URL em Dashboard → Links rastreados → Copiar.",
     "widgetMissing": "Arquivo widget.js não encontrado neste site",
+    "loadError": "Erro ao carregar",
     "apiCheck": "Verifique se a API Render está respondendo:",
-    "freePlanHint": "Plano Free: a primeira chamada pode levar ~1 min (inicialização)."
+    "freePlanHint": "Plano Free: a primeira chamada pode levar ~1 min (inicialização).",
+    "reload": "Recarregar"
   },
   "integration": {
     "title": "Integração",
@@ -449,6 +694,9 @@
   "setupOrg": {
     "title": "Configurar sua organização",
     "subtitle": "Último passo para acessar o dashboard.",
-    "submit": "Continuar"
+    "submit": "Continuar",
+    "submitting": "Criação em andamento...",
+    "sessionExpired": "A sessão expirou – faça login novamente.",
+    "createFailed": "Não foi possível criar a organização"
   }
 }

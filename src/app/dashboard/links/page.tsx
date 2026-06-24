@@ -2,18 +2,20 @@
 
 import { trackedLinkUrl } from "@/lib/app-url";
 import { ResponsiveTable } from "@/components/dashboard/responsive-table";
-import { formatDate, sourceLabel, widgetClickLabel, type TrackedLinkInteractionStat } from "@/lib/dashboard-data";
+import { formatDate, type TrackedLinkInteractionStat } from "@/lib/dashboard-data";
+import { useT } from "@/i18n/context";
+import { useDashboardLabels } from "@/i18n/use-dashboard-labels";
 import { useOrganization } from "@/hooks/use-organization";
 import { useEffect, useRef, useState } from "react";
 
-const SOURCES = [
-  { value: "facebook", label: "Facebook" },
-  { value: "instagram", label: "Instagram" },
-  { value: "google_ads", label: "Google Ads" },
-  { value: "whatsapp", label: "WhatsApp" },
-  { value: "qr_code", label: "QR Code" },
-  { value: "direct_link", label: "Lien direct" },
-];
+const SOURCE_VALUES = [
+  "facebook",
+  "instagram",
+  "google_ads",
+  "whatsapp",
+  "qr_code",
+  "direct_link",
+] as const;
 
 async function uploadLinkImage(linkId: string, file: File) {
   const formData = new FormData();
@@ -24,13 +26,15 @@ async function uploadLinkImage(linkId: string, file: File) {
   });
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.error ?? "Impossible d'envoyer l'image");
+    throw new Error(data.error ?? "");
   }
   return data.image_url as string;
 }
 
 export default function LinksPage() {
   const { sites, loading: orgLoading } = useOrganization();
+  const t = useT();
+  const { sourceLabel, widgetClickLabel } = useDashboardLabels();
   const [links, setLinks] = useState<TrackedLinkInteractionStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [siteId, setSiteId] = useState("");
@@ -52,13 +56,13 @@ export default function LinksPage() {
       const res = await fetch("/api/traffic-links", { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Impossible de charger les liens");
+        setError(data.error ?? t("dashboard.links.loadFailed"));
         setLinks([]);
         return;
       }
       setLinks((data.links as TrackedLinkInteractionStat[]) ?? []);
     } catch {
-      setError("Impossible de charger les liens");
+      setError(t("dashboard.links.loadFailed"));
       setLinks([]);
     } finally {
       setLoading(false);
@@ -102,7 +106,7 @@ export default function LinksPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Impossible de créer le lien");
+        setError(data.error ?? t("dashboard.links.createFailed"));
         return;
       }
 
@@ -116,7 +120,11 @@ export default function LinksPage() {
       setImageFile(null);
       await loadLinks();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Impossible de créer le lien");
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : t("dashboard.links.createFailed")
+      );
     } finally {
       setCreating(false);
     }
@@ -129,19 +137,23 @@ export default function LinksPage() {
       await uploadLinkImage(linkId, file);
       await loadLinks();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Impossible de mettre à jour l'image");
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : t("dashboard.links.imageUpdateFailed")
+      );
     } finally {
       setUploadingId(null);
     }
   }
 
   async function deleteLink(id: string) {
-    if (!confirm("Supprimer ce lien tracké ?")) return;
+    if (!confirm(t("dashboard.links.deleteConfirm"))) return;
     setError(null);
     const res = await fetch(`/api/traffic-links/${id}`, { method: "DELETE" });
     if (!res.ok) {
       const data = await res.json();
-      setError(data.error ?? "Impossible de supprimer");
+      setError(data.error ?? t("dashboard.links.deleteFailed"));
       return;
     }
     await loadLinks();
@@ -158,16 +170,13 @@ export default function LinksPage() {
   }
 
   if (orgLoading) {
-    return <p className="text-sm text-slate-500">Chargement...</p>;
+    return <p className="text-sm text-slate-500">{t("common.loading")}</p>;
   }
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-slate-900">Liens trackés</h1>
-      <p className="mt-0.5 text-sm text-slate-600">
-        Créez des liens pour vos campagnes Facebook, Instagram, Google Ads, etc. Ajoutez une image
-        d&apos;aperçu visible quand le lien est partagé (WhatsApp, Facebook…).
-      </p>
+      <h1 className="text-xl font-bold text-slate-900">{t("dashboard.links.title")}</h1>
+      <p className="mt-0.5 text-sm text-slate-600">{t("dashboard.links.subtitleExtended")}</p>
 
       {error && (
         <div className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
@@ -175,10 +184,10 @@ export default function LinksPage() {
 
       {sites.length > 0 ? (
         <form onSubmit={createLink} className="mt-3 rounded-lg border border-slate-200 bg-white p-4">
-          <h2 className="text-sm font-semibold">Nouveau lien</h2>
+          <h2 className="text-sm font-semibold">{t("dashboard.links.newLink")}</h2>
           <div className="mt-2 grid gap-2 sm:grid-cols-2">
             <div>
-              <label className="text-xs text-slate-500">Site</label>
+              <label className="text-xs text-slate-500">{t("dashboard.links.siteLabel")}</label>
               <select
                 value={siteId}
                 onChange={(e) => setSiteId(e.target.value)}
@@ -192,21 +201,21 @@ export default function LinksPage() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-500">Source</label>
+              <label className="text-xs text-slate-500">{t("dashboard.links.source")}</label>
               <select
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
               >
-                {SOURCES.map((s) => (
-                  <option key={s.value} value={s.value}>
-                    {s.label}
+                {SOURCE_VALUES.map((value) => (
+                  <option key={value} value={value}>
+                    {t(`dashboard.links.sources.${value}`)}
                   </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-500">Slug (ex: facebook-ads)</label>
+              <label className="text-xs text-slate-500">{t("dashboard.links.slugHint")}</label>
               <input
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
@@ -216,18 +225,16 @@ export default function LinksPage() {
               />
             </div>
             <div>
-              <label className="text-xs text-slate-500">Label (optionnel)</label>
+              <label className="text-xs text-slate-500">{t("dashboard.links.labelOptional")}</label>
               <input
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
-                placeholder="Campagne été 2026"
+                placeholder={t("dashboard.links.campaignPlaceholder")}
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs text-slate-500">
-                Image d&apos;aperçu du slug (recommandé 1200×630)
-              </label>
+              <label className="text-xs text-slate-500">{t("dashboard.links.previewImage")}</label>
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <input
                   type="file"
@@ -239,14 +246,13 @@ export default function LinksPage() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={imagePreview}
-                    alt="Aperçu"
+                    alt={t("dashboard.links.previewAlt")}
                     className="h-14 w-24 rounded border border-slate-200 object-cover"
                   />
                 )}
               </div>
               <p className="mt-1 text-[11px] text-slate-400">
-                Cette image s&apos;affiche dans WhatsApp, Facebook et Messenger quand vous partagez le
-                lien /c/{slug || "votre-slug"}.
+                {t("dashboard.links.previewHint", { slug: slug || "votre-slug" })}
               </p>
             </div>
           </div>
@@ -255,35 +261,31 @@ export default function LinksPage() {
             disabled={creating}
             className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
-            {creating ? "Création..." : "Créer le lien"}
+            {creating ? t("dashboard.links.creating") : t("dashboard.links.createLink")}
           </button>
         </form>
       ) : (
-        <p className="mt-3 text-sm text-slate-500">
-          Ajoutez d&apos;abord un site dans <strong>Sites</strong> pour créer des liens trackés.
-        </p>
+        <p className="mt-3 text-sm text-slate-500">{t("dashboard.links.noSiteYet")}</p>
       )}
 
       <div className="mt-3 overflow-hidden rounded-lg border border-slate-200 bg-white">
         {loading ? (
-          <p className="p-4 text-sm text-slate-500">Chargement...</p>
+          <p className="p-4 text-sm text-slate-500">{t("common.loading")}</p>
         ) : links.length === 0 ? (
-          <p className="p-4 text-sm text-slate-500">
-            Aucun lien tracké. Créez-en un ci-dessus pour obtenir votre URL Facebook.
-          </p>
+          <p className="p-4 text-sm text-slate-500">{t("dashboard.links.emptyTable")}</p>
         ) : (
           <ResponsiveTable>
             <table className="w-full text-sm">
             <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
               <tr>
-                <th className="px-3 py-2">Image</th>
-                <th className="px-3 py-2">Label / Slug</th>
-                <th className="px-3 py-2">Source</th>
-                <th className="px-3 py-2">Visites</th>
-                <th className="px-3 py-2">Pays</th>
-                <th className="px-3 py-2">Interactions</th>
-                <th className="px-3 py-2">URL</th>
-                <th className="px-3 py-2">Créé</th>
+                <th className="px-3 py-2">{t("dashboard.links.colImage")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.colLabel")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.source")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.visits")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.country")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.interactions")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.colUrl")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.colCreated")}</th>
                 <th className="px-3 py-2"></th>
               </tr>
             </thead>
@@ -301,7 +303,7 @@ export default function LinksPage() {
                         />
                       ) : (
                         <span className="flex h-10 w-16 items-center justify-center rounded border border-dashed border-slate-200 text-[10px] text-slate-400">
-                          Aucune
+                          {t("dashboard.links.noImage")}
                         </span>
                       )}
                       <input
@@ -323,7 +325,11 @@ export default function LinksPage() {
                         onClick={() => editImageRefs.current[link.id]?.click()}
                         className="text-[10px] text-brand-600 hover:underline disabled:opacity-50"
                       >
-                        {uploadingId === link.id ? "Envoi…" : link.image_url ? "Changer" : "Ajouter"}
+                        {uploadingId === link.id
+                          ? t("dashboard.settings.uploading")
+                          : link.image_url
+                          ? t("dashboard.links.changeImage")
+                          : t("dashboard.links.addImage")}
                       </button>
                     </div>
                   </td>
@@ -384,14 +390,14 @@ export default function LinksPage() {
                         onClick={() => copyUrl(link)}
                         className="text-xs text-brand-600 hover:underline"
                       >
-                        {copied === link.id ? "Copié !" : "Copier"}
+                        {copied === link.id ? t("common.copied") : t("common.copy")}
                       </button>
                       <button
                         type="button"
                         onClick={() => deleteLink(link.id)}
                         className="text-xs text-red-600 hover:underline"
                       >
-                        Suppr.
+                        {t("dashboard.links.deleteShort")}
                       </button>
                     </div>
                   </td>

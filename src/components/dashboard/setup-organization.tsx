@@ -1,10 +1,12 @@
 "use client";
 
+import { useT } from "@/i18n/context";
 import { setupAccount } from "@/lib/setup-account";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 
 export function SetupOrganizationForm({ onComplete }: { onComplete: () => void | Promise<void> }) {
+  const t = useT();
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        setError("Session expirée — reconnectez-vous.");
+        setError(t("setupOrg.sessionExpired"));
         return;
       }
 
@@ -48,7 +50,7 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
           ? String((err as { message: string }).message)
           : err instanceof Error
             ? err.message
-            : "Impossible de créer l'organisation";
+            : t("setupOrg.createFailed");
       setError(message);
     } finally {
       setLoading(false);
@@ -57,11 +59,8 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
 
   return (
     <div className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-      <h1 className="text-xl font-bold text-slate-900">Finalisez votre compte</h1>
-      <p className="mt-2 text-sm text-slate-600">
-        Votre compte existe mais l&apos;organisation n&apos;a pas encore été créée. Entrez les
-        informations de votre entreprise pour continuer.
-      </p>
+      <h1 className="text-xl font-bold text-slate-900">{t("setupOrg.title")}</h1>
+      <p className="mt-2 text-sm text-slate-600">{t("setupOrg.subtitle")}</p>
 
       {error && (
         <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
@@ -69,7 +68,9 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700">Nom de l&apos;entreprise</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t("auth.signup.companyName")}
+          </label>
           <input
             type="text"
             value={name}
@@ -79,7 +80,9 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700">URL du site</label>
+          <label className="block text-sm font-medium text-slate-700">
+            {t("auth.signup.siteUrl")}
+          </label>
           <input
             type="url"
             value={url}
@@ -94,7 +97,7 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
           disabled={loading}
           className="w-full rounded-lg bg-brand-600 py-3 font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {loading ? "Création en cours..." : "Créer mon organisation"}
+          {loading ? t("setupOrg.submitting") : t("setupOrg.submit")}
         </button>
       </form>
     </div>

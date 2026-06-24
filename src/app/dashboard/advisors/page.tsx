@@ -1,5 +1,6 @@
 "use client";
 
+import { useT } from "@/i18n/context";
 import { useOrganization } from "@/hooks/use-organization";
 import { useCallback, useEffect, useState } from "react";
 
@@ -15,14 +16,16 @@ type Member = {
   created_at: string;
 };
 
-const ROLE_LABELS: Record<string, string> = {
-  owner: "Propriétaire",
-  admin: "Admin",
-  agent: "Conseiller",
-};
+function roleLabel(role: string, t: (key: string) => string) {
+  if (role === "owner") return t("dashboard.advisors.roleOwner");
+  if (role === "admin") return t("dashboard.advisors.roleAdmin");
+  if (role === "agent") return t("dashboard.advisors.roleAgent");
+  return role;
+}
 
 export default function AdvisorsPage() {
   const { organization, sites, loading: orgLoading } = useOrganization();
+  const t = useT();
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,14 +45,14 @@ export default function AdvisorsPage() {
     try {
       const res = await fetch("/api/organization/members");
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Chargement impossible");
+      if (!res.ok) throw new Error(data.error ?? t("dashboard.advisors.loadFailed"));
       setMembers(data.members ?? []);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur");
+      setError(e instanceof Error ? e.message : t("common.error"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (organization) void loadMembers();
@@ -71,19 +74,19 @@ export default function AdvisorsPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Ajout impossible");
+      if (!res.ok) throw new Error(data.error ?? t("dashboard.advisors.addFailed"));
       setEmail("");
       setDisplayName("");
       setSuccess(
         data.invited
-          ? "Invitation envoyée par email — le conseiller pourra se connecter à l'app mobile."
+          ? t("dashboard.advisors.inviteSent")
           : data.updated
-          ? "Site du conseiller mis à jour."
-          : "Conseiller ajouté."
+          ? t("dashboard.advisors.siteUpdated")
+          : t("dashboard.advisors.advisorAdded")
       );
       await loadMembers();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur");
+      setError(e instanceof Error ? e.message : t("common.error"));
     } finally {
       setAdding(false);
     }
@@ -100,14 +103,15 @@ export default function AdvisorsPage() {
 
   async function removeMember(member: Member) {
     if (member.role === "owner") return;
-    if (!confirm(`Retirer ${member.display_name || member.email} ?`)) return;
+    const name = member.display_name || member.email || "";
+    if (!confirm(t("dashboard.advisors.removeConfirm", { name }))) return;
     const res = await fetch(`/api/organization/members/${member.id}`, {
       method: "DELETE",
     });
     if (res.ok) await loadMembers();
     else {
       const data = await res.json();
-      setError(data.error ?? "Suppression impossible");
+      setError(data.error ?? t("dashboard.advisors.removeFailed"));
     }
   }
 
@@ -123,31 +127,28 @@ export default function AdvisorsPage() {
     (m) => m.role === "owner" || m.role === "admin" || (m.role === "agent" && !m.site_id)
   );
 
+  function advisorCountLabel(count: number) {
+    return count > 1
+      ? t("dashboard.advisors.advisorCountPlural", { count })
+      : t("dashboard.advisors.advisorCount", { count });
+  }
+
   if (orgLoading) {
-    return <p className="text-sm text-slate-500">Chargement…</p>;
+    return <p className="text-sm text-slate-500">{t("common.loading")}</p>;
   }
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-slate-900">Conseillers</h1>
-      <p className="mt-0.5 text-sm text-slate-600">
-        Invitez <strong>autant de conseillers que nécessaire</strong> sur un même site — ils
-        reçoivent tous les handoffs et le premier disponible prend la conversation.
-      </p>
+      <h1 className="text-xl font-bold text-slate-900">{t("dashboard.advisors.title")}</h1>
+      <p className="mt-0.5 text-sm text-slate-600">{t("dashboard.advisors.subtitleExtended")}</p>
 
       <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
-        <p className="font-medium">Comment ça marche</p>
+        <p className="font-medium">{t("dashboard.advisors.howItWorks")}</p>
         <ol className="mt-2 list-decimal space-y-1 pl-4 text-blue-800">
-          <li>Créez un <strong>site</strong> par page / marque (Dashboard → Sites)</li>
-          <li>Installez le widget ou partagez un <strong>lien tracké</strong> (Dashboard → Liens)</li>
-          <li>
-            Invitez <strong>un ou plusieurs conseillers</strong> sur le même site (ex. 3
-            personnes pour alibaba si le trafic est fort)
-          </li>
-          <li>
-            Chaque conseiller se connecte à l&apos;app mobile — tous reçoivent la notification,
-            le premier qui répond prend le visiteur
-          </li>
+          <li>{t("dashboard.advisors.step1")}</li>
+          <li>{t("dashboard.advisors.step2")}</li>
+          <li>{t("dashboard.advisors.step3")}</li>
+          <li>{t("dashboard.advisors.step4")}</li>
         </ol>
       </div>
 
@@ -176,10 +177,10 @@ export default function AdvisorsPage() {
         onSubmit={handleAdd}
         className="mt-4 max-w-xl rounded-lg border border-slate-200 bg-white p-4"
       >
-        <h2 className="text-sm font-semibold text-slate-900">Inviter un conseiller</h2>
+        <h2 className="text-sm font-semibold text-slate-900">{t("dashboard.advisors.inviteTitle")}</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="text-xs text-slate-500">Site assigné</label>
+            <label className="text-xs text-slate-500">{t("dashboard.advisors.assignedSite")}</label>
             <select
               required
               value={siteId}
@@ -187,14 +188,14 @@ export default function AdvisorsPage() {
               className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
             >
               {sites.length === 0 ? (
-                <option value="">Créez d&apos;abord un site</option>
+                <option value="">{t("dashboard.advisors.createSiteFirst")}</option>
               ) : (
                 sites.map((s) => {
                   const n = agentCountForSite(s.id);
                   return (
                     <option key={s.id} value={s.id}>
                       {s.name}
-                      {n > 0 ? ` — ${n} conseiller${n > 1 ? "s" : ""}` : ""}
+                      {n > 0 ? ` — ${advisorCountLabel(n)}` : ""}
                     </option>
                   );
                 })
@@ -202,7 +203,7 @@ export default function AdvisorsPage() {
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-500">Email</label>
+            <label className="text-xs text-slate-500">{t("common.email")}</label>
             <input
               type="email"
               required
@@ -213,11 +214,11 @@ export default function AdvisorsPage() {
             />
           </div>
           <div>
-            <label className="text-xs text-slate-500">Nom affiché (optionnel)</label>
+            <label className="text-xs text-slate-500">{t("dashboard.advisors.displayNameOptional")}</label>
             <input
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Marie Dupont"
+              placeholder={t("dashboard.advisors.namePlaceholder")}
               className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
             />
           </div>
@@ -227,25 +228,27 @@ export default function AdvisorsPage() {
           disabled={adding || !siteId}
           className="mt-3 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {adding ? "Envoi…" : "Inviter"}
+          {adding ? t("dashboard.advisors.inviting") : t("dashboard.advisors.invite")}
         </button>
       </form>
 
       <div className="mt-6 rounded-lg border border-slate-200 bg-white">
         <div className="border-b border-slate-100 px-4 py-3">
-          <h2 className="text-sm font-semibold text-slate-900">Équipe ({members.length})</h2>
+          <h2 className="text-sm font-semibold text-slate-900">
+            {t("dashboard.advisors.team", { count: members.length })}
+          </h2>
         </div>
         {loading ? (
-          <p className="p-4 text-sm text-slate-500">Chargement…</p>
+          <p className="p-4 text-sm text-slate-500">{t("common.loading")}</p>
         ) : members.length === 0 ? (
-          <p className="p-4 text-sm text-slate-500">Aucun conseiller pour l&apos;instant.</p>
+          <p className="p-4 text-sm text-slate-500">{t("dashboard.advisors.noAdvisors")}</p>
         ) : (
           <div className="divide-y divide-slate-100">
             {groupedAgents.map(({ site, advisors }) =>
               advisors.length > 0 ? (
                 <div key={site.id}>
                   <p className="bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    {site.name} · {advisors.length} conseiller{advisors.length > 1 ? "s" : ""}
+                    {site.name} · {advisorCountLabel(advisors.length)}
                   </p>
                   <ul>
                     {advisors.map((m) => (
@@ -263,7 +266,7 @@ export default function AdvisorsPage() {
             {otherMembers.length > 0 && (
               <div>
                 <p className="bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Propriétaire / admin
+                  {t("dashboard.advisors.ownerAdmin")}
                 </p>
                 <ul>
                   {otherMembers.map((m) => (
@@ -293,15 +296,21 @@ function MemberRow({
   onToggle: (m: Member) => void;
   onRemove: (m: Member) => void;
 }) {
+  const t = useT();
+
   return (
     <li className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
       <div>
         <p className="text-sm font-medium text-slate-900">
-          {m.display_name || m.email || "Conseiller"}
+          {m.display_name || m.email || t("dashboard.advisors.roleAgent")}
         </p>
         <p className="text-xs text-slate-500">
-          {m.email} · {ROLE_LABELS[m.role] ?? m.role}
-          {m.site_name ? ` · Site : ${m.site_name}` : m.role === "owner" ? " · Tous les sites" : ""}
+          {m.email} · {roleLabel(m.role, t)}
+          {m.site_name
+            ? ` · ${t("dashboard.advisors.siteLabel", { name: m.site_name })}`
+            : m.role === "owner"
+            ? ` · ${t("dashboard.advisors.allSites")}`
+            : ""}
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -314,7 +323,7 @@ function MemberRow({
               : "bg-slate-100 text-slate-600"
           }`}
         >
-          {m.is_available ? "Disponible" : "Indisponible"}
+          {m.is_available ? t("dashboard.advisors.available") : t("dashboard.advisors.unavailable")}
         </button>
         {m.role !== "owner" && (
           <button
@@ -322,7 +331,7 @@ function MemberRow({
             onClick={() => onRemove(m)}
             className="text-xs text-red-600 hover:underline"
           >
-            Retirer
+            {t("dashboard.advisors.remove")}
           </button>
         )}
       </div>

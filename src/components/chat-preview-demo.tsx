@@ -1,7 +1,8 @@
 "use client";
 
+import { useI18n } from "@/i18n/context";
 import { SAAS_NAME } from "@/lib/branding";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Phase =
   | "idle"
@@ -12,11 +13,6 @@ type Phase =
   | "typing-assistant-2"
   | "message-2"
   | "hold";
-
-const WELCOME =
-  "Bonjour ! Je suis l'assistant de votre entreprise. Quelle formation vous intéresse ?";
-const USER_MSG = "Cordiste IRATA au Togo, prochaine session ?";
-const REPLY_INTRO = "Voici les sessions à venir :";
 
 const TIMING = {
   idle: 400,
@@ -51,7 +47,7 @@ function useTypewriter(text: string, active: boolean, msPerChar: number) {
 
 function TypingIndicator() {
   return (
-    <div className="flex items-center gap-1 rounded-lg bg-slate-100 px-3 py-2.5 w-fit">
+    <div className="flex w-fit items-center gap-1 rounded-lg bg-slate-100 px-3 py-2.5">
       <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:0ms]" />
       <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:150ms]" />
       <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:300ms]" />
@@ -88,16 +84,24 @@ function Bubble({
 }
 
 export function ChatPreviewDemo() {
+  const { t, ready } = useI18n();
   const [phase, setPhase] = useState<Phase>("idle");
   const [cycle, setCycle] = useState(0);
 
+  const welcome = t("home.demo.chatPreview.welcome");
+  const userMsg = t("home.demo.chatPreview.userMessage");
+  const replyIntro = t("home.demo.chatPreview.replyIntro");
+  const sessionCta = t("home.demo.chatPreview.sessionCta");
+
   useEffect(() => {
+    if (!ready) return;
+
     const steps: { phase: Phase; delay: number }[] = [
       { phase: "idle", delay: TIMING.idle },
       { phase: "typing-assistant-1", delay: TIMING.typingAssistant },
-      { phase: "message-1", delay: WELCOME.length * TIMING.message1Char + 400 },
+      { phase: "message-1", delay: welcome.length * TIMING.message1Char + 400 },
       { phase: "typing-user", delay: TIMING.typingUser },
-      { phase: "message-user", delay: USER_MSG.length * TIMING.messageUserChar + 300 },
+      { phase: "message-user", delay: userMsg.length * TIMING.messageUserChar + 300 },
       { phase: "typing-assistant-2", delay: TIMING.typingAssistant },
       { phase: "message-2", delay: TIMING.message2Delay },
       { phase: "hold", delay: TIMING.hold },
@@ -121,10 +125,10 @@ export function ChatPreviewDemo() {
 
     runStep();
     return () => window.clearTimeout(timeoutId);
-  }, [cycle]);
+  }, [cycle, ready, welcome, userMsg]);
 
-  const welcomeTyping = useTypewriter(WELCOME, phase === "message-1", TIMING.message1Char);
-  const userTyping = useTypewriter(USER_MSG, phase === "message-user", TIMING.messageUserChar);
+  const welcomeTyping = useTypewriter(welcome, phase === "message-1", TIMING.message1Char);
+  const userTyping = useTypewriter(userMsg, phase === "message-user", TIMING.messageUserChar);
 
   const showWelcome =
     phase === "message-1" ||
@@ -140,10 +144,19 @@ export function ChatPreviewDemo() {
     phase === "message-2" ||
     phase === "hold";
 
-  const welcomeText = phase === "message-1" ? welcomeTyping : showWelcome ? WELCOME : "";
-  const userText = phase === "message-user" ? userTyping : showUser ? USER_MSG : "";
+  const welcomeText = phase === "message-1" ? welcomeTyping : showWelcome ? welcome : "";
+  const userText = phase === "message-user" ? userTyping : showUser ? userMsg : "";
 
   const showReply = phase === "message-2" || phase === "hold";
+
+  const headerTitle = useMemo(
+    () => t("home.demo.chatPreview.assistantTitle", { saasName: SAAS_NAME }),
+    [t]
+  );
+
+  if (!ready) {
+    return <div className="min-h-[220px] rounded-lg border border-slate-200 bg-white" />;
+  }
 
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-md">
@@ -152,13 +165,13 @@ export function ChatPreviewDemo() {
           IA
         </div>
         <div>
-          <p className="text-xs font-semibold">Assistant {SAAS_NAME}</p>
+          <p className="text-xs font-semibold">{headerTitle}</p>
           <p className="flex items-center gap-1 text-[10px] text-emerald-600">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
             </span>
-            En ligne
+            {t("home.demo.chatPreview.online")}
           </p>
         </div>
       </div>
@@ -169,7 +182,7 @@ export function ChatPreviewDemo() {
         {showWelcome && (
           <Bubble variant="assistant" visible={showWelcome}>
             {welcomeText}
-            {phase === "message-1" && welcomeText.length < WELCOME.length && (
+            {phase === "message-1" && welcomeText.length < welcome.length && (
               <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-brand-500 align-middle" />
             )}
           </Bubble>
@@ -184,7 +197,7 @@ export function ChatPreviewDemo() {
         {showUser && (
           <Bubble variant="user" visible={showUser}>
             {userText}
-            {phase === "message-user" && userText.length < USER_MSG.length && (
+            {phase === "message-user" && userText.length < userMsg.length && (
               <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-brand-600 align-middle" />
             )}
           </Bubble>
@@ -194,20 +207,20 @@ export function ChatPreviewDemo() {
 
         {showReply && (
           <Bubble variant="assistant" visible={showReply}>
-            {REPLY_INTRO}
+            {replyIntro}
             <span
               className={`mt-2 inline-block rounded bg-brand-600 px-2.5 py-1 text-[10px] font-medium text-white transition-all duration-500 ${
                 showReply ? "scale-100 opacity-100" : "scale-95 opacity-0"
               }`}
             >
-              Mars 2026 — Inscription
+              {sessionCta}
             </span>
           </Bubble>
         )}
       </div>
 
       <p className="mt-2 text-center text-[10px] text-slate-400">
-        Démo en direct — comme sur votre site
+        {t("home.demo.chatPreview.footer")}
       </p>
     </div>
   );

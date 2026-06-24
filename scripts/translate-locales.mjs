@@ -1,19 +1,22 @@
 #!/usr/bin/env node
 /**
- * Génère en.json, de.json, it.json, es.json, pt.json à partir de messages/fr.json
- * via l'API Anthropic (Claude).
+ * Génère / met à jour en.json, de.json, it.json, es.json, pt.json depuis fr.json
+ * via Google Translate (google-translate-api-x).
+ *
+ * Par défaut : INCRÉMENTAL — ne retraduit que les clés manquantes ou encore en français.
  *
  * Usage:
- *   node scripts/translate-locales.mjs
- *   node scripts/translate-locales.mjs --locale en
- *   node scripts/translate-locales.mjs --dry-run
- *
- * Clé API : ANTHROPIC_API_KEY dans api/.env ou variable d'environnement
+ *   npm run i18n:translate                    # nouvelles clés seulement
+ *   npm run i18n:translate -- --locale en
+ *   npm run i18n:translate -- --section home    # une section fr.json
+ *   npm run i18n:translate -- --force         # tout retraduire
+ *   npm run i18n:translate -- --dry-run
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import translate from "google-translate-api-x";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -21,132 +24,190 @@ const MESSAGES_DIR = path.join(ROOT, "messages");
 const FR_PATH = path.join(MESSAGES_DIR, "fr.json");
 
 const TARGETS = {
-  en: "English",
-  de: "German (Deutsch)",
-  it: "Italian (italiano)",
-  es: "Spanish (español)",
-  pt: "Portuguese (português)",
+  en: { label: "English", google: "en" },
+  de: { label: "Deutsch", google: "de" },
+  it: { label: "Italiano", google: "it" },
+  es: { label: "Español", google: "es" },
+  pt: { label: "Português", google: "pt" },
 };
 
-const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
-
-function loadAnthropicKey() {
-  if (process.env.ANTHROPIC_API_KEY?.trim()) {
-    return process.env.ANTHROPIC_API_KEY.trim().replace(/\s+/g, "");
-  }
-  const envPaths = [
-    path.join(ROOT, "..", "api", ".env"),
-    path.join(ROOT, ".env.local"),
-    path.join(ROOT, ".env"),
-  ];
-  for (const envPath of envPaths) {
-    if (!fs.existsSync(envPath)) continue;
-    const text = fs.readFileSync(envPath, "utf8");
-    const match = text.match(/ANTHROPIC_API_KEY\s*=\s*([\s\S]*?)(?:\n[A-Z_][A-Z0-9_]*\s*=|\n#|$)/);
-    if (match) {
-      return match[1].replace(/\s+/g, "").replace(/^["']|["']$/g, "");
-    }
-  }
-  return null;
-}
+const DELAY_MS = Number(process.env.I18N_TRANSLATE_DELAY_MS || 120);
 
 function parseArgs() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
+  const force = args.includes("--force");
   const localeIdx = args.indexOf("--locale");
   const onlyLocale = localeIdx >= 0 ? args[localeIdx + 1] : null;
-  return { dryRun, onlyLocale };
+  const sectionIdx = args.indexOf("--section");
+  const onlySection = sectionIdx >= 0 ? args[sectionIdx + 1] : null;
+  return { dryRun, force, onlyLocale, onlySection };
 }
 
-async function translateChunk(apiKey, targetLang, chunkJson) {
-  const prompt = `You are a professional translator for a SaaS chatbot product website.
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
 
-Translate the following JSON from French to ${targetLang}.
+function protectPlaceholders(text) {
+  const map = new Map();
+  let i = 0;
+  const protectedText = text.replace(/\{(\w+)\}/g, (original) => {
+    const token = `⟦PH${i}⟧`;
+    map.set(token, original);
+    i += 1;
+    return token;
+  });
+  return { protectedText, map };
+}
 
-Rules:
-- Keep the EXACT same JSON structure and all keys unchanged
-- Translate only string VALUES
-- Preserve placeholders like {saasName}, {name}, {plan} exactly
-- Preserve HTML fragments like </body> if present
-- Preserve emoji and special characters in values
-- Keep brand names (ChatAgent, Facebook, Instagram, WordPress, Next.js, React, Claude, Render, WhatsApp, IRATA, CND) unchanged
-- Return ONLY valid JSON, no markdown fences
+function restorePlaceholders(text, map) {
+  let out = text;
+  for (const [token, original] of map) {
+    out = out.split(token).join(original);
+  }
+  return out;
+}
 
-JSON to translate:
-${JSON.stringify(chunkJson, null, 2)}`;
+async function translateString(text, googleLocale) {
+  if (!text || typeof text !== "string" || !text.trim()) return text;
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 16000,
-      messages: [{ role: "user", content: prompt }],
-    }),
+  const { protectedText, map } = protectPlaceholders(text);
+  await sleep(DELAY_MS);
+
+  const res = await translate(protectedText, {
+    from: "fr",
+    to: googleLocale,
+    autoCorrect: false,
   });
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Anthropic API ${res.status}: ${err}`);
-  }
-
-  const data = await res.json();
-  const text = data.content?.[0]?.text?.trim() ?? "";
-  const cleaned = text.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
-  return JSON.parse(cleaned);
+  return restorePlaceholders(res.text, map);
 }
 
-function topLevelChunks(obj) {
-  const chunks = {};
-  for (const [key, value] of Object.entries(obj)) {
-    chunks[key] = value;
-  }
-  return chunks;
+function needsTranslation(frValue, existingValue, force) {
+  if (force) return true;
+  if (existingValue == null) return true;
+  if (typeof existingValue !== "string") return true;
+  // Identique au français = clé nouvelle (i18n:sync) ou jamais traduite
+  return existingValue === frValue;
 }
 
-function mergeChunks(translatedChunks) {
-  return { ...translatedChunks };
-}
+/**
+ * Fusionne fr + locale existante : conserve les traductions, traduit le reste.
+ */
+async function mergeIncremental(frNode, existingNode, googleLocale, stats, keyPath, opts) {
+  if (typeof frNode === "string") {
+    if (keyPath === "meta.locale") return undefined;
 
-async function translateLocale(apiKey, locale, frData, dryRun) {
-  const langLabel = TARGETS[locale];
-  if (!langLabel) throw new Error(`Locale inconnue: ${locale}`);
-
-  console.log(`\n→ Traduction ${locale} (${langLabel})...`);
-  const chunks = topLevelChunks(frData);
-  const translatedChunks = {};
-
-  for (const [section, chunk] of Object.entries(chunks)) {
-    console.log(`  · section "${section}"`);
-    if (dryRun) {
-      translatedChunks[section] = chunk;
-      continue;
+    if (!needsTranslation(frNode, existingNode, opts.force)) {
+      stats.kept += 1;
+      return existingNode;
     }
-    const wrapped = { [section]: chunk };
-    const result = await translateChunk(apiKey, langLabel, wrapped);
-    translatedChunks[section] = result[section];
-    await new Promise((r) => setTimeout(r, 500));
+
+    stats.translated += 1;
+    if (opts.dryRun) {
+      return `[${googleLocale}] ${frNode}`;
+    }
+    return translateString(frNode, googleLocale);
   }
 
-  const merged = mergeChunks(translatedChunks);
-  merged.meta = {
-    locale,
-    label: {
-      en: "English",
-      de: "Deutsch",
-      it: "Italiano",
-      es: "Español",
-      pt: "Português",
-    }[locale],
-  };
+  if (Array.isArray(frNode)) {
+    const out = [];
+    for (let i = 0; i < frNode.length; i += 1) {
+      const childPath = `${keyPath}[${i}]`;
+      out.push(
+        await mergeIncremental(
+          frNode[i],
+          Array.isArray(existingNode) ? existingNode[i] : undefined,
+          googleLocale,
+          stats,
+          childPath,
+          opts
+        )
+      );
+    }
+    return out;
+  }
+
+  if (frNode && typeof frNode === "object") {
+    const out = {};
+    for (const [key, value] of Object.entries(frNode)) {
+      const childPath = keyPath ? `${keyPath}.${key}` : key;
+      if (childPath === "meta.locale") continue;
+
+      const childExisting =
+        existingNode && typeof existingNode === "object" ? existingNode[key] : undefined;
+
+      out[key] = await mergeIncremental(
+        value,
+        childExisting,
+        googleLocale,
+        stats,
+        childPath,
+        opts
+      );
+    }
+    return out;
+  }
+
+  return frNode;
+}
+
+function pickSection(data, section) {
+  if (!section) return data;
+  if (!(section in data)) {
+    throw new Error(`Section introuvable dans fr.json : "${section}"`);
+  }
+  return { [section]: data[section] };
+}
+
+function mergeSectionIntoFull(full, section, partial) {
+  if (!section) return partial;
+  return { ...full, [section]: partial[section] };
+}
+
+async function translateLocale(locale, frData, opts) {
+  const target = TARGETS[locale];
+  if (!target) throw new Error(`Locale inconnue: ${locale}`);
 
   const outPath = path.join(MESSAGES_DIR, `${locale}.json`);
-  if (dryRun) {
+  let existing = {};
+  if (fs.existsSync(outPath)) {
+    existing = JSON.parse(fs.readFileSync(outPath, "utf8"));
+  }
+
+  const mode = opts.force ? "complet (--force)" : "incrémental (nouvelles clés)";
+  const sectionLabel = opts.onlySection ? ` · section "${opts.onlySection}"` : "";
+  console.log(`\n→ ${locale} (${target.label}) · ${mode}${sectionLabel}`);
+
+  const frSlice = pickSection(frData, opts.onlySection);
+  const existingSlice = pickSection(existing, opts.onlySection);
+
+  const stats = { kept: 0, translated: 0 };
+
+  const mergedSlice = await mergeIncremental(
+    frSlice,
+    existingSlice,
+    target.google,
+    stats,
+    "",
+    opts
+  );
+
+  const merged = mergeSectionIntoFull(existing, opts.onlySection, mergedSlice);
+  merged.meta = {
+    locale,
+    label: target.label,
+  };
+
+  console.log(`  · conservées : ${stats.kept} · traduites : ${stats.translated}`);
+
+  if (opts.dryRun) {
     console.log(`  (dry-run) écrirait ${outPath}`);
+    return;
+  }
+
+  if (stats.translated === 0) {
+    console.log(`  ✓ rien à faire — ${outPath} déjà à jour`);
     return;
   }
 
@@ -155,7 +216,7 @@ async function translateLocale(apiKey, locale, frData, dryRun) {
 }
 
 async function main() {
-  const { dryRun, onlyLocale } = parseArgs();
+  const opts = parseArgs();
 
   if (!fs.existsSync(FR_PATH)) {
     console.error(`Fichier source introuvable: ${FR_PATH}`);
@@ -163,22 +224,25 @@ async function main() {
   }
 
   const frData = JSON.parse(fs.readFileSync(FR_PATH, "utf8"));
-  const apiKey = loadAnthropicKey();
+  const locales = opts.onlyLocale ? [opts.onlyLocale] : Object.keys(TARGETS);
 
-  if (!apiKey && !dryRun) {
-    console.error(
-      "ANTHROPIC_API_KEY introuvable. Définissez-la dans api/.env ou en variable d'environnement."
-    );
-    process.exit(1);
-  }
+  console.log(
+    opts.force
+      ? "Mode : retraduction complète"
+      : "Mode : incrémental (seules les clés manquantes ou encore en français)"
+  );
 
-  const locales = onlyLocale ? [onlyLocale] : Object.keys(TARGETS);
   for (const locale of locales) {
     if (!TARGETS[locale]) {
       console.error(`Locale non supportée: ${locale}`);
       process.exit(1);
     }
-    await translateLocale(apiKey, locale, frData, dryRun);
+    try {
+      await translateLocale(locale, frData, opts);
+    } catch (err) {
+      console.error(`\n✗ Erreur pour ${locale}:`, err instanceof Error ? err.message : err);
+      process.exit(1);
+    }
   }
 
   console.log("\nTerminé.");

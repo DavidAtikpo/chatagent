@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/i18n/context";
 import { SAAS_NAME } from "@/lib/branding";
 import { useEffect, useState } from "react";
 
@@ -14,30 +15,11 @@ type Phase =
   | "hold";
 
 const DEMO_URL = "https://mon-entreprise.com";
-const DEMO_NAME = "Mon Centre de Formation";
 const CRAWL_URLS = [
   "https://mon-entreprise.com/",
   "https://mon-entreprise.com/formations",
   "https://mon-entreprise.com/tarifs",
   "https://mon-entreprise.com/contact",
-];
-
-const STEPS = [
-  {
-    step: "1",
-    title: "Connectez votre site",
-    desc: "Inscription + crawl automatique de vos pages.",
-  },
-  {
-    step: "2",
-    title: "Déployez partout",
-    desc: "Widget prêt à coller sur votre site.",
-  },
-  {
-    step: "3",
-    title: "Convertissez",
-    desc: "Premier lead qualifié dans le dashboard.",
-  },
 ];
 
 function useTypewriter(text: string, active: boolean, msPerChar: number) {
@@ -69,21 +51,27 @@ function activeStep(phase: Phase): number {
 }
 
 export function SignupFlowDemo() {
+  const { t, messages, ready } = useI18n();
   const [phase, setPhase] = useState<Phase>("idle");
   const [cycle, setCycle] = useState(0);
   const [progress, setProgress] = useState(0);
   const [crawlUrl, setCrawlUrl] = useState(CRAWL_URLS[0]);
   const [pagesDone, setPagesDone] = useState(0);
 
-  const nameText = useTypewriter(DEMO_NAME, phase === "typing", 40);
-  const nameDone = nameText.length >= DEMO_NAME.length;
+  const demo = messages.home?.demo?.signupFlow;
+  const demoName = demo?.demoName ?? "Mon Centre de Formation";
+  const steps = demo?.steps ?? [];
+
+  const nameText = useTypewriter(demoName, phase === "typing", 40);
+  const nameDone = nameText.length >= demoName.length;
   const urlText = useTypewriter(DEMO_URL, phase === "typing" && nameDone, 22);
 
-  // Main phase sequencer
   useEffect(() => {
+    if (!ready) return;
+
     const sequence: { phase: Phase; delay: number }[] = [
       { phase: "idle", delay: 500 },
-      { phase: "typing", delay: DEMO_NAME.length * 40 + DEMO_URL.length * 22 + 600 },
+      { phase: "typing", delay: demoName.length * 40 + DEMO_URL.length * 22 + 600 },
       { phase: "submitting", delay: 1200 },
       { phase: "crawling", delay: 3200 },
       { phase: "embedding", delay: 2400 },
@@ -118,9 +106,8 @@ export function SignupFlowDemo() {
 
     next();
     return () => window.clearTimeout(timeoutId);
-  }, [cycle]);
+  }, [cycle, ready, demoName]);
 
-  // Crawl progress animation
   useEffect(() => {
     if (phase !== "crawling") return;
     let p = 0;
@@ -138,7 +125,6 @@ export function SignupFlowDemo() {
     return () => window.clearInterval(id);
   }, [phase]);
 
-  // Embedding progress animation
   useEffect(() => {
     if (phase !== "embedding") return;
     let p = 0;
@@ -151,16 +137,34 @@ export function SignupFlowDemo() {
 
   const step = activeStep(phase);
 
+  function phaseTitle() {
+    if (phase === "typing" || phase === "submitting") {
+      return t("home.demo.signupFlow.phases.creatingAccount");
+    }
+    if (phase === "crawling" || phase === "embedding") {
+      return t("home.demo.signupFlow.phases.configuringAgent");
+    }
+    if (phase === "deploy") return t("home.demo.signupFlow.phases.deploying");
+    if (phase === "lead" || phase === "hold") {
+      return t("home.demo.signupFlow.phases.dashboard");
+    }
+    return t("home.demo.signupFlow.phases.demoTitle", { saasName: SAAS_NAME });
+  }
+
+  if (!ready) {
+    return <div className="min-h-[260px] rounded-lg border border-slate-200 bg-white" />;
+  }
+
   return (
     <div className="grid gap-4 lg:grid-cols-5">
       <div className="space-y-2 lg:col-span-2">
-        {STEPS.map((s, idx) => {
+        {steps.map((s, idx) => {
           const num = idx + 1;
           const isActive = step === num;
           const isDone = step > num;
           return (
             <div
-              key={s.step}
+              key={num}
               className={`rounded-lg border p-3 transition-all duration-500 ${
                 isActive
                   ? "border-brand-400 bg-brand-50 shadow-sm ring-1 ring-brand-200"
@@ -179,7 +183,7 @@ export function SignupFlowDemo() {
                         : "bg-slate-100 text-slate-400"
                   }`}
                 >
-                  {isDone ? "✓" : s.step}
+                  {isDone ? "✓" : num}
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold">{s.title}</h3>
@@ -194,24 +198,13 @@ export function SignupFlowDemo() {
       <div className="lg:col-span-3">
         <div className="min-h-[260px] rounded-lg border border-slate-200 bg-white p-3 shadow-md">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-            <p className="text-xs font-semibold text-slate-800">
-              {phase === "typing" || phase === "submitting"
-                ? "Création du compte"
-                : phase === "crawling" || phase === "embedding"
-                  ? "Configuration de l'agent"
-                  : phase === "deploy"
-                    ? "Déploiement"
-                    : phase === "lead" || phase === "hold"
-                      ? "Dashboard"
-                      : `Démo ${SAAS_NAME}`}
-            </p>
+            <p className="text-xs font-semibold text-slate-800">{phaseTitle()}</p>
             <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700">
-              En direct
+              {t("home.demo.signupFlow.live")}
             </span>
           </div>
 
           <div className="mt-2">
-            {/* Signup form */}
             {(phase === "idle" ||
               phase === "typing" ||
               phase === "submitting" ||
@@ -223,48 +216,47 @@ export function SignupFlowDemo() {
                 }`}
               >
                 <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
-                  Inscription
+                  {t("home.demo.signupFlow.signup")}
                 </p>
                 <div className="mt-1.5 space-y-1.5">
                   <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
                     {nameText || "\u00A0"}
-                    {phase === "typing" && nameText.length < DEMO_NAME.length && (
+                    {phase === "typing" && nameText.length < demoName.length && (
                       <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-brand-500" />
                     )}
                   </div>
                   <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-700">
                     {urlText || "\u00A0"}
                     {phase === "typing" && nameDone && urlText.length < DEMO_URL.length && (
-                        <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-brand-500" />
-                      )}
+                      <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse bg-brand-500" />
+                    )}
                   </div>
                   <button
                     type="button"
                     className={`w-full rounded-lg py-2 text-xs font-semibold text-white transition-colors ${
-                      phase === "submitting"
-                        ? "bg-brand-500"
-                        : "bg-brand-600"
+                      phase === "submitting" ? "bg-brand-500" : "bg-brand-600"
                     }`}
                   >
                     {phase === "submitting" ? (
                       <span className="inline-flex items-center gap-2">
                         <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                        Création en cours…
+                        {t("home.demo.signupFlow.submitting")}
                       </span>
                     ) : (
-                      "Créer mon agent IA"
+                      t("home.demo.signupFlow.submit")
                     )}
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Crawl progress */}
             {(phase === "crawling" || phase === "embedding") && (
               <div className="mt-2 rounded-lg border border-brand-100 bg-brand-50/60 p-2.5 transition-all duration-300">
                 <div className="flex items-center justify-between text-xs font-medium text-slate-700">
                   <span>
-                    {phase === "crawling" ? "Lecture des pages" : "Analyse sémantique (IA)"}
+                    {phase === "crawling"
+                      ? t("home.demo.signupFlow.crawlPages")
+                      : t("home.demo.signupFlow.crawlEmbedding")}
                   </span>
                   <span>{progress} %</span>
                 </div>
@@ -277,28 +269,34 @@ export function SignupFlowDemo() {
                 {phase === "crawling" && (
                   <>
                     <p className="mt-2 text-xs text-slate-600">
-                      Page {pagesDone}/4 analysée
+                      {t("home.demo.signupFlow.pageProgress", {
+                        current: pagesDone,
+                        total: CRAWL_URLS.length,
+                      })}
                     </p>
                     <p className="mt-1 truncate text-[10px] text-slate-400">{crawlUrl}</p>
                   </>
                 )}
                 {phase === "embedding" && (
                   <p className="mt-2 text-xs text-slate-600">
-                    Indexation des connaissances pour le chat…
+                    {t("home.demo.signupFlow.indexing")}
                   </p>
                 )}
               </div>
             )}
 
-            {/* Deploy */}
             {(phase === "deploy" || phase === "lead" || phase === "hold") && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2">
                   <span className="text-emerald-600">✓</span>
-                  <p className="text-xs font-medium text-emerald-800">Agent prêt — widget généré</p>
+                  <p className="text-xs font-medium text-emerald-800">
+                    {t("home.demo.signupFlow.agentReady")}
+                  </p>
                 </div>
                 <div className="rounded-lg bg-slate-900 p-3">
-                  <p className="text-[10px] text-slate-400">Script à coller sur votre site</p>
+                  <p className="text-[10px] text-slate-400">
+                    {t("home.demo.signupFlow.scriptHint")}
+                  </p>
                   <code className="mt-1 block text-[10px] text-emerald-400">
                     {`<script src="…/widget.js" data-key="wk_…"></script>`}
                   </code>
@@ -306,21 +304,22 @@ export function SignupFlowDemo() {
               </div>
             )}
 
-            {/* Lead notification */}
             {(phase === "lead" || phase === "hold") && (
-              <div
-                className={`mt-2 rounded-lg border border-brand-200 bg-white p-2.5 shadow-sm transition-all duration-500 ${
-                  phase === "lead" ? "translate-y-0 opacity-100" : "opacity-100"
-                }`}
-              >
+              <div className="mt-2 rounded-lg border border-brand-200 bg-white p-2.5 shadow-sm">
                 <div className="flex items-start gap-2">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">
                     80
                   </span>
                   <div>
-                    <p className="text-xs font-semibold text-slate-900">Nouveau lead qualifié</p>
-                    <p className="text-[10px] text-slate-500">Togo · Formation cordiste · Budget OK</p>
-                    <p className="mt-1 text-[10px] text-brand-600">Score 80/100 — notification envoyée</p>
+                    <p className="text-xs font-semibold text-slate-900">
+                      {t("home.demo.signupFlow.newLead")}
+                    </p>
+                    <p className="text-[10px] text-slate-500">
+                      {t("home.demo.signupFlow.leadDetail")}
+                    </p>
+                    <p className="mt-1 text-[10px] text-brand-600">
+                      {t("home.demo.signupFlow.leadScore")}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -328,7 +327,7 @@ export function SignupFlowDemo() {
           </div>
 
           <p className="mt-2 text-center text-[10px] text-slate-400">
-            Parcours réel après inscription — environ 5 minutes
+            {t("home.demo.signupFlow.footer")}
           </p>
         </div>
       </div>

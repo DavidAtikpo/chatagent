@@ -3,28 +3,25 @@
 import { hasProFeatures } from "@/lib/plans";
 import { AgentConfig } from "@/lib/dashboard-data";
 import { SUPPORTED_LANGUAGES } from "@/lib/languages";
+import { useT } from "@/i18n/context";
 import { useOrganization } from "@/hooks/use-organization";
 import { useEffect, useState } from "react";
 
-const TONES = [
-  { value: "professional", label: "Professionnel" },
-  { value: "friendly", label: "Amical" },
-  { value: "casual", label: "Décontracté" },
-  { value: "formal", label: "Formel" },
-];
+const TONE_VALUES = ["professional", "friendly", "casual", "formal"] as const;
 
-const HEADER_FONTS = [
-  { value: "system-ui, -apple-system, sans-serif", label: "Systeme (par defaut)" },
-  { value: "Georgia, 'Times New Roman', serif", label: "Georgia — serif" },
-  { value: "Arial, Helvetica, sans-serif", label: "Arial" },
-  { value: "'Trebuchet MS', sans-serif", label: "Trebuchet MS" },
-  { value: "Verdana, sans-serif", label: "Verdana" },
-  { value: "'Courier New', monospace", label: "Courier — monospace" },
-];
+const HEADER_FONT_OPTIONS = [
+  { key: "system", value: "system-ui, -apple-system, sans-serif" },
+  { key: "georgia", value: "Georgia, 'Times New Roman', serif" },
+  { key: "arial", value: "Arial, Helvetica, sans-serif" },
+  { key: "trebuchet", value: "'Trebuchet MS', sans-serif" },
+  { key: "verdana", value: "Verdana, sans-serif" },
+  { key: "courier", value: "'Courier New', monospace" },
+] as const;
 
 function applySiteConfig(
   config: AgentConfig,
   whatsappFromSite: string | null | undefined,
+  defaultWelcome: string,
   setters: {
     setWelcomeMessage: (v: string) => void;
     setTone: (v: string) => void;
@@ -40,7 +37,7 @@ function applySiteConfig(
     setLogoUrl: (v: string) => void;
   }
 ) {
-  setters.setWelcomeMessage(config.welcome_message ?? "Bonjour ! Comment puis-je vous aider ?");
+  setters.setWelcomeMessage(config.welcome_message ?? defaultWelcome);
   setters.setTone(config.tone ?? "professional");
   setters.setLanguage(config.language ?? "fr");
   setters.setCtaUrl(config.cta_url ?? "");
@@ -56,6 +53,7 @@ function applySiteConfig(
 
 export default function SettingsPage() {
   const { organization, sites, email, loading: orgLoading, refresh } = useOrganization();
+  const t = useT();
   const proContacts = hasProFeatures(organization);
   const [orgName, setOrgName] = useState("");
   const [siteId, setSiteId] = useState("");
@@ -75,6 +73,8 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const defaultWelcome = t("dashboard.settings.defaultWelcome");
 
   const setters = {
     setWelcomeMessage,
@@ -100,14 +100,14 @@ export default function SettingsPage() {
     const activeId = siteId && sites.some((s) => s.id === siteId) ? siteId : sites[0].id;
     if (activeId !== siteId) setSiteId(activeId);
     const site = sites.find((s) => s.id === activeId) ?? sites[0];
-    applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, setters);
+    applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, defaultWelcome, setters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sites, siteId]);
+  }, [sites, siteId, defaultWelcome]);
 
   function handleSiteChange(id: string) {
     setSiteId(id);
     const site = sites.find((s) => s.id === id);
-    if (site) applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, setters);
+    if (site) applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, defaultWelcome, setters);
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -116,7 +116,7 @@ export default function SettingsPage() {
 
     const trimmedName = orgName.trim();
     if (!trimmedName) {
-      setError("Le nom de l'organisation est requis.");
+      setError(t("dashboard.settings.orgNameRequired"));
       return;
     }
 
@@ -131,7 +131,7 @@ export default function SettingsPage() {
 
     if (!orgRes.ok) {
       const data = await orgRes.json();
-      setError(data.error ?? "Impossible de mettre à jour l'organisation");
+      setError(data.error ?? t("dashboard.settings.orgUpdateFailed"));
       setSaving(false);
       return;
     }
@@ -167,7 +167,7 @@ export default function SettingsPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error ?? "Enregistrement échoué");
+        setError(data.error ?? t("dashboard.settings.saveFailed"));
         setSaving(false);
         return;
       }
@@ -190,7 +190,7 @@ export default function SettingsPage() {
       const res = await fetch(`/api/sites/${siteId}/logo`, { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error ?? "Upload echoue");
+        alert(data.error ?? t("dashboard.settings.uploadFailed"));
         return;
       }
       setLogoUrl(data.logo_url ?? "");
@@ -202,13 +202,13 @@ export default function SettingsPage() {
   }
 
   if (orgLoading) {
-    return <p className="text-sm text-slate-500">Chargement...</p>;
+    return <p className="text-sm text-slate-500">{t("common.loading")}</p>;
   }
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-slate-900">Paramètres</h1>
-      <p className="mt-0.5 text-sm text-slate-600">Configuration de votre compte et de votre agent.</p>
+      <h1 className="text-xl font-bold text-slate-900">{t("dashboard.settings.title")}</h1>
+      <p className="mt-0.5 text-sm text-slate-600">{t("dashboard.settings.subtitle")}</p>
 
       {error && (
         <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -218,9 +218,9 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} className="mt-3 max-w-2xl space-y-3">
         <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <h2 className="text-sm font-semibold">Compte</h2>
+          <h2 className="text-sm font-semibold">{t("dashboard.settings.account")}</h2>
           <div className="mt-3">
-            <label className="text-xs text-slate-500">Email</label>
+            <label className="text-xs text-slate-500">{t("common.email")}</label>
             <input
               value={email}
               disabled
@@ -229,33 +229,25 @@ export default function SettingsPage() {
           </div>
           <div className="mt-3">
             <label htmlFor="org-name" className="text-xs text-slate-500">
-              Nom de l&apos;organisation
+              {t("dashboard.settings.orgName")}
             </label>
             <input
               id="org-name"
               value={orgName}
               onChange={(e) => setOrgName(e.target.value)}
-              placeholder="Ex. CIDES, Mon Agence…"
+              placeholder={t("dashboard.settings.orgNamePlaceholder")}
               maxLength={120}
               required
               className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
             />
-            <p className="mt-1 text-xs text-slate-400">
-              Affiché dans le dashboard et l&apos;aperçu du chat ci-dessous.
-            </p>
+            <p className="mt-1 text-xs text-slate-400">{t("dashboard.settings.orgNameHint")}</p>
           </div>
         </div>
 
         {sites.length === 0 ? (
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            <p className="font-medium">Aucun site configuré</p>
-            <p className="mt-1 text-amber-800">
-              Ajoutez d&apos;abord un site dans{" "}
-              <a href="/dashboard/sites" className="font-medium underline">
-                Sites
-              </a>{" "}
-              pour configurer l&apos;agent, les contacts et l&apos;apparence du chat.
-            </p>
+            <p className="font-medium">{t("dashboard.settings.noSitesTitle")}</p>
+            <p className="mt-1 text-amber-800">{t("dashboard.settings.noSitesBody")}</p>
           </div>
         ) : (
           <>
@@ -265,24 +257,23 @@ export default function SettingsPage() {
               }`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-slate-900">Contacts rapides</h2>
+                <h2 className="text-sm font-semibold text-slate-900">
+                  {t("dashboard.settings.quickContacts")}
+                </h2>
                 {!proContacts && (
                   <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">
-                    Plan Pro
+                    {t("dashboard.settings.planPro")}
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-slate-500">
-                Boutons WhatsApp, Appel et Email en bas du chat (icônes cliquables).
-              </p>
+              <p className="mt-1 text-xs text-slate-500">{t("dashboard.settings.quickContactsHint")}</p>
               {!proContacts && (
                 <p className="mt-2 rounded-lg border border-brand-100 bg-brand-50 px-3 py-2 text-xs text-brand-800">
-                  Réservé au <strong>Plan Pro</strong>. Passez au Pro pour activer WhatsApp, appel et
-                  email dans le widget.
+                  {t("dashboard.settings.proOnlyHint")}
                 </p>
               )}
               <div className="mt-3">
-                <label className="text-xs text-slate-500">Site à configurer</label>
+                <label className="text-xs text-slate-500">{t("dashboard.settings.siteToConfigure")}</label>
                 <select
                   value={siteId}
                   onChange={(e) => handleSiteChange(e.target.value)}
@@ -298,7 +289,9 @@ export default function SettingsPage() {
               </div>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="text-xs font-medium text-slate-600">WhatsApp</label>
+                  <label className="text-xs font-medium text-slate-600">
+                    {t("dashboard.settings.whatsapp")}
+                  </label>
                   <input
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
@@ -308,7 +301,9 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-slate-600">Téléphone (appel)</label>
+                  <label className="text-xs font-medium text-slate-600">
+                    {t("dashboard.settings.phoneCall")}
+                  </label>
                   <input
                     value={contactPhone}
                     onChange={(e) => setContactPhone(e.target.value)}
@@ -318,7 +313,9 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-slate-600">Email</label>
+                  <label className="text-xs font-medium text-slate-600">
+                    {t("dashboard.settings.contactEmail")}
+                  </label>
                   <input
                     type="email"
                     value={contactEmail}
@@ -332,19 +329,17 @@ export default function SettingsPage() {
             </div>
 
             <div className="rounded-lg border border-slate-200 bg-white p-4">
-              <h2 className="text-sm font-semibold">Apparence du chat (widget)</h2>
-              <p className="mt-1 text-xs text-slate-500">
-                Logo, couleurs et police affiches dans l&apos;en-tete du chat sur votre site.
-              </p>
+              <h2 className="text-sm font-semibold">{t("dashboard.settings.widgetAppearance")}</h2>
+              <p className="mt-1 text-xs text-slate-500">{t("dashboard.settings.widgetAppearanceHint")}</p>
               <div className="mt-2 flex flex-wrap items-start gap-4">
                 <div>
-                  <label className="text-xs text-slate-500">Logo entreprise</label>
+                  <label className="text-xs text-slate-500">{t("dashboard.settings.companyLogo")}</label>
                   <div className="mt-2 flex items-center gap-3">
                     {logoUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={logoUrl}
-                        alt="Logo"
+                        alt={t("dashboard.settings.logo")}
                         className="h-12 w-12 rounded-lg border border-slate-200 object-contain bg-white"
                       />
                     ) : (
@@ -353,7 +348,7 @@ export default function SettingsPage() {
                       </div>
                     )}
                     <label className="cursor-pointer rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
-                      {logoUploading ? "Envoi…" : "Choisir une image"}
+                      {logoUploading ? t("dashboard.settings.uploading") : t("dashboard.settings.chooseImage")}
                       <input
                         type="file"
                         accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif"
@@ -367,13 +362,13 @@ export default function SettingsPage() {
                     type="url"
                     value={logoUrl}
                     onChange={(e) => setLogoUrl(e.target.value)}
-                    placeholder="Ou URL du logo (https://…)"
+                    placeholder={t("dashboard.settings.logoUrlPlaceholder")}
                     className="mt-2 w-full max-w-md rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-900"
                   />
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="text-xs text-slate-500">Couleur fond header</label>
+                    <label className="text-xs text-slate-500">{t("dashboard.settings.headerBgColor")}</label>
                     <div className="mt-1 flex items-center gap-2">
                       <input
                         type="color"
@@ -389,7 +384,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500">Couleur nom entreprise</label>
+                    <label className="text-xs text-slate-500">{t("dashboard.settings.headerNameColor")}</label>
                     <div className="mt-1 flex items-center gap-2">
                       <input
                         type="color"
@@ -406,15 +401,15 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div className="w-full max-w-xs">
-                  <label className="text-xs text-slate-500">Police du header</label>
+                  <label className="text-xs text-slate-500">{t("dashboard.settings.headerFontLabel")}</label>
                   <select
                     value={headerFont}
                     onChange={(e) => setHeaderFont(e.target.value)}
                     className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
                   >
-                    {HEADER_FONTS.map((f) => (
+                    {HEADER_FONT_OPTIONS.map((f) => (
                       <option key={f.value} value={f.value}>
-                        {f.label}
+                        {t(`dashboard.settings.fonts.${f.key}`)}
                       </option>
                     ))}
                   </select>
@@ -429,42 +424,40 @@ export default function SettingsPage() {
                   <img src={logoUrl} alt="" className="h-8 w-8 rounded object-contain bg-white/10" />
                 ) : null}
                 <span className="text-sm font-semibold" style={{ color: headerTitleColor }}>
-                  {orgName || "Votre entreprise"}
+                  {orgName || t("dashboard.settings.yourCompany")}
                 </span>
               </div>
             </div>
 
             <div className="rounded-lg border border-slate-200 bg-white p-4">
-              <h2 className="text-sm font-semibold">Agent IA</h2>
+              <h2 className="text-sm font-semibold">{t("dashboard.settings.agentIa")}</h2>
               <div className="mt-3">
-                <label className="text-xs text-slate-500">Message d&apos;accueil</label>
+                <label className="text-xs text-slate-500">{t("dashboard.settings.welcomeMessage")}</label>
                 <textarea
                   value={welcomeMessage}
                   onChange={(e) => setWelcomeMessage(e.target.value)}
                   rows={3}
                   className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
                 />
-                <p className="mt-1 text-xs text-slate-400">
-                  Laissez vide ou générique pour génération auto depuis le site (au re-crawl).
-                </p>
+                <p className="mt-1 text-xs text-slate-400">{t("dashboard.settings.welcomeHint")}</p>
               </div>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="text-xs text-slate-500">Ton</label>
+                  <label className="text-xs text-slate-500">{t("dashboard.settings.tone")}</label>
                   <select
                     value={tone}
                     onChange={(e) => setTone(e.target.value)}
                     className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
                   >
-                    {TONES.map((t) => (
-                      <option key={t.value} value={t.value}>
-                        {t.label}
+                    {TONE_VALUES.map((toneValue) => (
+                      <option key={toneValue} value={toneValue}>
+                        {t(`dashboard.settings.tones.${toneValue}`)}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-500">Langue</label>
+                  <label className="text-xs text-slate-500">{t("dashboard.settings.language")}</label>
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
@@ -481,9 +474,9 @@ export default function SettingsPage() {
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div>
                   <label className="text-xs text-slate-500">
-                    URL du CTA (optionnel)
+                    {t("dashboard.settings.ctaUrl")}
                     {!proContacts && (
-                      <span className="ml-1 text-brand-600">· Plan Pro</span>
+                      <span className="ml-1 text-brand-600">{t("dashboard.settings.ctaUrlPro")}</span>
                     )}
                   </label>
                   <input
@@ -496,11 +489,11 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-500">Label du CTA</label>
+                  <label className="text-xs text-slate-500">{t("dashboard.settings.ctaLabel")}</label>
                   <input
                     value={ctaLabel}
                     onChange={(e) => setCtaLabel(e.target.value)}
-                    placeholder="S'inscrire"
+                    placeholder={t("dashboard.settings.ctaPlaceholder")}
                     disabled={!proContacts}
                     className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 disabled:bg-slate-100 disabled:text-slate-400"
                   />
@@ -515,7 +508,7 @@ export default function SettingsPage() {
           disabled={saving}
           className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {saving ? "Enregistrement..." : saved ? "Enregistré !" : "Enregistrer"}
+          {saving ? t("common.saving") : saved ? t("common.saved") : t("common.save")}
         </button>
       </form>
     </div>

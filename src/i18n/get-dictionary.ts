@@ -4,42 +4,62 @@ export type Messages = typeof import("../../messages/fr.json");
 
 const dictionaries: Partial<Record<SiteLocale, Messages>> = {};
 
+async function loadFr(): Promise<Messages> {
+  if (!dictionaries.fr) {
+    dictionaries.fr = (await import("../../messages/fr.json")).default;
+  }
+  return dictionaries.fr as Messages;
+}
+
+/** Fusionne la locale sur le français pour les clés manquantes */
+function deepMerge(base: unknown, overlay: unknown): unknown {
+  if (overlay == null) return base;
+  if (base == null) return overlay;
+  if (Array.isArray(overlay)) return overlay.length ? overlay : base;
+  if (typeof overlay !== "object" || typeof base !== "object") return overlay;
+
+  const result = { ...(base as Record<string, unknown>) };
+  for (const [key, value] of Object.entries(overlay as Record<string, unknown>)) {
+    result[key] = deepMerge((base as Record<string, unknown>)[key], value);
+  }
+  return result;
+}
+
 export async function loadMessages(locale: SiteLocale): Promise<Messages> {
   if (dictionaries[locale]) {
     return dictionaries[locale] as Messages;
   }
 
+  const fr = await loadFr();
+
   try {
+    let loaded: Messages;
     switch (locale) {
       case "fr":
-        dictionaries.fr = (await import("../../messages/fr.json")).default;
-        return dictionaries.fr as Messages;
+        return fr;
       case "en":
-        dictionaries.en = (await import("../../messages/en.json")).default;
-        return dictionaries.en as Messages;
-      case "de":
-        dictionaries.de = (await import("../../messages/de.json")).default;
-        return dictionaries.de as Messages;
-      case "it":
-        dictionaries.it = (await import("../../messages/it.json")).default;
-        return dictionaries.it as Messages;
-      case "es":
-        dictionaries.es = (await import("../../messages/es.json")).default;
-        return dictionaries.es as Messages;
-      case "pt":
-        dictionaries.pt = (await import("../../messages/pt.json")).default;
-        return dictionaries.pt as Messages;
-      default:
+        loaded = (await import("../../messages/en.json")).default as Messages;
         break;
+      case "de":
+        loaded = (await import("../../messages/de.json")).default as Messages;
+        break;
+      case "it":
+        loaded = (await import("../../messages/it.json")).default as Messages;
+        break;
+      case "es":
+        loaded = (await import("../../messages/es.json")).default as Messages;
+        break;
+      case "pt":
+        loaded = (await import("../../messages/pt.json")).default as Messages;
+        break;
+      default:
+        return fr;
     }
+    dictionaries[locale] = deepMerge(fr, loaded) as Messages;
+    return dictionaries[locale] as Messages;
   } catch {
-    // Fichier de locale absent — repli sur le français
+    return fr;
   }
-
-  if (!dictionaries.fr) {
-    dictionaries.fr = (await import("../../messages/fr.json")).default;
-  }
-  return dictionaries.fr as Messages;
 }
 
 /** Résout une clé pointée : "home.hero.title" */

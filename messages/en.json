@@ -6,12 +6,12 @@
   "common": {
     "loading": "Loading...",
     "save": "Save",
-    "saving": "Saving...",
-    "saved": "Saved!",
+    "saving": "Registration...",
+    "saved": "Registered!",
     "cancel": "Cancel",
-    "delete": "Delete",
-    "deleting": "Deleting…",
-    "edit": "Edit",
+    "delete": "DELETE",
+    "deleting": "Deletion…",
+    "edit": "To modify",
     "add": "Add",
     "copy": "Copy",
     "copied": "Copied!",
@@ -21,7 +21,7 @@
     "no": "No",
     "error": "Error",
     "unexpectedError": "Unexpected error",
-    "email": "Email",
+    "email": "E-mail",
     "password": "Password",
     "name": "Name",
     "url": "URL",
@@ -30,108 +30,186 @@
     "total": "Total",
     "anonymousVisitor": "Anonymous visitor",
     "perMonth": "/month",
-    "seeGuide": "See the integration guide →",
+    "seeGuide": "View the integration guide →",
     "rightsReserved": "All rights reserved."
   },
   "languageSwitcher": {
     "label": "Language",
-    "ariaLabel": "Change the site language"
+    "ariaLabel": "Change the language of the site"
   },
   "nav": {
     "features": "Features",
-    "useCases": "Use Cases",
-    "pricing": "Pricing",
+    "useCases": "Use cases",
+    "pricing": "Prices",
     "integration": "Integration",
-    "faq": "FAQ",
-    "login": "Login",
-    "signup": "Sign Up",
-    "freeTrial": "Free Trial",
-    "privacy": "Privacy",
-    "deleteAccount": "Delete Account",
+    "faq": "FAQs",
+    "login": "Connection",
+    "signup": "Registration",
+    "freeTrial": "Free trial",
+    "privacy": "Confidentiality",
+    "deleteAccount": "Account deletion",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "menu": "Menu",
-    "logout": "Logout"
+    "logout": "Disconnect"
   },
   "dashboard": {
-    "loading": "Loading dashboard...",
+    "loading": "Loading the dashboard...",
     "nav": {
       "overview": "Overview",
       "conversations": "Conversations",
       "leads": "Leads",
       "advisors": "Advisors",
       "sites": "Sites",
-      "trackedLinks": "Tracked Links",
+      "trackedLinks": "Tracked links",
       "settings": "Settings"
     },
     "overview": {
       "title": "Overview",
-      "subtitle": "Your organization's activity.",
+      "subtitle": "Activity of your organization.",
       "kpiConversations": "Conversations",
-      "kpiLeads": "Qualified Leads",
-      "kpiAvgScore": "Average Score",
-      "kpiConversion": "Conversion Rate",
+      "kpiLeads": "Qualified leads",
+      "kpiAvgScore": "Average score",
+      "kpiConversion": "Conversion rate",
       "hintAllScores": "All scores",
       "hintOutOf100": "Out of 100",
       "hintLeadsPerConv": "Leads / conv.",
-      "recentConversations": "Recent Conversations",
+      "recentConversations": "Recent conversations",
       "recentLeads": "Recent Leads",
       "seeAll": "See all",
       "embedStats": "Embed widget statistics",
       "trackedLinksStats": "Detailed tracked links",
-      "countryBreakdown": "Breakdown by country",
+      "countryBreakdown": "Distribution by country",
       "copyScript": "Copy script",
       "periodDay": "Day",
       "periodMonth": "Month",
-      "noData": "No data yet."
+      "noData": "No data yet.",
+      "plan": "Map {plan}",
+      "manageSites": "Manage sites",
+      "noConversations": "No conversations yet.",
+      "noLeads": "No leads yet.",
+      "siteFallback": "Site",
+      "notConfiguredTitle": "Account not configured",
+      "notConfiguredBody": "Your organization has not yet been created. Contact support or re-register.",
+      "embed": {
+        "title": "Widget integrated into your site",
+        "hint": "Script pasted in the layout · excluding Facebook / Instagram tracked links",
+        "desc": "Chatbot statistics displayed on your website after installing the embed code.",
+        "opens": "Chat openings",
+        "conversationsStarted": "Conversations started",
+        "visitorMessages": "Visitor messages",
+        "clicks": "Clicks (WhatsApp, session, etc.)",
+        "period30Days": "30 days",
+        "period12Months": "12 months",
+        "totalPeriod": "Total over the period:",
+        "perDay": "per day",
+        "perMonth": "per month",
+        "bySite": "By site",
+        "openCount": "{count} opening",
+        "openCountPlural": "{count} openings",
+        "convAbbr": "conv.",
+        "msgAbbr": "msg.",
+        "noActivity": "No embed activity at the moment. Check that the widget script is installed on your site (see “Quick deployment” section below)."
+      },
+      "trackedLinks": {
+        "title": "Performance of tracked links",
+        "manage": "Manage links",
+        "desc": "For each link created (Facebook, Instagram, etc.), see who opened the chat and where they clicked (WhatsApp, session, registration, etc.).",
+        "empty": "No tracked links. Create a Facebook or Instagram link in Tracked Links then share the URL on your networks.",
+        "visit": "{count} visit",
+        "visitPlural": "{count} visits",
+        "interaction": "{count} interaction",
+        "interactionPlural": "{count} interactions",
+        "noInteraction": "No interaction yet (WhatsApp, session, etc.) on this link."
+      },
+      "country": {
+        "title": "Distribution by country",
+        "visitor": "{count} qualified visitor",
+        "visitorPlural": "{count} qualified visitors",
+        "desc": "Countries detected when opening the tracked link or when qualifying in the chat.",
+        "empty": "No country data at the moment. Countries appear when the assistant qualifies a visitor (question about country of origin)."
+      },
+      "quickDeploy": {
+        "title": "Rapid deployment — {name}",
+        "hint": "Paste this script before the </body> tag of your site:"
+      }
     },
     "sites": {
       "title": "Sites",
       "subtitle": "Your sites and widget keys for integration.",
       "addSite": "+ Add a site",
       "cancelAdd": "Cancel",
-      "newSite": "New site",
+      "newSite": "New website",
       "siteName": "Name",
       "siteUrl": "URL",
-      "urlPlaceholder": "https://mysite.com",
-      "createAndCrawl": "Create and start crawl",
-      "creating": "Creating...",
-      "noSites": "No sites. Click \"+ Add a site\" to get started.",
+      "urlPlaceholder": "https://monsite.com",
+      "createAndCrawl": "Create and launch the crawl",
+      "creating": "Creation...",
+      "noSites": "No sites. Click “+ Add Site” to get started.",
       "crawlStatus": "Crawl",
-      "importFormations": "Import courses",
-      "importing": "Importing…",
+      "importFormations": "Import training",
+      "importing": "Import…",
       "recrawl": "Re-crawl",
-      "recrawling": "Restarting...",
-      "activate": "Activate",
-      "deactivate": "Deactivate",
-      "deleteConfirm": "Delete \"{name}\"?\n\nThis action is irreversible: conversations, leads, tracked links and widget data will be deleted.",
+      "recrawling": "RELAUNCH...",
+      "activate": "Enable",
+      "deactivate": "Disable",
+      "deleteConfirm": "Delete “{name}”? \n\nThis action is irreversible: conversations, leads, tracked links and widget data will be deleted.",
       "crawlInProgress": "Crawl in progress…",
-      "crawlConnecting": "Connecting to API to display progress…",
+      "crawlConnecting": "Connecting to the API to view progress…",
       "crawlPhasePages": "Reading pages",
-      "crawlPhaseEmbedding": "Semantic analysis (AI)",
-      "crawlFailed": "Crawl failed",
-      "crawlFailedDefault": "Unable to read the site — check the URL or try again.",
+      "crawlPhaseEmbedding": "Semantic Analysis (AI)",
+      "crawlFailed": "Crawl failure",
+      "crawlFailedDefault": "Unable to read site — check URL or try again.",
       "crawlCause": "Cause",
-      "crawlApiCheck": "Check that the Render API is responding:",
-      "crawlFreePlanHint": "Free plan: the first call may take ~1 min (wake-up).",
-      "reload": "Reload"
+      "crawlApiCheck": "Verify that the Render API responds:",
+      "crawlFreePlanHint": "Free Plan: the first call may take ~1 min (wake-up).",
+      "reload": "Reload",
+      "createFailed": "Unable to create site",
+      "crawlNotStarted": "Crawl not started — check API (NEXT_PUBLIC_API_URL)",
+      "crawlFailedShort": "Crawl not started",
+      "formationsFailed": "Failed training indexing",
+      "sessionsFailed": "Import sessions failed",
+      "deleteFailed": "Unable to delete site",
+      "crawlPrefix": "Crawl:"
     },
     "links": {
-      "title": "Tracked Links",
-      "subtitle": "Create links per campaign (Facebook, Instagram…) and track visits.",
+      "title": "Tracked links",
+      "subtitle": "Create links by campaign (Facebook, Instagram, etc.) and track visits.",
       "newLink": "New link",
       "slug": "Slug",
       "source": "Source",
-      "campaignName": "Campaign name",
+      "campaignName": "Campaign Name",
       "campaignPlaceholder": "Summer 2026 campaign",
-      "createLink": "Create link",
-      "creating": "Creating...",
+      "createLink": "Create the link",
+      "creating": "Creation...",
       "visits": "Visits",
       "country": "Country",
       "interactions": "Interactions",
       "copyUrl": "Copy URL",
       "deleteConfirm": "Delete this tracked link?",
       "noLinks": "No tracked links.",
+      "subtitleExtended": "Create links for your Facebook, Instagram, Google Ads, etc. campaigns. Add a preview image visible when the link is shared (WhatsApp, Facebook, etc.).",
+      "siteLabel": "Site",
+      "slugHint": "Slug (e.g.: facebook-ads)",
+      "labelOptional": "Label (optional)",
+      "previewImage": "Slug preview image (recommended 1200×630)",
+      "previewAlt": "Preview",
+      "previewHint": "This image is displayed in WhatsApp, Facebook and Messenger when you share the link /c/{slug}.",
+      "noSiteYet": "First add a site in Sites to create tracked links.",
+      "loadFailed": "Unable to load links",
+      "createFailed": "Unable to create link",
+      "imageFailed": "Unable to send image",
+      "imageUpdateFailed": "Unable to update image",
+      "deleteFailed": "Unable to delete",
+      "emptyTable": "No tracked links. Create one above to get your Facebook URL.",
+      "colImage": "Picture",
+      "colLabel": "Label / Slug",
+      "colUrl": "URL",
+      "colCreated": "Created",
+      "noImage": "None",
+      "changeImage": "To change",
+      "addImage": "Add",
+      "deleteShort": "Delete",
       "sources": {
         "facebook": "Facebook",
         "instagram": "Instagram",
@@ -144,12 +222,17 @@
     },
     "leads": {
       "title": "Leads",
-      "subtitle": "Prospects qualified by the agent.",
+      "subtitle": "Agent qualified leads.",
       "score": "Score",
       "contact": "Contact",
       "country": "Country",
       "date": "Date",
-      "noLeads": "No leads yet."
+      "noLeads": "No leads yet.",
+      "subtitleExtended": "Visitors qualified by the chatbot (score, contact, country) · {count} qualified{plural} (≥ 60)",
+      "filterAll": "All",
+      "site": "Site",
+      "seeConv": "See conv.",
+      "emptyHint": "No leads yet. A lead is created when a visitor is well qualified by the assistant (score ≥ 60)."
     },
     "conversations": {
       "title": "Conversations",
@@ -157,57 +240,86 @@
       "statusAll": "All",
       "statusActive": "Active",
       "statusQualified": "Qualified",
-      "statusHandedOff": "Handed off",
+      "statusHandedOff": "Transferred",
       "statusClosed": "Closed",
       "notFound": "Conversation not found.",
-      "advisor": "Advisor",
-      "visitor": "Visitor"
+      "advisor": "Advise",
+      "visitor": "Visitor",
+      "subtitleRealtime": "All conversations in real time.",
+      "status": "Status",
+      "page": "Page",
+      "lastActivity": "Last activity",
+      "empty": "No conversations yet."
     },
     "advisors": {
       "title": "Advisors",
       "subtitle": "Invite advisors to respond to handoffs from the mobile app.",
       "addAdvisor": "Add an advisor",
-      "displayName": "Display name",
-      "namePlaceholder": "Jane Smith",
+      "displayName": "Display Name",
+      "namePlaceholder": "Marie Dupont",
       "roleOwner": "Owner",
       "roleAdmin": "Admin",
-      "roleAgent": "Advisor",
+      "roleAgent": "Advise",
       "available": "Available",
       "unavailable": "Unavailable",
-      "inviteSent": "Invitation sent by email — the advisor will be able to log in to the mobile app.",
-      "siteUpdated": "Advisor's site updated.",
-      "advisorAdded": "Advisor added."
+      "inviteSent": "Invitation sent by email — the advisor will be able to connect to the mobile app.",
+      "siteUpdated": "Advisor website updated.",
+      "advisorAdded": "Advisor added.",
+      "subtitleExtended": "Invite as many advisors as necessary to the same site — they receive all handoffs and the first available takes the conversation.",
+      "howItWorks": "How it works",
+      "step1": "Create a site per page/brand (Dashboard → Sites)",
+      "step2": "Install the widget or share a tracked link (Dashboard → Links)",
+      "step3": "Invite one or more advisors to the same site",
+      "step4": "Each advisor connects to the mobile app — everyone receives the notification, the first to respond takes the visitor",
+      "inviteTitle": "Invite an advisor",
+      "assignedSite": "Assigned site",
+      "createSiteFirst": "First create a site",
+      "advisorCount": "{count} advisor",
+      "advisorCountPlural": "{count} advisors",
+      "displayNameOptional": "Display name (optional)",
+      "invite": "Invite",
+      "inviting": "Sending…",
+      "team": "Team ({count})",
+      "noAdvisors": "No advisors yet.",
+      "ownerAdmin": "Owner/admin",
+      "allSites": "All sites",
+      "siteLabel": "Website: {name}",
+      "remove": "Withdraw",
+      "removeConfirm": "Remove {name}?",
+      "loadFailed": "Unable to load",
+      "addFailed": "Unable to add",
+      "removeFailed": "Unable to delete"
     },
     "settings": {
       "title": "Settings",
-      "subtitle": "Organization, agent and widget appearance.",
+      "subtitle": "Organization, agent and appearance of the widget.",
       "organization": "Organization",
-      "orgName": "Organization name",
-      "orgNamePlaceholder": "E.g. CIDES, My Agency…",
-      "orgNameRequired": "Organization name is required.",
+      "orgName": "Organization Name",
+      "orgNamePlaceholder": "Ex. CIDES, My Agency…",
+      "orgNameRequired": "The name of the organization is required.",
       "orgUpdateFailed": "Unable to update organization",
-      "saveFailed": "Save failed",
-      "uploadFailed": "Upload failed",
-      "widgetBranding": "Widget appearance",
-      "primaryColor": "Primary color",
+      "saveFailed": "Registration failed",
+      "uploadFailed": "Upload fails",
+      "widgetBranding": "Appearance of the widget",
+      "primaryColor": "Main color",
       "headerTitleColor": "Title color",
       "headerFont": "Title font",
       "logo": "Logo",
       "chooseImage": "Choose an image",
-      "uploading": "Uploading…",
+      "uploading": "Sending…",
       "logoUrlPlaceholder": "Or logo URL (https://…)",
       "previewTitle": "Preview",
-      "yourCompany": "Your company",
+      "yourCompany": "Your business",
       "agent": "Agent",
-      "welcomeMessage": "Welcome message",
-      "welcomeHint": "Leave blank or generic for auto-generation from the site (on re-crawl).",
-      "defaultWelcome": "Hello! How can I help you?",
-      "tone": "Tone",
+      "welcomeMessage": "Greeting message",
+      "welcomeHint": "Leave blank or generic for auto generation from the site (on re-crawl).",
+      "defaultWelcome": "Good morning ! How can I help you?",
+      "tone": "Your",
       "language": "Language",
       "ctaUrl": "CTA URL (optional)",
-      "ctaUrlPro": "· Pro Plan",
+      "ctaUrlPro": "· Pro plan",
       "ctaLabel": "CTA label",
-      "ctaPlaceholder": "Sign up",
+      "ctaPlaceholder": "Register",
       "contacts": "Direct contacts (widget)",
       "whatsapp": "WhatsApp",
       "phone": "Phone",
@@ -215,7 +327,7 @@
       "tones": {
         "professional": "Professional",
         "friendly": "Friendly",
-        "casual": "Casual",
+        "casual": "Relaxed",
         "formal": "Formal"
       },
       "fonts": {
@@ -224,118 +336,249 @@
         "arial": "Arial",
         "trebuchet": "Trebuchet MS",
         "verdana": "Verdana",
-        "courier": "Courier — monospace"
+        "courier": "Courier — minivan"
+      },
+      "account": "Account",
+      "orgNameHint": "Shown in the dashboard and chat preview below.",
+      "noSitesTitle": "No sites configured",
+      "noSitesBody": "First add a site in Sites to configure the agent, contacts and chat appearance.",
+      "quickContacts": "Quick contacts",
+      "planPro": "Pro Plan",
+      "quickContactsHint": "WhatsApp, Call and Email buttons at the bottom of the chat (clickable icons).",
+      "proOnlyHint": "Reserved for the Pro Plan. Upgrade to Pro to enable WhatsApp, call and email in the widget.",
+      "siteToConfigure": "Site to configure",
+      "phoneCall": "Telephone (call)",
+      "widgetAppearance": "Chat appearance (widget)",
+      "widgetAppearanceHint": "Logo, colors and font displayed in the chat header on your site.",
+      "companyLogo": "Company logo",
+      "headerBgColor": "Header background color",
+      "headerNameColor": "Company name color",
+      "headerFontLabel": "Header font",
+      "agentIa": "AI Agent"
+    },
+    "labels": {
+      "sources": {
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "google_ads": "Google Ads",
+        "whatsapp": "WhatsApp",
+        "qr_code": "QR Code",
+        "direct_link": "Direct link",
+        "widget": "Website",
+        "other": "Other"
+      },
+      "widgetClicks": {
+        "open": "Chat openings",
+        "whatsapp": "WhatsApp",
+        "phone": "Call",
+        "email": "E-mail",
+        "signup": "Register",
+        "session": "Sessions (registration)",
+        "link": "Assistant links"
+      },
+      "statuses": {
+        "active": "Active",
+        "qualified": "Qualified",
+        "handed_off": "Transferred",
+        "closed": "Closed",
+        "pending": "On hold",
+        "running": "In progress",
+        "completed": "Finished",
+        "failed": "Failure"
+      },
+      "crawlErrors": {
+        "cloudflare": "Cloudflare / anti-bot",
+        "anti_bot": "Anti-bot / captcha",
+        "robots_txt": "robots.txt",
+        "http_forbidden": "Access denied (403)",
+        "http_error": "HTTP error",
+        "timeout": "Deadline exceeded",
+        "network": "Network error",
+        "js_render": "JavaScript required",
+        "empty_content": "Empty content",
+        "playwright_unavailable": "Playwright unavailable",
+        "wrong_url": "Incorrect URL",
+        "unknown": "Unknown error"
+      },
+      "embedMetrics": {
+        "conversations": "Conversations",
+        "visitor_messages": "Visitor messages",
+        "opens": "Chat openings",
+        "clicks": "Clicks (WhatsApp, session, etc.)"
       }
     }
   },
   "auth": {
     "login": {
-      "title": "Login",
+      "title": "Connection",
       "submit": "Log in",
-      "submitting": "Logging in...",
-      "forgotPassword": "Forgot your password?",
-      "noAccount": "Don't have an account yet?",
+      "submitting": "Connection...",
+      "forgotPassword": "Forgotten password?",
+      "noAccount": "No account yet?",
       "signupLink": "Create an account",
-      "error": "Login error. Please try again."
+      "error": "Connection error. Try again."
     },
     "signup": {
-      "title": "Create an account",
-      "companyName": "Company name",
-      "siteUrl": "Your website URL",
-      "submit": "Create my account",
-      "submitting": "Creating...",
-      "hasAccount": "Already have an account?",
+      "title": "Create your AI agent",
+      "subtitle": "Enter your site URL. The analysis starts automatically.",
+      "companyName": "Company Name",
+      "siteUrl": "Site URL",
+      "submit": "Launch my agent",
+      "submitting": "Creation in progress...",
+      "hasAccount": "Already registered?",
       "loginLink": "Log in",
       "emailConfirmTitle": "Check your email",
-      "emailConfirmBody": "A confirmation link has been sent. Click on it to activate your account.",
-      "setupError": "Error while creating the account"
+      "emailConfirmBody": "A confirmation link has been sent to {email}.",
+      "goToLogin": "Go to login",
+      "setupError": "Error creating account"
     },
     "forgotPassword": {
-      "title": "Forgot password",
-      "subtitle": "Enter your email to receive a reset link.",
-      "submit": "Send the link",
-      "backToLogin": "Back to login"
+      "title": "Forgotten password",
+      "subtitle": "Enter your email — we'll send you a link to choose a new password.",
+      "submit": "Send link",
+      "submitting": "Sending...",
+      "backToLogin": "Return to login",
+      "sendFailed": "Unable to send email. Try again later.",
+      "sentBody": "If an account exists for {email}, an email has just been sent. Also check your spam.",
+      "gmailHint": "Gmail: also consult the Promotions tab and search for “Supabase” or “Reset password”. Supabase auth emails are sometimes filtered by Gmail."
     },
     "resetPassword": {
-      "title": "New password",
-      "submit": "Update",
-      "passwordMismatch": "Passwords do not match."
+      "title": "New Password",
+      "submit": "Save",
+      "submitting": "Registration...",
+      "passwordMismatch": "Passwords do not match.",
+      "passwordMin": "The password must contain at least 8 characters.",
+      "checking": "Checking the link...",
+      "invalidLink": "Invalid or expired link. Request a new reset link.",
+      "forgotLink": "Forgotten password",
+      "success": "Password updated. Redirection to the dashboard...",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm password"
     }
   },
   "home": {
     "hero": {
       "badge": "AI Sales Agent · Embed · Qualified Leads",
-      "title": "Turn your visitors into",
+      "title": "Transform your visitors into",
       "titleHighlight": "qualified customers",
-      "subtitle": "{saasName} analyzes your website, deploys an intelligent chatbot on your pages or ad campaigns, and alerts you when a prospect is ready to buy or sign up.",
+      "subtitle": "{saasName} analyzes your website, deploys an intelligent chatbot on your pages or advertising campaigns, and alerts you when a prospect is ready to buy or register.",
       "ctaPrimary": "Create my agent for free",
       "ctaSecondary": "See how it works"
     },
     "stats": {
-      "goLive": "Go Live",
+      "goLive": "Online",
       "availability": "Availability",
       "widgetLight": "Lightweight widget",
       "leadScore": "Lead score"
     },
     "preview": {
-      "title": "An assistant that knows",
+      "title": "An assistant who knows",
       "titleHighlight": "your",
       "titleEnd": "business",
-      "body": "No endless manual configuration: our engine reads your product pages, courses, pricing and sessions. Claude crafts natural responses in 6 languages (French, English, Italian, Spanish, Portuguese, German), complete with your registration links and contact buttons.",
+      "body": "No endless manual configuration: our engine reads your product pages, training courses, prices and sessions. Claude writes natural responses in 6 languages ​​(French, English, Italian, Spanish, Portuguese, German), with your registration links and contact buttons.",
       "bullets": [
-        "Welcome message generated after crawl",
-        "Automatic [[registration]] session buttons",
+        "Greeting message generated after the crawl",
+        "Automatic session [[registration]] buttons",
         "Dashboard: countries, campaigns, widget clicks"
       ]
     },
     "howItWorks": {
       "title": "How it works",
-      "subtitle": "From sign-up to your first qualified lead — follow the journey live."
+      "subtitle": "From registration to first qualified lead — follow the journey live."
+    },
+    "demo": {
+      "chatPreview": {
+        "assistantTitle": "Assistant {saasName}",
+        "online": "Online",
+        "welcome": "Good morning ! I am your company's assistant. What training are you interested in?",
+        "userMessage": "IRATA rope access technician in Togo, next session?",
+        "replyIntro": "Here are the upcoming sessions:",
+        "sessionCta": "March 2026 — Registration",
+        "footer": "Live demo — just like on your site"
+      },
+      "signupFlow": {
+        "steps": [
+          {
+            "title": "Connect your site",
+            "desc": "Registration + automatic crawl of your pages."
+          },
+          {
+            "title": "Deploy everywhere",
+            "desc": "Widget ready to paste on your site."
+          },
+          {
+            "title": "Convert",
+            "desc": "First qualified lead in the dashboard."
+          }
+        ],
+        "demoName": "My Training Center",
+        "phases": {
+          "creatingAccount": "Account creation",
+          "configuringAgent": "Agent configuration",
+          "deploying": "Deployment",
+          "dashboard": "Dashboard",
+          "demoTitle": "Demo {saasName}"
+        },
+        "live": "Live",
+        "signup": "Registration",
+        "submitting": "Creation in progress…",
+        "submit": "Create my AI agent",
+        "crawlPages": "Reading pages",
+        "crawlEmbedding": "Semantic Analysis (AI)",
+        "pageProgress": "Page {current}/{total} analyzed",
+        "indexing": "Knowledge indexing for chat…",
+        "agentReady": "Agent ready — generated widget",
+        "scriptHint": "Script to paste on your site",
+        "newLead": "New qualified lead",
+        "leadDetail": "Togo · Rope training · Budget OK",
+        "leadScore": "Score 80/100 — notification sent",
+        "footer": "Actual route after registration — approximately 5 minutes"
+      }
     },
     "features": {
-      "title": "Key features",
-      "subtitle": "Everything you need to sell and qualify leads, without a technical team.",
+      "title": "Key Features",
+      "subtitle": "Everything you need to sell and qualify, without a technical team.",
       "items": [
         {
           "title": "Lightweight embed widget",
-          "desc": "One script on your site. The chat opens as a bubble or full-screen page, without slowing down your pages."
+          "desc": "A script on your site. The chat opens in a bubble or full screen page, without slowing down your pages."
         },
         {
           "title": "AI trained on your site",
-          "desc": "Automatic crawl of your pages, courses and FAQ. The agent responds with your real pricing and registration links."
+          "desc": "Automatic crawling of your pages, training and FAQs. The agent responds with your real pricing and listing links."
         },
         {
-          "title": "Campaign-tracked links",
-          "desc": "Create a slug per source (Facebook, Instagram, Google Ads…) and track visits and interactions."
+          "title": "Links tracked by campaign",
+          "desc": "Create a slug by source (Facebook, Instagram, Google Ads, etc.) and track visits and interactions."
         },
         {
           "title": "Qualification & scoring",
-          "desc": "Country, budget, availability: every conversation is scored out of 100. Hot leads surface on their own."
+          "desc": "Country, budget, availability: each conversation is rated out of 100. Hot leads come up on their own."
         },
         {
-          "title": "Built-in voice",
+          "title": "Integrated voice",
           "desc": "Your visitors can speak into the microphone and listen to responses — ideal for mobile and accessibility."
         },
         {
           "title": "Human handoff",
-          "desc": "WhatsApp, call and email buttons in one click. The conversation history remains available."
+          "desc": "One-click WhatsApp, call and email buttons. The conversation history remains available."
         }
       ]
     },
     "useCases": {
-      "title": "Who is it for?",
+      "title": "For whom?",
       "items": [
         {
           "title": "Training centers",
-          "desc": "IRATA, CND sessions, dates and pricing: the agent suggests the right registrations with the exact links."
+          "desc": "IRATA, CND sessions, dates and prices: the agent offers the right registrations with the exact links."
         },
         {
           "title": "E-commerce & services",
-          "desc": "Product answers, FAQ and guidance toward purchase or a quote — no need to wait for an advisor."
+          "desc": "Product answers, FAQ and guidance towards purchase or quote without waiting for an advisor."
         },
         {
-          "title": "Social ad campaigns",
-          "desc": "One /c/your-slug link per campaign. See where clicks come from and what visitors do in the chat."
+          "title": "Social ads campaigns",
+          "desc": "One /c/your-slug link per campaign. See where clicks are coming from and what visitors are doing in chat."
         }
       ]
     },
@@ -343,19 +586,19 @@
       "title": "A dashboard that speaks business",
       "subtitle": "KPIs, conversations, leads, country breakdown, tracked link performance and widget interactions — all in one place.",
       "tags": [
-        "Live conversations",
+        "Live Chats",
         "Lead score 0–100",
         "Stats by country",
-        "WhatsApp / session clicks",
+        "WhatsApp clicks/session",
         "Facebook & Instagram links",
-        "Lead export"
+        "Export leads"
       ],
-      "cta": "Go to dashboard"
+      "cta": "Access the dashboard"
     },
     "pricing": {
-      "title": "Simple pricing",
+      "title": "Simple rates",
       "subtitle": "Start small, go Pro when your campaigns take off.",
-      "popular": "Most popular",
+      "popular": "The most chosen",
       "choosePlan": "Choose {plan}",
       "plans": [
         {
@@ -365,8 +608,8 @@
             "1 site",
             "500 conversations/month",
             "Embed widget",
-            "Lead scoring",
-            "KPI dashboard"
+            "Scoring leads",
+            "Dashboard KPIs"
           ]
         },
         {
@@ -379,7 +622,7 @@
             "Tracked links + preview image",
             "WhatsApp, call & email",
             "Real-time notifications",
-            "Country & campaign stats"
+            "Country & campaign statistics"
           ]
         },
         {
@@ -390,7 +633,7 @@
             "White label",
             "Multi-client",
             "Full API",
-            "Priority support"
+            "Priority Support"
           ]
         }
       ]
@@ -399,41 +642,43 @@
       "title": "Frequently asked questions",
       "items": [
         {
-          "q": "How long does it take to go live?",
-          "a": "About 5 minutes: create an account, enter your site URL, and the crawl and agent training start automatically."
+          "q": "How long to be online?",
+          "a": "About 5 minutes: create an account, enter the URL of your site, the crawl and agent training will launch automatically."
         },
         {
-          "q": "Does the AI make up information?",
-          "a": "Not by design: the agent relies solely on the crawled content from your site. If it doesn't know, it offers a human contact option."
+          "q": "Does AI invent information?",
+          "a": "Not by design: the agent only relies on the crawled content of your site. If he doesn't know, he offers human contact."
         },
         {
           "q": "Can I use it without a developer?",
           "a": "Yes. Copy the widget script or tracked link from the dashboard. No technical skills required."
         },
         {
-          "q": "How do I integrate it on my site (WordPress, Next.js, React…)?",
-          "a": "Just one script to paste before </body>. Detailed guides for each framework are available on the Integration page — viewable even before creating an account.",
+          "q": "How do I integrate it into my site (WordPress, Next.js, React, etc.)?",
+          "a": "Only one script to paste before </body>. Detailed guides for each framework on the Integration page — viewable even before creating an account.",
           "hasIntegrationLink": true
         },
         {
-          "q": "What languages are supported?",
+          "q": "What languages ​​are supported?",
           "a": "French, English, Italian, Spanish, Portuguese and German. The agent detects the visitor's language and responds in the same language."
         }
       ]
     },
     "cta": {
-      "title": "Ready to stop losing visitors?",
-      "subtitle": "Create your account, enter your site URL and let {saasName} do the rest. No commitment required.",
+      "title": "Ready to never lose another visitor?",
+      "subtitle": "Create your account, enter your site URL and let {saasName} do the rest. Test without obligation.",
       "button": "Get started now — it's free"
     }
   },
   "chatLanding": {
     "loading": "Loading chat…",
     "unavailable": "Chat unavailable",
-    "missingKey": "Incomplete link: the widget key is missing (?key=...). Copy the URL from Dashboard → Tracked Links → Copy.",
-    "widgetMissing": "widget.js file not found on this site",
-    "apiCheck": "Check that the Render API is responding:",
-    "freePlanHint": "Free plan: the first call may take ~1 min (wake-up)."
+    "missingKey": "Incomplete link: the widget key (?key=...) is missing. Copy the URL from Dashboard → Tracked Links → Copy.",
+    "widgetMissing": "Widget.js file not found on this site",
+    "loadError": "Loading error",
+    "apiCheck": "Verify that the Render API responds:",
+    "freePlanHint": "Free Plan: the first call may take ~1 min (wake-up).",
+    "reload": "Reload"
   },
   "integration": {
     "title": "Integration",
@@ -443,12 +688,15 @@
     "title": "Privacy Policy"
   },
   "deleteAccount": {
-    "title": "Account Deletion",
-    "subtitle": "Request the permanent deletion of your account and data."
+    "title": "Account deletion",
+    "subtitle": "Request permanent deletion of your account and data."
   },
   "setupOrg": {
-    "title": "Set up your organization",
-    "subtitle": "Last step to access the dashboard.",
-    "submit": "Continue"
+    "title": "Finalize your account",
+    "subtitle": "Your account exists but the organization has not yet been created. Enter your business information to continue.",
+    "submit": "Create my organization",
+    "submitting": "Creation in progress...",
+    "sessionExpired": "Session expired — log back in.",
+    "createFailed": "Unable to create organization"
   }
 }

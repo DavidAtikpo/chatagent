@@ -3,7 +3,6 @@
 import { WidgetIntegration } from "@/components/dashboard/widget-integration";
 import {
   CrawlProgress,
-  crawlErrorLabel,
   fetchCrawlProgress,
   refreshFormations,
   refreshSessions,
@@ -12,6 +11,8 @@ import {
 } from "@/lib/dashboard-data";
 import { createClient } from "@/lib/supabase/client";
 import { useOrganization } from "@/hooks/use-organization";
+import { useT } from "@/i18n/context";
+import { useDashboardLabels } from "@/i18n/use-dashboard-labels";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 function crawlPercent(progress: CrawlProgress) {
@@ -24,9 +25,12 @@ function crawlPercent(progress: CrawlProgress) {
 }
 
 function CrawlProgressBar({ progress }: { progress: CrawlProgress }) {
+  const t = useT();
   const percent = crawlPercent(progress);
   const phaseLabel =
-    progress.phase === "embedding" ? "Analyse sémantique (IA)" : "Lecture des pages";
+    progress.phase === "embedding"
+      ? t("dashboard.sites.crawlPhaseEmbedding")
+      : t("dashboard.sites.crawlPhasePages");
 
   return (
     <div className="mt-2 rounded-md border border-brand-100 bg-brand-50/50 p-2.5">
@@ -52,6 +56,8 @@ function CrawlProgressBar({ progress }: { progress: CrawlProgress }) {
 
 export default function SitesPage() {
   const { organization, sites, refresh, loading: orgLoading } = useOrganization();
+  const t = useT();
+  const { crawlErrorLabel } = useDashboardLabels();
   const [showForm, setShowForm] = useState(false);
   const [newName, setNewName] = useState("");
   const [newUrl, setNewUrl] = useState("");
@@ -149,13 +155,13 @@ export default function SitesPage() {
       const data = await res.json();
 
       if (!res.ok || !data.site?.id) {
-        setError(data.error ?? "Impossible de créer le site");
+        setError(data.error ?? t("dashboard.sites.createFailed"));
         return;
       }
 
       const crawl = await triggerCrawl(data.site.id);
       if (!crawl.ok) {
-        setError(crawl.error ?? "Crawl non lancé — vérifiez l'API (NEXT_PUBLIC_API_URL)");
+        setError(crawl.error ?? t("dashboard.sites.crawlNotStarted"));
       }
 
       setNewName("");
@@ -163,7 +169,7 @@ export default function SitesPage() {
       setShowForm(false);
       await refresh({ silent: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur inattendue");
+      setError(err instanceof Error ? err.message : t("common.unexpectedError"));
     } finally {
       setCreating(false);
     }
@@ -175,7 +181,7 @@ export default function SitesPage() {
     try {
       const crawl = await triggerCrawl(siteId);
       if (!crawl.ok) {
-        setError(crawl.error ?? "Crawl non lancé");
+        setError(crawl.error ?? t("dashboard.sites.crawlFailedShort"));
         return;
       }
       const supabase = createClient();
@@ -192,12 +198,12 @@ export default function SitesPage() {
     try {
       const formations = await refreshFormations(siteId);
       if (!formations.ok) {
-        setError(formations.error ?? "Indexation formations échouée");
+        setError(formations.error ?? t("dashboard.sites.formationsFailed"));
         return;
       }
       const result = await refreshSessions(siteId);
       if (!result.ok) {
-        setError(result.error ?? "Import sessions échoué");
+        setError(result.error ?? t("dashboard.sites.sessionsFailed"));
         return;
       }
       await refresh({ silent: true });
@@ -213,9 +219,7 @@ export default function SitesPage() {
   }
 
   async function deleteSite(siteId: string, siteName: string) {
-    const confirmed = window.confirm(
-      `Supprimer « ${siteName} » ?\n\nCette action est irréversible : conversations, leads, liens trackés et données du widget seront supprimés.`
-    );
+    const confirmed = window.confirm(t("dashboard.sites.deleteConfirm", { name: siteName }));
     if (!confirmed) return;
 
     setDeleting(siteId);
@@ -224,34 +228,34 @@ export default function SitesPage() {
       const res = await fetch(`/api/sites/${siteId}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Impossible de supprimer le site");
+        setError(data.error ?? t("dashboard.sites.deleteFailed"));
         return;
       }
       await refresh({ silent: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur inattendue");
+      setError(err instanceof Error ? err.message : t("common.unexpectedError"));
     } finally {
       setDeleting(null);
     }
   }
 
   if (orgLoading) {
-    return <p className="text-sm text-slate-500">Chargement...</p>;
+    return <p className="text-sm text-slate-500">{t("common.loading")}</p>;
   }
 
   return (
     <div>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Sites</h1>
-          <p className="mt-0.5 text-sm text-slate-600">Vos sites et clés widget pour l&apos;intégration.</p>
+          <h1 className="text-xl font-bold text-slate-900">{t("dashboard.sites.title")}</h1>
+          <p className="mt-0.5 text-sm text-slate-600">{t("dashboard.sites.subtitle")}</p>
         </div>
         <button
           type="button"
           onClick={() => setShowForm(!showForm)}
           className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
         >
-          {showForm ? "Annuler" : "+ Ajouter un site"}
+          {showForm ? t("dashboard.sites.cancelAdd") : t("dashboard.sites.addSite")}
         </button>
       </div>
 
@@ -261,10 +265,10 @@ export default function SitesPage() {
 
       {showForm && (
         <form onSubmit={addSite} className="mt-3 rounded-lg border border-slate-200 bg-white p-4">
-          <h2 className="text-sm font-semibold">Nouveau site</h2>
+          <h2 className="text-sm font-semibold">{t("dashboard.sites.newSite")}</h2>
           <div className="mt-2 grid gap-2 sm:grid-cols-2">
             <div>
-              <label className="text-xs text-slate-500">Nom</label>
+              <label className="text-xs text-slate-500">{t("dashboard.sites.siteName")}</label>
               <input
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
@@ -273,12 +277,12 @@ export default function SitesPage() {
               />
             </div>
             <div>
-              <label className="text-xs text-slate-500">URL</label>
+              <label className="text-xs text-slate-500">{t("dashboard.sites.siteUrl")}</label>
               <input
                 type="url"
                 value={newUrl}
                 onChange={(e) => setNewUrl(e.target.value)}
-                placeholder="https://monsite.com"
+                placeholder={t("dashboard.sites.urlPlaceholder")}
                 className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900"
                 required
               />
@@ -289,15 +293,13 @@ export default function SitesPage() {
             disabled={creating}
             className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
-            {creating ? "Création..." : "Créer et lancer le crawl"}
+            {creating ? t("dashboard.sites.creating") : t("dashboard.sites.createAndCrawl")}
           </button>
         </form>
       )}
 
       {sites.length === 0 ? (
-        <p className="mt-3 text-sm text-slate-500">
-          Aucun site. Cliquez sur &quot;+ Ajouter un site&quot; pour commencer.
-        </p>
+        <p className="mt-3 text-sm text-slate-500">{t("dashboard.sites.noSites")}</p>
       ) : (
         <div className="mt-3 space-y-2">
           {sites.map((site) => (
@@ -308,7 +310,7 @@ export default function SitesPage() {
                     <h2 className="font-semibold">{site.name}</h2>
                     {!site.is_active && (
                       <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-                        Inactif
+                        {t("common.inactive")}
                       </span>
                     )}
                   </div>
@@ -323,7 +325,7 @@ export default function SitesPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <span className={`rounded-full px-2 py-0.5 text-xs ${statusBadge(site.crawl_status)}`}>
-                    Crawl : {site.crawl_status}
+                    {t("dashboard.sites.crawlPrefix")} {site.crawl_status}
                   </span>
                   <button
                     type="button"
@@ -331,7 +333,9 @@ export default function SitesPage() {
                     disabled={refreshingSessions === site.id}
                     className="rounded-md bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 hover:bg-brand-100 disabled:opacity-50"
                   >
-                    {refreshingSessions === site.id ? "Import…" : "Importer formations"}
+                    {refreshingSessions === site.id
+                      ? t("dashboard.sites.importing")
+                      : t("dashboard.sites.importFormations")}
                   </button>
                   <button
                     type="button"
@@ -339,14 +343,16 @@ export default function SitesPage() {
                     disabled={crawling === site.id || site.crawl_status === "running"}
                     className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 hover:bg-slate-200 disabled:opacity-50"
                   >
-                    {crawling === site.id ? "Relance..." : "Re-crawler"}
+                    {crawling === site.id
+                      ? t("dashboard.sites.recrawling")
+                      : t("dashboard.sites.recrawl")}
                   </button>
                   <button
                     type="button"
                     onClick={() => toggleActive(site.id, site.is_active)}
                     className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 hover:bg-slate-200"
                   >
-                    {site.is_active ? "Désactiver" : "Activer"}
+                    {site.is_active ? t("dashboard.sites.deactivate") : t("dashboard.sites.activate")}
                   </button>
                   <button
                     type="button"
@@ -354,7 +360,7 @@ export default function SitesPage() {
                     disabled={deleting === site.id}
                     className="rounded-md bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700 hover:bg-red-100 disabled:opacity-50"
                   >
-                    {deleting === site.id ? "Suppression…" : "Supprimer"}
+                    {deleting === site.id ? t("common.deleting") : t("common.delete")}
                   </button>
                 </div>
               </div>
@@ -365,28 +371,28 @@ export default function SitesPage() {
                 ) : (
                   <div className="mt-2 rounded-md border border-brand-100 bg-brand-50/50 p-2.5">
                     <div className="flex items-center justify-between text-xs text-slate-700">
-                      <span className="font-medium">Crawl en cours…</span>
+                      <span className="font-medium">{t("dashboard.sites.crawlInProgress")}</span>
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
                       <div className="h-full w-1/3 animate-pulse rounded-full bg-brand-400" />
                     </div>
                     <p className="mt-2 text-xs text-slate-500">
-                      Connexion à l&apos;API pour afficher la progression…
+                      {t("dashboard.sites.crawlConnecting")}
                     </p>
                   </div>
                 ))}
 
               {site.crawl_status === "failed" && (
                 <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-3">
-                  <p className="text-sm font-medium text-red-800">Échec du crawl</p>
+                  <p className="text-sm font-medium text-red-800">{t("dashboard.sites.crawlFailed")}</p>
                   <p className="mt-1 text-sm text-red-700">
                     {site.agent_config?.crawl_error?.message ??
                       progressMap[site.id]?.message ??
-                      "Impossible de lire le site — vérifiez l'URL ou réessayez."}
+                      t("dashboard.sites.crawlFailedDefault")}
                   </p>
                   {(site.agent_config?.crawl_error?.code ?? progressMap[site.id]?.error_code) && (
                     <p className="mt-2 text-xs text-red-600">
-                      Cause :{" "}
+                      {t("dashboard.sites.crawlCause")} :{" "}
                       {crawlErrorLabel(
                         site.agent_config?.crawl_error?.code ??
                           progressMap[site.id]?.error_code ??
