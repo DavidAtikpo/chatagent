@@ -76,7 +76,7 @@ export async function PATCH(
     const newLang = (agentConfig.language as string) ?? "fr";
     const welcomeCustomized = Boolean(agentConfig.welcome_customized);
 
-    if (newLang !== oldLang && !welcomeCustomized) {
+    if (newLang !== oldLang) {
       agentConfig = {
         ...agentConfig,
         welcome_intro: null,
@@ -85,6 +85,7 @@ export async function PATCH(
         welcome_message: null,
         welcome_message_lang: null,
         welcome_auto_generated: false,
+        welcome_customized: false,
       };
     } else if (!welcomeCustomized) {
       const introLang = (prevConfig.welcome_intro_lang as string) ?? "";

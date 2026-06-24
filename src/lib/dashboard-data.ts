@@ -23,7 +23,8 @@ export type Site = {
 export type AgentConfig = {
   tone?: string;
   language?: string;
-  welcome_message?: string;
+  welcome_message?: string | null;
+  welcome_message_lang?: string | null;
   welcome_customized?: boolean;
   welcome_auto_generated?: boolean;
   training_sessions?: { label: string; url: string; region?: string }[];

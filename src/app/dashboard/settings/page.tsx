@@ -40,7 +40,9 @@ function applySiteConfig(
     setLogoUrl: (v: string) => void;
   }
 ) {
-  setters.setWelcomeMessage(config.welcome_message ?? defaultWelcome);
+  setters.setWelcomeMessage(
+    config.welcome_customized ? (config.welcome_message ?? "") : ""
+  );
   setters.setTone(config.tone ?? "professional");
   setters.setLanguage(config.language ?? "fr");
   setters.setCtaUrl(config.cta_url ?? "");
@@ -77,6 +79,7 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
+  const [welcomeTouched, setWelcomeTouched] = useState(false);
 
   const defaultWelcome = t("dashboard.settings.defaultWelcome");
 
@@ -115,13 +118,17 @@ export default function SettingsPage() {
     if (activeId !== siteId) setSiteId(activeId);
     const site = sites.find((s) => s.id === activeId) ?? sites[0];
     applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, defaultWelcome, setters);
+    setWelcomeTouched(Boolean(site.agent_config?.welcome_customized));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sites, siteId, defaultWelcome]);
 
   function handleSiteChange(id: string) {
     setSiteId(id);
     const site = sites.find((s) => s.id === id);
-    if (site) applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, defaultWelcome, setters);
+    if (site) {
+      applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, defaultWelcome, setters);
+      setWelcomeTouched(Boolean(site.agent_config?.welcome_customized));
+    }
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -153,10 +160,12 @@ export default function SettingsPage() {
     if (siteId) {
       const site = sites.find((s) => s.id === siteId);
       const prev = site?.agent_config ?? {};
+      const welcomeCustomized = welcomeTouched && welcomeMessage.trim().length > 0;
       const agentConfig: AgentConfig = {
         ...prev,
-        welcome_message: welcomeMessage,
-        welcome_customized: true,
+        welcome_message: welcomeCustomized ? welcomeMessage.trim() : null,
+        welcome_customized: welcomeCustomized,
+        welcome_message_lang: welcomeCustomized ? language : null,
         tone,
         language,
         cta_url: ctaUrl || null,
@@ -462,11 +471,18 @@ export default function SettingsPage() {
                   <label className="text-xs text-slate-500">{t("dashboard.settings.welcomeMessage")}</label>
                   <textarea
                     value={welcomeMessage}
-                    onChange={(e) => setWelcomeMessage(e.target.value)}
+                    onChange={(e) => {
+                      setWelcomeTouched(true);
+                      setWelcomeMessage(e.target.value);
+                    }}
+                    placeholder={defaultWelcome}
                     rows={3}
                     className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
                   />
                   <p className="mt-1 text-xs text-slate-400">{t("dashboard.settings.welcomeHint")}</p>
+                  {!welcomeTouched && (
+                    <p className="mt-1 text-xs text-brand-700">{t("dashboard.settings.welcomeAutoHint")}</p>
+                  )}
                 </div>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div>
