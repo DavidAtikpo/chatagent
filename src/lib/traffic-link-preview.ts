@@ -7,6 +7,7 @@ export type TrafficLinkPreview = {
   description: string;
   imageUrl: string | null;
   siteName: string;
+  primaryColor: string;
 };
 
 export async function getTrafficLinkPreview(
@@ -42,5 +43,11 @@ export async function getTrafficLinkPreview(
     saasLogoUrl() ||
     null;
 
-  return { title, description, imageUrl, siteName };
+  return {
+    title,
+    description,
+    imageUrl,
+    siteName,
+    primaryColor: (agentConfig.primary_color as string | undefined) || "#C9922A",
+  };
 }

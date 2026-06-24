@@ -8,22 +8,28 @@ type Props = {
   slug: string;
   widgetKey: string;
   previewTitle?: string;
+  primaryColor?: string;
 };
 
-function ReloadButton() {
+const DEFAULT_PRIMARY = "#C9922A";
+
+function ReloadButton({ primaryColor }: { primaryColor?: string }) {
   const t = useT();
+  const color = primaryColor || DEFAULT_PRIMARY;
+
   return (
     <button
       type="button"
       onClick={() => window.location.reload()}
-      className="mt-4 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
+      className="mt-4 rounded-lg px-4 py-2 text-sm font-medium text-white transition hover:brightness-95 active:brightness-90"
+      style={{ backgroundColor: color }}
     >
       {t("chatLanding.reload")}
     </button>
   );
 }
 
-export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
+export function ChatLandingClient({ slug, widgetKey, previewTitle, primaryColor }: Props) {
   const t = useT();
   const [status, setStatus] = useState<"loading" | "ready" | "error" | "no-key">(
     widgetKey ? "loading" : "no-key"
@@ -126,7 +132,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
             <p className="mb-2 text-base font-semibold text-slate-900">{previewTitle}</p>
           )}
           <p className="text-sm text-slate-500">{t("chatLanding.loading")}</p>
-          <ReloadButton />
+          <ReloadButton primaryColor={primaryColor} />
         </div>
       )}
 
@@ -142,7 +148,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle }: Props) {
               {t("chatLanding.freePlanHint")}
             </p>
           </div>
-          <ReloadButton />
+          <ReloadButton primaryColor={primaryColor} />
         </div>
       )}
     </div>

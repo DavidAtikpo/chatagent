@@ -40,6 +40,7 @@ export default async function ChatLandingPage({ params, searchParams }: PageProp
       slug={params.slug}
       widgetKey={searchParams.key ?? ""}
       previewTitle={preview?.title}
+      primaryColor={preview?.primaryColor}
     />
   );
 }
