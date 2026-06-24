@@ -67,6 +67,13 @@
     "overview": {
       "title": "Vue d'ensemble",
       "subtitle": "Activité de votre organisation.",
+      "tabs": {
+        "summary": "Résumé",
+        "widget": "Widget site",
+        "links": "Liens réseaux",
+        "audience": "Audience",
+        "deploy": "Intégration"
+      },
       "kpiConversations": "Conversations",
       "kpiLeads": "Leads qualifiés",
       "kpiAvgScore": "Score moyen",
@@ -109,7 +116,10 @@
         "openCountPlural": "{count} ouvertures",
         "convAbbr": "conv.",
         "msgAbbr": "msg.",
-        "noActivity": "Aucune activité embed pour le moment. Vérifiez que le script widget est bien installé sur votre site (voir section « Déploiement rapide » ci-dessous)."
+        "noActivity": "Aucune activité embed pour le moment. Vérifiez que le script widget est bien installé sur votre site (onglet Intégration).",
+        "noActivityTab": "Aucune activité pour le moment. Installez le script widget (onglet Intégration) puis revenez ici.",
+        "clickBreakdown": "Détail des clics",
+        "clickType": "Type de clic"
       },
       "trackedLinks": {
         "title": "Performance des liens trackés",
@@ -120,7 +130,9 @@
         "visitPlural": "{count} visites",
         "interaction": "{count} interaction",
         "interactionPlural": "{count} interactions",
-        "noInteraction": "Pas encore d'interaction (WhatsApp, session, etc.) sur ce lien."
+        "noInteraction": "Pas encore d'interaction (WhatsApp, session, etc.) sur ce lien.",
+        "visitsLabel": "Visites",
+        "interactionsLabel": "Interactions"
       },
       "country": {
         "title": "Répartition par pays",
@@ -293,6 +305,12 @@
     "settings": {
       "title": "Paramètres",
       "subtitle": "Organisation, agent et apparence du widget.",
+      "tabs": {
+        "account": "Compte",
+        "contacts": "Contacts",
+        "widget": "Apparence",
+        "agent": "Agent IA"
+      },
       "organization": "Organisation",
       "orgName": "Nom de l'organisation",
       "orgNamePlaceholder": "Ex. CIDES, Mon Agence…",

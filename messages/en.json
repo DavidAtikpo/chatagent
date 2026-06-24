@@ -67,6 +67,13 @@
     "overview": {
       "title": "Overview",
       "subtitle": "Activity of your organization.",
+      "tabs": {
+        "summary": "Summary",
+        "widget": "Site widget",
+        "links": "Social links",
+        "audience": "Audience",
+        "deploy": "Integration"
+      },
       "kpiConversations": "Conversations",
       "kpiLeads": "Qualified leads",
       "kpiAvgScore": "Average score",
@@ -109,7 +116,10 @@
         "openCountPlural": "{count} openings",
         "convAbbr": "conv.",
         "msgAbbr": "msg.",
-        "noActivity": "No embed activity at the moment. Check that the widget script is installed on your site (see “Quick deployment” section below)."
+        "noActivity": "No embed activity at the moment. Check that the widget script is installed on your site (Integration tab).",
+        "noActivityTab": "No activity yet. Install the widget script (Integration tab) and check back here.",
+        "clickBreakdown": "Click breakdown",
+        "clickType": "Click type"
       },
       "trackedLinks": {
         "title": "Performance of tracked links",
@@ -120,7 +130,9 @@
         "visitPlural": "{count} visits",
         "interaction": "{count} interaction",
         "interactionPlural": "{count} interactions",
-        "noInteraction": "No interaction yet (WhatsApp, session, etc.) on this link."
+        "noInteraction": "No interaction yet (WhatsApp, session, etc.) on this link.",
+        "visitsLabel": "Visits",
+        "interactionsLabel": "Interactions"
       },
       "country": {
         "title": "Distribution by country",
@@ -293,6 +305,12 @@
     "settings": {
       "title": "Settings",
       "subtitle": "Organization, agent and appearance of the widget.",
+      "tabs": {
+        "account": "Account",
+        "contacts": "Contacts",
+        "widget": "Appearance",
+        "agent": "AI agent"
+      },
       "organization": "Organization",
       "orgName": "Organization Name",
       "orgNamePlaceholder": "Ex. CIDES, My Agency…",
