@@ -1,7 +1,9 @@
 "use client";
 
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { DashboardMobileHeader, DashboardSidebar } from "@/components/dashboard/sidebar";
 import { SetupOrganizationForm } from "@/components/dashboard/setup-organization";
+import { useT } from "@/i18n/context";
 import { OrganizationProvider, useOrganization } from "@/hooks/use-organization";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,6 +12,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   const { email, loading, organization, refresh } = useOrganization();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const pathname = usePathname();
+  const t = useT();
 
   useEffect(() => {
     setMobileNavOpen(false);
@@ -18,7 +21,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500">
-        Chargement du dashboard...
+        {t("dashboard.loading")}
       </div>
     );
   }
@@ -44,6 +47,9 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
         onMobileClose={() => setMobileNavOpen(false)}
       />
       <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-slate-50 p-3 text-slate-900 sm:p-4 lg:p-5">
+        <div className="mx-auto mb-3 flex w-full max-w-6xl justify-end">
+          <LanguageSwitcher />
+        </div>
         <div className="mx-auto w-full max-w-6xl">{children}</div>
       </main>
     </div>

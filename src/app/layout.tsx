@@ -1,3 +1,4 @@
+import { Providers } from "@/components/providers";
 import { WidgetEmbed } from "@/components/widget-embed";
 import { SAAS_LOGO_PATH } from "@/lib/branding";
 import {
@@ -94,8 +95,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {children}
-        <WidgetEmbed embedKey={process.env.NEXT_PUBLIC_EMBED_WIDGET_KEY} />
+        <Providers>
+          {children}
+          <WidgetEmbed embedKey={process.env.NEXT_PUBLIC_EMBED_WIDGET_KEY} />
+        </Providers>
       </body>
     </html>
   );

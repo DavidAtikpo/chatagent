@@ -1,0 +1,454 @@
+{
+  "meta": {
+    "locale": "en",
+    "label": "English"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Saved!",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "edit": "Edit",
+    "add": "Add",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "close": "Close",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "error": "Error",
+    "unexpectedError": "Unexpected error",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "url": "URL",
+    "active": "Active",
+    "inactive": "Inactive",
+    "total": "Total",
+    "anonymousVisitor": "Anonymous visitor",
+    "perMonth": "/month",
+    "seeGuide": "See the integration guide →",
+    "rightsReserved": "All rights reserved."
+  },
+  "languageSwitcher": {
+    "label": "Language",
+    "ariaLabel": "Change the site language"
+  },
+  "nav": {
+    "features": "Features",
+    "useCases": "Use Cases",
+    "pricing": "Pricing",
+    "integration": "Integration",
+    "faq": "FAQ",
+    "login": "Login",
+    "signup": "Sign Up",
+    "freeTrial": "Free Trial",
+    "privacy": "Privacy",
+    "deleteAccount": "Delete Account",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "loading": "Loading dashboard...",
+    "nav": {
+      "overview": "Overview",
+      "conversations": "Conversations",
+      "leads": "Leads",
+      "advisors": "Advisors",
+      "sites": "Sites",
+      "trackedLinks": "Tracked Links",
+      "settings": "Settings"
+    },
+    "overview": {
+      "title": "Overview",
+      "subtitle": "Your organization's activity.",
+      "kpiConversations": "Conversations",
+      "kpiLeads": "Qualified Leads",
+      "kpiAvgScore": "Average Score",
+      "kpiConversion": "Conversion Rate",
+      "hintAllScores": "All scores",
+      "hintOutOf100": "Out of 100",
+      "hintLeadsPerConv": "Leads / conv.",
+      "recentConversations": "Recent Conversations",
+      "recentLeads": "Recent Leads",
+      "seeAll": "See all",
+      "embedStats": "Embed widget statistics",
+      "trackedLinksStats": "Detailed tracked links",
+      "countryBreakdown": "Breakdown by country",
+      "copyScript": "Copy script",
+      "periodDay": "Day",
+      "periodMonth": "Month",
+      "noData": "No data yet."
+    },
+    "sites": {
+      "title": "Sites",
+      "subtitle": "Your sites and widget keys for integration.",
+      "addSite": "+ Add a site",
+      "cancelAdd": "Cancel",
+      "newSite": "New site",
+      "siteName": "Name",
+      "siteUrl": "URL",
+      "urlPlaceholder": "https://mysite.com",
+      "createAndCrawl": "Create and start crawl",
+      "creating": "Creating...",
+      "noSites": "No sites. Click \"+ Add a site\" to get started.",
+      "crawlStatus": "Crawl",
+      "importFormations": "Import courses",
+      "importing": "Importing…",
+      "recrawl": "Re-crawl",
+      "recrawling": "Restarting...",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "deleteConfirm": "Delete \"{name}\"?\n\nThis action is irreversible: conversations, leads, tracked links and widget data will be deleted.",
+      "crawlInProgress": "Crawl in progress…",
+      "crawlConnecting": "Connecting to API to display progress…",
+      "crawlPhasePages": "Reading pages",
+      "crawlPhaseEmbedding": "Semantic analysis (AI)",
+      "crawlFailed": "Crawl failed",
+      "crawlFailedDefault": "Unable to read the site — check the URL or try again.",
+      "crawlCause": "Cause",
+      "crawlApiCheck": "Check that the Render API is responding:",
+      "crawlFreePlanHint": "Free plan: the first call may take ~1 min (wake-up).",
+      "reload": "Reload"
+    },
+    "links": {
+      "title": "Tracked Links",
+      "subtitle": "Create links per campaign (Facebook, Instagram…) and track visits.",
+      "newLink": "New link",
+      "slug": "Slug",
+      "source": "Source",
+      "campaignName": "Campaign name",
+      "campaignPlaceholder": "Summer 2026 campaign",
+      "createLink": "Create link",
+      "creating": "Creating...",
+      "visits": "Visits",
+      "country": "Country",
+      "interactions": "Interactions",
+      "copyUrl": "Copy URL",
+      "deleteConfirm": "Delete this tracked link?",
+      "noLinks": "No tracked links.",
+      "sources": {
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "google_ads": "Google Ads",
+        "whatsapp": "WhatsApp",
+        "qr_code": "QR Code",
+        "direct_link": "Direct link",
+        "other": "Other"
+      }
+    },
+    "leads": {
+      "title": "Leads",
+      "subtitle": "Prospects qualified by the agent.",
+      "score": "Score",
+      "contact": "Contact",
+      "country": "Country",
+      "date": "Date",
+      "noLeads": "No leads yet."
+    },
+    "conversations": {
+      "title": "Conversations",
+      "subtitle": "History of exchanges with your visitors.",
+      "statusAll": "All",
+      "statusActive": "Active",
+      "statusQualified": "Qualified",
+      "statusHandedOff": "Handed off",
+      "statusClosed": "Closed",
+      "notFound": "Conversation not found.",
+      "advisor": "Advisor",
+      "visitor": "Visitor"
+    },
+    "advisors": {
+      "title": "Advisors",
+      "subtitle": "Invite advisors to respond to handoffs from the mobile app.",
+      "addAdvisor": "Add an advisor",
+      "displayName": "Display name",
+      "namePlaceholder": "Jane Smith",
+      "roleOwner": "Owner",
+      "roleAdmin": "Admin",
+      "roleAgent": "Advisor",
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "inviteSent": "Invitation sent by email — the advisor will be able to log in to the mobile app.",
+      "siteUpdated": "Advisor's site updated.",
+      "advisorAdded": "Advisor added."
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Organization, agent and widget appearance.",
+      "organization": "Organization",
+      "orgName": "Organization name",
+      "orgNamePlaceholder": "E.g. CIDES, My Agency…",
+      "orgNameRequired": "Organization name is required.",
+      "orgUpdateFailed": "Unable to update organization",
+      "saveFailed": "Save failed",
+      "uploadFailed": "Upload failed",
+      "widgetBranding": "Widget appearance",
+      "primaryColor": "Primary color",
+      "headerTitleColor": "Title color",
+      "headerFont": "Title font",
+      "logo": "Logo",
+      "chooseImage": "Choose an image",
+      "uploading": "Uploading…",
+      "logoUrlPlaceholder": "Or logo URL (https://…)",
+      "previewTitle": "Preview",
+      "yourCompany": "Your company",
+      "agent": "Agent",
+      "welcomeMessage": "Welcome message",
+      "welcomeHint": "Leave blank or generic for auto-generation from the site (on re-crawl).",
+      "defaultWelcome": "Hello! How can I help you?",
+      "tone": "Tone",
+      "language": "Language",
+      "ctaUrl": "CTA URL (optional)",
+      "ctaUrlPro": "· Pro Plan",
+      "ctaLabel": "CTA label",
+      "ctaPlaceholder": "Sign up",
+      "contacts": "Direct contacts (widget)",
+      "whatsapp": "WhatsApp",
+      "phone": "Phone",
+      "contactEmail": "Contact email",
+      "tones": {
+        "professional": "Professional",
+        "friendly": "Friendly",
+        "casual": "Casual",
+        "formal": "Formal"
+      },
+      "fonts": {
+        "system": "System (default)",
+        "georgia": "Georgia — serif",
+        "arial": "Arial",
+        "trebuchet": "Trebuchet MS",
+        "verdana": "Verdana",
+        "courier": "Courier — monospace"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account yet?",
+      "signupLink": "Create an account",
+      "error": "Login error. Please try again."
+    },
+    "signup": {
+      "title": "Create an account",
+      "companyName": "Company name",
+      "siteUrl": "Your website URL",
+      "submit": "Create my account",
+      "submitting": "Creating...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log in",
+      "emailConfirmTitle": "Check your email",
+      "emailConfirmBody": "A confirmation link has been sent. Click on it to activate your account.",
+      "setupError": "Error while creating the account"
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email to receive a reset link.",
+      "submit": "Send the link",
+      "backToLogin": "Back to login"
+    },
+    "resetPassword": {
+      "title": "New password",
+      "submit": "Update",
+      "passwordMismatch": "Passwords do not match."
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "AI Sales Agent · Embed · Qualified Leads",
+      "title": "Turn your visitors into",
+      "titleHighlight": "qualified customers",
+      "subtitle": "{saasName} analyzes your website, deploys an intelligent chatbot on your pages or ad campaigns, and alerts you when a prospect is ready to buy or sign up.",
+      "ctaPrimary": "Create my agent for free",
+      "ctaSecondary": "See how it works"
+    },
+    "stats": {
+      "goLive": "Go Live",
+      "availability": "Availability",
+      "widgetLight": "Lightweight widget",
+      "leadScore": "Lead score"
+    },
+    "preview": {
+      "title": "An assistant that knows",
+      "titleHighlight": "your",
+      "titleEnd": "business",
+      "body": "No endless manual configuration: our engine reads your product pages, courses, pricing and sessions. Claude crafts natural responses in 6 languages (French, English, Italian, Spanish, Portuguese, German), complete with your registration links and contact buttons.",
+      "bullets": [
+        "Welcome message generated after crawl",
+        "Automatic [[registration]] session buttons",
+        "Dashboard: countries, campaigns, widget clicks"
+      ]
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "subtitle": "From sign-up to your first qualified lead — follow the journey live."
+    },
+    "features": {
+      "title": "Key features",
+      "subtitle": "Everything you need to sell and qualify leads, without a technical team.",
+      "items": [
+        {
+          "title": "Lightweight embed widget",
+          "desc": "One script on your site. The chat opens as a bubble or full-screen page, without slowing down your pages."
+        },
+        {
+          "title": "AI trained on your site",
+          "desc": "Automatic crawl of your pages, courses and FAQ. The agent responds with your real pricing and registration links."
+        },
+        {
+          "title": "Campaign-tracked links",
+          "desc": "Create a slug per source (Facebook, Instagram, Google Ads…) and track visits and interactions."
+        },
+        {
+          "title": "Qualification & scoring",
+          "desc": "Country, budget, availability: every conversation is scored out of 100. Hot leads surface on their own."
+        },
+        {
+          "title": "Built-in voice",
+          "desc": "Your visitors can speak into the microphone and listen to responses — ideal for mobile and accessibility."
+        },
+        {
+          "title": "Human handoff",
+          "desc": "WhatsApp, call and email buttons in one click. The conversation history remains available."
+        }
+      ]
+    },
+    "useCases": {
+      "title": "Who is it for?",
+      "items": [
+        {
+          "title": "Training centers",
+          "desc": "IRATA, CND sessions, dates and pricing: the agent suggests the right registrations with the exact links."
+        },
+        {
+          "title": "E-commerce & services",
+          "desc": "Product answers, FAQ and guidance toward purchase or a quote — no need to wait for an advisor."
+        },
+        {
+          "title": "Social ad campaigns",
+          "desc": "One /c/your-slug link per campaign. See where clicks come from and what visitors do in the chat."
+        }
+      ]
+    },
+    "dashboardHighlight": {
+      "title": "A dashboard that speaks business",
+      "subtitle": "KPIs, conversations, leads, country breakdown, tracked link performance and widget interactions — all in one place.",
+      "tags": [
+        "Live conversations",
+        "Lead score 0–100",
+        "Stats by country",
+        "WhatsApp / session clicks",
+        "Facebook & Instagram links",
+        "Lead export"
+      ],
+      "cta": "Go to dashboard"
+    },
+    "pricing": {
+      "title": "Simple pricing",
+      "subtitle": "Start small, go Pro when your campaigns take off.",
+      "popular": "Most popular",
+      "choosePlan": "Choose {plan}",
+      "plans": [
+        {
+          "name": "Starter",
+          "price": "29",
+          "features": [
+            "1 site",
+            "500 conversations/month",
+            "Embed widget",
+            "Lead scoring",
+            "KPI dashboard"
+          ]
+        },
+        {
+          "name": "Pro",
+          "price": "79",
+          "popular": true,
+          "features": [
+            "5 sites",
+            "Unlimited conversations",
+            "Tracked links + preview image",
+            "WhatsApp, call & email",
+            "Real-time notifications",
+            "Country & campaign stats"
+          ]
+        },
+        {
+          "name": "Agency",
+          "price": "199",
+          "features": [
+            "Unlimited sites",
+            "White label",
+            "Multi-client",
+            "Full API",
+            "Priority support"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": [
+        {
+          "q": "How long does it take to go live?",
+          "a": "About 5 minutes: create an account, enter your site URL, and the crawl and agent training start automatically."
+        },
+        {
+          "q": "Does the AI make up information?",
+          "a": "Not by design: the agent relies solely on the crawled content from your site. If it doesn't know, it offers a human contact option."
+        },
+        {
+          "q": "Can I use it without a developer?",
+          "a": "Yes. Copy the widget script or tracked link from the dashboard. No technical skills required."
+        },
+        {
+          "q": "How do I integrate it on my site (WordPress, Next.js, React…)?",
+          "a": "Just one script to paste before </body>. Detailed guides for each framework are available on the Integration page — viewable even before creating an account.",
+          "hasIntegrationLink": true
+        },
+        {
+          "q": "What languages are supported?",
+          "a": "French, English, Italian, Spanish, Portuguese and German. The agent detects the visitor's language and responds in the same language."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to stop losing visitors?",
+      "subtitle": "Create your account, enter your site URL and let {saasName} do the rest. No commitment required.",
+      "button": "Get started now — it's free"
+    }
+  },
+  "chatLanding": {
+    "loading": "Loading chat…",
+    "unavailable": "Chat unavailable",
+    "missingKey": "Incomplete link: the widget key is missing (?key=...). Copy the URL from Dashboard → Tracked Links → Copy.",
+    "widgetMissing": "widget.js file not found on this site",
+    "apiCheck": "Check that the Render API is responding:",
+    "freePlanHint": "Free plan: the first call may take ~1 min (wake-up)."
+  },
+  "integration": {
+    "title": "Integration",
+    "subtitle": "Paste the script on your site — WordPress, Next.js, React, HTML…"
+  },
+  "privacy": {
+    "title": "Privacy Policy"
+  },
+  "deleteAccount": {
+    "title": "Account Deletion",
+    "subtitle": "Request the permanent deletion of your account and data."
+  },
+  "setupOrg": {
+    "title": "Set up your organization",
+    "subtitle": "Last step to access the dashboard.",
+    "submit": "Continue"
+  }
+}

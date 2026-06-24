@@ -1,0 +1,454 @@
+{
+  "meta": {
+    "locale": "it",
+    "label": "Italiano"
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "save": "Salva",
+    "saving": "Salvataggio...",
+    "saved": "Salvato!",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "deleting": "Eliminazione…",
+    "edit": "Modifica",
+    "add": "Aggiungi",
+    "copy": "Copia",
+    "copied": "Copiato!",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "yes": "Sì",
+    "no": "No",
+    "error": "Errore",
+    "unexpectedError": "Errore imprevisto",
+    "email": "Email",
+    "password": "Password",
+    "name": "Nome",
+    "url": "URL",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "total": "Totale",
+    "anonymousVisitor": "Visitatore anonimo",
+    "perMonth": "/mese",
+    "seeGuide": "Vedi la guida all'integrazione →",
+    "rightsReserved": "Tutti i diritti riservati."
+  },
+  "languageSwitcher": {
+    "label": "Lingua",
+    "ariaLabel": "Cambia la lingua del sito"
+  },
+  "nav": {
+    "features": "Funzionalità",
+    "useCases": "Casi d'uso",
+    "pricing": "Prezzi",
+    "integration": "Integrazione",
+    "faq": "FAQ",
+    "login": "Accesso",
+    "signup": "Registrazione",
+    "freeTrial": "Prova gratuita",
+    "privacy": "Privacy",
+    "deleteAccount": "Eliminazione account",
+    "openMenu": "Apri il menu",
+    "closeMenu": "Chiudi il menu",
+    "menu": "Menu",
+    "logout": "Disconnessione"
+  },
+  "dashboard": {
+    "loading": "Caricamento della dashboard...",
+    "nav": {
+      "overview": "Panoramica",
+      "conversations": "Conversazioni",
+      "leads": "Leads",
+      "advisors": "Consulenti",
+      "sites": "Siti",
+      "trackedLinks": "Link tracciati",
+      "settings": "Impostazioni"
+    },
+    "overview": {
+      "title": "Panoramica",
+      "subtitle": "Attività della tua organizzazione.",
+      "kpiConversations": "Conversazioni",
+      "kpiLeads": "Leads qualificati",
+      "kpiAvgScore": "Punteggio medio",
+      "kpiConversion": "Tasso di conversione",
+      "hintAllScores": "Tutti i punteggi",
+      "hintOutOf100": "Su 100",
+      "hintLeadsPerConv": "Leads / conv.",
+      "recentConversations": "Conversazioni recenti",
+      "recentLeads": "Leads recenti",
+      "seeAll": "Vedi tutto",
+      "embedStats": "Statistiche widget embed",
+      "trackedLinksStats": "Link tracciati dettagliati",
+      "countryBreakdown": "Ripartizione per paese",
+      "copyScript": "Copia lo script",
+      "periodDay": "Giorno",
+      "periodMonth": "Mese",
+      "noData": "Nessun dato per il momento."
+    },
+    "sites": {
+      "title": "Siti",
+      "subtitle": "I tuoi siti e chiavi widget per l'integrazione.",
+      "addSite": "+ Aggiungi un sito",
+      "cancelAdd": "Annulla",
+      "newSite": "Nuovo sito",
+      "siteName": "Nome",
+      "siteUrl": "URL",
+      "urlPlaceholder": "https://miosito.com",
+      "createAndCrawl": "Crea e avvia il crawl",
+      "creating": "Creazione...",
+      "noSites": "Nessun sito. Clicca su « + Aggiungi un sito » per iniziare.",
+      "crawlStatus": "Crawl",
+      "importFormations": "Importa formazioni",
+      "importing": "Importazione…",
+      "recrawl": "Re-crawl",
+      "recrawling": "Riavvio...",
+      "activate": "Attiva",
+      "deactivate": "Disattiva",
+      "deleteConfirm": "Eliminare « {name} » ?\n\nQuesta azione è irreversibile: le conversazioni, i leads, i link tracciati e i dati del widget verranno eliminati.",
+      "crawlInProgress": "Crawl in corso…",
+      "crawlConnecting": "Connessione all'API per visualizzare l'avanzamento…",
+      "crawlPhasePages": "Lettura delle pagine",
+      "crawlPhaseEmbedding": "Analisi semantica (IA)",
+      "crawlFailed": "Crawl fallito",
+      "crawlFailedDefault": "Impossibile leggere il sito — verifica l'URL o riprova.",
+      "crawlCause": "Causa",
+      "crawlApiCheck": "Verifica che l'API Render risponda:",
+      "crawlFreePlanHint": "Piano Free: la prima chiamata può richiedere ~1 min (avvio).",
+      "reload": "Ricarica"
+    },
+    "links": {
+      "title": "Link tracciati",
+      "subtitle": "Crea link per campagna (Facebook, Instagram…) e monitora le visite.",
+      "newLink": "Nuovo link",
+      "slug": "Slug",
+      "source": "Sorgente",
+      "campaignName": "Nome campagna",
+      "campaignPlaceholder": "Campagna estate 2026",
+      "createLink": "Crea il link",
+      "creating": "Creazione...",
+      "visits": "Visite",
+      "country": "Paese",
+      "interactions": "Interazioni",
+      "copyUrl": "Copia l'URL",
+      "deleteConfirm": "Eliminare questo link tracciato?",
+      "noLinks": "Nessun link tracciato.",
+      "sources": {
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "google_ads": "Google Ads",
+        "whatsapp": "WhatsApp",
+        "qr_code": "QR Code",
+        "direct_link": "Link diretto",
+        "other": "Altro"
+      }
+    },
+    "leads": {
+      "title": "Leads",
+      "subtitle": "Prospect qualificati dall'agente.",
+      "score": "Punteggio",
+      "contact": "Contatto",
+      "country": "Paese",
+      "date": "Data",
+      "noLeads": "Nessun lead per il momento."
+    },
+    "conversations": {
+      "title": "Conversazioni",
+      "subtitle": "Storico degli scambi con i tuoi visitatori.",
+      "statusAll": "Tutte",
+      "statusActive": "Attive",
+      "statusQualified": "Qualificate",
+      "statusHandedOff": "Trasferite",
+      "statusClosed": "Chiuse",
+      "notFound": "Conversazione non trovata.",
+      "advisor": "Consulente",
+      "visitor": "Visitatore"
+    },
+    "advisors": {
+      "title": "Consulenti",
+      "subtitle": "Invita dei consulenti per rispondere agli handoff dall'app mobile.",
+      "addAdvisor": "Aggiungi un consulente",
+      "displayName": "Nome visualizzato",
+      "namePlaceholder": "Mario Rossi",
+      "roleOwner": "Proprietario",
+      "roleAdmin": "Admin",
+      "roleAgent": "Consulente",
+      "available": "Disponibile",
+      "unavailable": "Non disponibile",
+      "inviteSent": "Invito inviato via email — il consulente potrà accedere all'app mobile.",
+      "siteUpdated": "Sito del consulente aggiornato.",
+      "advisorAdded": "Consulente aggiunto."
+    },
+    "settings": {
+      "title": "Impostazioni",
+      "subtitle": "Organizzazione, agente e aspetto del widget.",
+      "organization": "Organizzazione",
+      "orgName": "Nome dell'organizzazione",
+      "orgNamePlaceholder": "Es. CIDES, La Mia Agenzia…",
+      "orgNameRequired": "Il nome dell'organizzazione è obbligatorio.",
+      "orgUpdateFailed": "Impossibile aggiornare l'organizzazione",
+      "saveFailed": "Salvataggio fallito",
+      "uploadFailed": "Caricamento fallito",
+      "widgetBranding": "Aspetto del widget",
+      "primaryColor": "Colore principale",
+      "headerTitleColor": "Colore del titolo",
+      "headerFont": "Carattere del titolo",
+      "logo": "Logo",
+      "chooseImage": "Scegli un'immagine",
+      "uploading": "Caricamento…",
+      "logoUrlPlaceholder": "Oppure URL del logo (https://…)",
+      "previewTitle": "Anteprima",
+      "yourCompany": "La tua azienda",
+      "agent": "Agente",
+      "welcomeMessage": "Messaggio di benvenuto",
+      "welcomeHint": "Lascia vuoto o generico per la generazione automatica dal sito (al re-crawl).",
+      "defaultWelcome": "Ciao! Come posso aiutarti?",
+      "tone": "Tono",
+      "language": "Lingua",
+      "ctaUrl": "URL del CTA (opzionale)",
+      "ctaUrlPro": "· Piano Pro",
+      "ctaLabel": "Etichetta del CTA",
+      "ctaPlaceholder": "Iscriviti",
+      "contacts": "Contatti diretti (widget)",
+      "whatsapp": "WhatsApp",
+      "phone": "Telefono",
+      "contactEmail": "Email di contatto",
+      "tones": {
+        "professional": "Professionale",
+        "friendly": "Amichevole",
+        "casual": "Informale",
+        "formal": "Formale"
+      },
+      "fonts": {
+        "system": "Sistema (predefinito)",
+        "georgia": "Georgia — serif",
+        "arial": "Arial",
+        "trebuchet": "Trebuchet MS",
+        "verdana": "Verdana",
+        "courier": "Courier — monospace"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Accesso",
+      "submit": "Accedi",
+      "submitting": "Accesso in corso...",
+      "forgotPassword": "Password dimenticata?",
+      "noAccount": "Non hai ancora un account?",
+      "signupLink": "Crea un account",
+      "error": "Errore di accesso. Riprova."
+    },
+    "signup": {
+      "title": "Crea un account",
+      "companyName": "Nome dell'azienda",
+      "siteUrl": "URL del tuo sito",
+      "submit": "Crea il mio account",
+      "submitting": "Creazione in corso...",
+      "hasAccount": "Hai già un account?",
+      "loginLink": "Accedi",
+      "emailConfirmTitle": "Controlla la tua email",
+      "emailConfirmBody": "È stato inviato un link di conferma. Clicca su di esso per attivare il tuo account.",
+      "setupError": "Errore durante la creazione dell'account"
+    },
+    "forgotPassword": {
+      "title": "Password dimenticata",
+      "subtitle": "Inserisci la tua email per ricevere un link di reimpostazione.",
+      "submit": "Invia il link",
+      "backToLogin": "Torna al login"
+    },
+    "resetPassword": {
+      "title": "Nuova password",
+      "submit": "Aggiorna",
+      "passwordMismatch": "Le password non corrispondono."
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Agente commerciale IA · Embed · Lead qualificati",
+      "title": "Trasforma i tuoi visitatori in",
+      "titleHighlight": "clienti qualificati",
+      "subtitle": "{saasName} analizza il tuo sito web, distribuisce un chatbot intelligente sulle tue pagine o campagne pubblicitarie, e ti avvisa quando un prospect è pronto ad acquistare o iscriversi.",
+      "ctaPrimary": "Crea il mio agente gratuitamente",
+      "ctaSecondary": "Scopri come funziona"
+    },
+    "stats": {
+      "goLive": "Messa online",
+      "availability": "Disponibilità",
+      "widgetLight": "Widget leggero",
+      "leadScore": "Score lead"
+    },
+    "preview": {
+      "title": "Un assistente che conosce",
+      "titleHighlight": "la tua",
+      "titleEnd": "azienda",
+      "body": "Nessuna configurazione manuale infinita: il nostro motore legge le tue pagine prodotti, corsi, prezzi e sessioni. Claude redige risposte naturali in 6 lingue (francese, inglese, italiano, spagnolo, portoghese, tedesco), con i tuoi link di iscrizione e pulsanti di contatto.",
+      "bullets": [
+        "Messaggio di benvenuto generato dopo il crawl",
+        "Pulsanti sessione [[iscrizione]] automatici",
+        "Dashboard: paesi, campagne, clic widget"
+      ]
+    },
+    "howItWorks": {
+      "title": "Come funziona",
+      "subtitle": "Dalla registrazione al primo lead qualificato — segui il percorso in diretta."
+    },
+    "features": {
+      "title": "Funzionalità principali",
+      "subtitle": "Tutto il necessario per vendere e qualificare, senza un team tecnico.",
+      "items": [
+        {
+          "title": "Widget embed leggero",
+          "desc": "Un solo script sul tuo sito. La chat si apre come bolla o in pagina a schermo intero, senza rallentare le tue pagine."
+        },
+        {
+          "title": "IA addestrata sul tuo sito",
+          "desc": "Crawl automatico delle tue pagine, corsi e FAQ. L'agente risponde con i tuoi veri prezzi e link di iscrizione."
+        },
+        {
+          "title": "Link tracciati per campagna",
+          "desc": "Crea uno slug per ogni fonte (Facebook, Instagram, Google Ads…) e monitora visite e interazioni."
+        },
+        {
+          "title": "Qualificazione & scoring",
+          "desc": "Paese, budget, disponibilità: ogni conversazione viene valutata su 100. I lead caldi emergono da soli."
+        },
+        {
+          "title": "Voce integrata",
+          "desc": "I tuoi visitatori possono parlare al microfono e ascoltare le risposte — ideale per mobile e accessibilità."
+        },
+        {
+          "title": "Handoff umano",
+          "desc": "Pulsanti WhatsApp, chiamata ed email in un clic. La cronologia della conversazione rimane disponibile."
+        }
+      ]
+    },
+    "useCases": {
+      "title": "Per chi?",
+      "items": [
+        {
+          "title": "Centri di formazione",
+          "desc": "Sessioni IRATA, CND, date e prezzi: l'agente propone le giuste iscrizioni con i link esatti."
+        },
+        {
+          "title": "E-commerce & servizi",
+          "desc": "Risposte sui prodotti, FAQ e orientamento verso l'acquisto o il preventivo senza aspettare un consulente."
+        },
+        {
+          "title": "Campagne social ads",
+          "desc": "Un link /c/tuo-slug per campagna. Scopri da dove arrivano i clic e cosa fanno i visitatori nella chat."
+        }
+      ]
+    },
+    "dashboardHighlight": {
+      "title": "Una dashboard che parla business",
+      "subtitle": "KPI, conversazioni, lead, distribuzione per paese, performance dei link tracciati e interazioni widget — tutto in un unico posto.",
+      "tags": [
+        "Conversazioni in diretta",
+        "Score lead 0–100",
+        "Statistiche per paese",
+        "Clic WhatsApp / sessione",
+        "Link Facebook & Instagram",
+        "Esporta lead"
+      ],
+      "cta": "Accedi alla dashboard"
+    },
+    "pricing": {
+      "title": "Prezzi semplici",
+      "subtitle": "Inizia in piccolo, passa al Pro quando le tue campagne decollano.",
+      "popular": "Il più scelto",
+      "choosePlan": "Scegli {plan}",
+      "plans": [
+        {
+          "name": "Starter",
+          "price": "29",
+          "features": [
+            "1 sito",
+            "500 conversazioni/mese",
+            "Widget embed",
+            "Scoring lead",
+            "Dashboard KPI"
+          ]
+        },
+        {
+          "name": "Pro",
+          "price": "79",
+          "popular": true,
+          "features": [
+            "5 siti",
+            "Conversazioni illimitate",
+            "Link tracciati + immagine di anteprima",
+            "WhatsApp, chiamata & email",
+            "Notifiche in tempo reale",
+            "Statistiche paese & campagne"
+          ]
+        },
+        {
+          "name": "Agency",
+          "price": "199",
+          "features": [
+            "Siti illimitati",
+            "White label",
+            "Multi-clienti",
+            "API completa",
+            "Supporto prioritario"
+          ]
+        }
+      ]
+    },
+    "faq": {
+      "title": "Domande frequenti",
+      "items": [
+        {
+          "q": "Quanto tempo ci vuole per andare online?",
+          "a": "Circa 5 minuti: crea un account, inserisci l'URL del tuo sito, il crawl e l'addestramento dell'agente si avviano automaticamente."
+        },
+        {
+          "q": "L'IA inventa informazioni?",
+          "a": "No, per design: l'agente si basa esclusivamente sui contenuti del tuo sito acquisiti tramite crawl. Se non sa rispondere, propone il contatto umano."
+        },
+        {
+          "q": "Posso usarlo senza uno sviluppatore?",
+          "a": "Sì. Copia lo script widget o il link tracciato dalla dashboard. Non è richiesta alcuna competenza tecnica."
+        },
+        {
+          "q": "Come integrarlo sul mio sito (WordPress, Next.js, React…)?",
+          "a": "Un solo script da incollare prima di </body>. Guide dettagliate per ogni framework nella pagina Integrazione — consultabile anche prima di creare un account.",
+          "hasIntegrationLink": true
+        },
+        {
+          "q": "Quali lingue sono supportate?",
+          "a": "Francese, inglese, italiano, spagnolo, portoghese e tedesco. L'agente rileva la lingua del visitatore e risponde nella stessa lingua."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Pronto a non perdere più nessun visitatore?",
+      "subtitle": "Crea il tuo account, inserisci l'URL del tuo sito e lascia fare il resto a {saasName}. Prova senza impegno.",
+      "button": "Inizia ora — è gratuito"
+    }
+  },
+  "chatLanding": {
+    "loading": "Caricamento della chat…",
+    "unavailable": "Chat non disponibile",
+    "missingKey": "Link incompleto: manca la chiave widget (?key=...). Copia l'URL da Dashboard → Link tracciati → Copia.",
+    "widgetMissing": "File widget.js non trovato su questo sito",
+    "apiCheck": "Verifica che l'API Render risponda:",
+    "freePlanHint": "Piano Free: la prima chiamata può richiedere ~1 min (riattivazione)."
+  },
+  "integration": {
+    "title": "Integrazione",
+    "subtitle": "Incolla lo script sul tuo sito — WordPress, Next.js, React, HTML…"
+  },
+  "privacy": {
+    "title": "Politica sulla privacy"
+  },
+  "deleteAccount": {
+    "title": "Eliminazione dell'account",
+    "subtitle": "Richiedi l'eliminazione definitiva del tuo account e dei tuoi dati."
+  },
+  "setupOrg": {
+    "title": "Configura la tua organizzazione",
+    "subtitle": "Ultimo passaggio per accedere alla dashboard.",
+    "submit": "Continua"
+  }
+}

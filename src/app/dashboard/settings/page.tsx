@@ -2,6 +2,7 @@
 
 import { hasProFeatures } from "@/lib/plans";
 import { AgentConfig } from "@/lib/dashboard-data";
+import { SUPPORTED_LANGUAGES } from "@/lib/languages";
 import { useOrganization } from "@/hooks/use-organization";
 import { useEffect, useState } from "react";
 
@@ -10,13 +11,6 @@ const TONES = [
   { value: "friendly", label: "Amical" },
   { value: "casual", label: "Décontracté" },
   { value: "formal", label: "Formel" },
-];
-
-const LANGUAGES = [
-  { value: "fr", label: "Français" },
-  { value: "en", label: "English" },
-  { value: "es", label: "Español" },
-  { value: "de", label: "Deutsch" },
 ];
 
 const HEADER_FONTS = [
@@ -476,7 +470,7 @@ export default function SettingsPage() {
                     onChange={(e) => setLanguage(e.target.value)}
                     className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
                   >
-                    {LANGUAGES.map((l) => (
+                    {SUPPORTED_LANGUAGES.map((l) => (
                       <option key={l.value} value={l.value}>
                         {l.label}
                       </option>

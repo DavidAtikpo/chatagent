@@ -2,6 +2,7 @@
 
 import { BrandLogo } from "@/components/brand-logo";
 import { LOGO_SIZE } from "@/lib/branding";
+import { useT } from "@/i18n/context";
 import { ensureOrganization } from "@/lib/ensure-organization";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -12,12 +13,13 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const authError = searchParams.get("error");
+  const t = useT();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(
-    authError ? "Erreur de connexion. Réessayez." : null
+    authError ? t("auth.login.error") : null
   );
 
   async function handleSubmit(e: React.FormEvent) {
@@ -51,7 +53,7 @@ function LoginForm() {
             className="flex-col gap-2"
           />
         </div>
-        <h1 className="mt-6 text-center text-2xl font-bold">Connexion</h1>
+        <h1 className="mt-6 text-center text-2xl font-bold">{t("auth.login.title")}</h1>
 
         {error && (
           <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
@@ -59,7 +61,7 @@ function LoginForm() {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700">Email</label>
+            <label className="block text-sm font-medium text-slate-700">{t("common.email")}</label>
             <input
               type="email"
               value={email}
@@ -70,12 +72,12 @@ function LoginForm() {
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-slate-700">Mot de passe</label>
+              <label className="block text-sm font-medium text-slate-700">{t("common.password")}</label>
               <Link
                 href="/login/forgot-password"
                 className="text-xs text-brand-600 hover:underline"
               >
-                Mot de passe oublié ?
+                {t("auth.login.forgotPassword")}
               </Link>
             </div>
             <input
@@ -91,14 +93,14 @@ function LoginForm() {
             disabled={loading}
             className="w-full rounded-lg bg-brand-600 py-3 font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
           >
-            {loading ? "Connexion..." : "Se connecter"}
+            {loading ? t("auth.login.submitting") : t("auth.login.submit")}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-500">
-          Pas encore de compte ?{" "}
+          {t("auth.login.noAccount")}{" "}
           <Link href="/signup" className="text-brand-600 hover:underline">
-            S&apos;inscrire
+            {t("auth.login.signupLink")}
           </Link>
         </p>
       </div>

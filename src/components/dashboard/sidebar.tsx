@@ -2,19 +2,20 @@
 
 import { BrandLogo } from "@/components/brand-logo";
 import { LOGO_SIZE } from "@/lib/branding";
+import { useT } from "@/i18n/context";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 const NAV = [
-  { href: "/dashboard", label: "Vue d'ensemble", exact: true },
-  { href: "/dashboard/conversations", label: "Conversations" },
-  { href: "/dashboard/leads", label: "Leads" },
-  { href: "/dashboard/advisors", label: "Conseillers" },
-  { href: "/dashboard/sites", label: "Sites" },
-  { href: "/dashboard/links", label: "Liens trackés" },
-  { href: "/dashboard/settings", label: "Paramètres" },
-];
+  { href: "/dashboard", key: "overview", exact: true },
+  { href: "/dashboard/conversations", key: "conversations" },
+  { href: "/dashboard/leads", key: "leads" },
+  { href: "/dashboard/advisors", key: "advisors" },
+  { href: "/dashboard/sites", key: "sites" },
+  { href: "/dashboard/links", key: "trackedLinks" },
+  { href: "/dashboard/settings", key: "settings" },
+] as const;
 
 function NavLinks({
   pathname,
@@ -23,6 +24,8 @@ function NavLinks({
   pathname: string;
   onNavigate?: () => void;
 }) {
+  const t = useT();
+
   function isActive(href: string, exact?: boolean) {
     if (exact) return pathname === href;
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -36,12 +39,12 @@ function NavLinks({
           href={item.href}
           onClick={onNavigate}
           className={`block rounded-md px-2.5 py-2 text-sm font-medium ${
-            isActive(item.href, item.exact)
+            isActive(item.href, "exact" in item ? item.exact : undefined)
               ? "bg-brand-50 text-brand-700"
               : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
           }`}
         >
-          {item.label}
+          {t(`dashboard.nav.${item.key}`)}
         </Link>
       ))}
     </nav>
@@ -55,6 +58,8 @@ function SidebarFooter({
   email?: string;
   onLogout: () => void;
 }) {
+  const t = useT();
+
   return (
     <div className="border-t border-slate-100 pt-3">
       {email && <p className="truncate text-xs text-slate-500">{email}</p>}
@@ -62,7 +67,7 @@ function SidebarFooter({
         onClick={onLogout}
         className="mt-2 text-sm font-medium text-slate-600 hover:text-slate-900"
       >
-        Déconnexion
+        {t("nav.logout")}
       </button>
     </div>
   );
@@ -79,6 +84,7 @@ export function DashboardSidebar({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useT();
 
   async function logout() {
     const supabase = createClient();
@@ -111,18 +117,18 @@ export function DashboardSidebar({
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
-            aria-label="Fermer le menu"
+            aria-label={t("nav.closeMenu")}
             className="absolute inset-0 bg-slate-900/40"
             onClick={onMobileClose}
           />
           <aside className="relative flex h-full w-[min(18rem,85vw)] flex-col overflow-y-auto border-r border-slate-200 bg-white p-4 shadow-xl">
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm font-semibold text-slate-900">Menu</span>
+              <span className="text-sm font-semibold text-slate-900">{t("nav.menu")}</span>
               <button
                 type="button"
                 onClick={onMobileClose}
                 className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100"
-                aria-label="Fermer"
+                aria-label={t("nav.closeMenu")}
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -138,13 +144,15 @@ export function DashboardSidebar({
 }
 
 export function DashboardMobileHeader({ onMenuOpen }: { onMenuOpen: () => void }) {
+  const t = useT();
+
   return (
     <header className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
       <button
         type="button"
         onClick={onMenuOpen}
         className="rounded-md p-2 text-slate-600 hover:bg-slate-100"
-        aria-label="Ouvrir le menu"
+        aria-label={t("nav.openMenu")}
       >
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
