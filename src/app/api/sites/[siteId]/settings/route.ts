@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/setup-account-server";
+import { isGenericWelcomeMessage } from "@/lib/generic-welcome";
 import { hasProFeatures } from "@/lib/plans";
 import { userOwnsSite } from "@/lib/site-access";
 import { createClient } from "@/lib/supabase/server";
@@ -75,6 +76,16 @@ export async function PATCH(
     const oldLang = (prevConfig.language as string) ?? "fr";
     const newLang = (agentConfig.language as string) ?? "fr";
     const welcomeCustomized = Boolean(agentConfig.welcome_customized);
+    const welcomeMsg = agentConfig.welcome_message as string | null | undefined;
+
+    if (isGenericWelcomeMessage(welcomeMsg)) {
+      agentConfig = {
+        ...agentConfig,
+        welcome_message: null,
+        welcome_customized: false,
+        welcome_message_lang: null,
+      };
+    }
 
     if (newLang !== oldLang) {
       agentConfig = {

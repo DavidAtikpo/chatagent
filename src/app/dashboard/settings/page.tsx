@@ -3,6 +3,7 @@
 import { DashboardTabs } from "@/components/dashboard/dashboard-tabs";
 import { hasProFeatures } from "@/lib/plans";
 import { AgentConfig } from "@/lib/dashboard-data";
+import { isGenericWelcomeMessage } from "@/lib/generic-welcome";
 import { SUPPORTED_LANGUAGES } from "@/lib/languages";
 import { useT } from "@/i18n/context";
 import { useOrganization } from "@/hooks/use-organization";
@@ -41,7 +42,9 @@ function applySiteConfig(
   }
 ) {
   setters.setWelcomeMessage(
-    config.welcome_customized ? (config.welcome_message ?? "") : ""
+    config.welcome_customized && !isGenericWelcomeMessage(config.welcome_message)
+      ? (config.welcome_message ?? "")
+      : ""
   );
   setters.setTone(config.tone ?? "professional");
   setters.setLanguage(config.language ?? "fr");
@@ -118,7 +121,10 @@ export default function SettingsPage() {
     if (activeId !== siteId) setSiteId(activeId);
     const site = sites.find((s) => s.id === activeId) ?? sites[0];
     applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, defaultWelcome, setters);
-    setWelcomeTouched(Boolean(site.agent_config?.welcome_customized));
+    setWelcomeTouched(
+      Boolean(site.agent_config?.welcome_customized) &&
+        !isGenericWelcomeMessage(site.agent_config?.welcome_message)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sites, siteId, defaultWelcome]);
 
@@ -127,7 +133,10 @@ export default function SettingsPage() {
     const site = sites.find((s) => s.id === id);
     if (site) {
       applySiteConfig(site.agent_config ?? {}, site.whatsapp_number, defaultWelcome, setters);
-      setWelcomeTouched(Boolean(site.agent_config?.welcome_customized));
+      setWelcomeTouched(
+        Boolean(site.agent_config?.welcome_customized) &&
+          !isGenericWelcomeMessage(site.agent_config?.welcome_message)
+      );
     }
   }
 
@@ -160,7 +169,11 @@ export default function SettingsPage() {
     if (siteId) {
       const site = sites.find((s) => s.id === siteId);
       const prev = site?.agent_config ?? {};
-      const welcomeCustomized = welcomeTouched && welcomeMessage.trim().length > 0;
+      const trimmedWelcome = welcomeMessage.trim();
+      const welcomeCustomized =
+        welcomeTouched &&
+        trimmedWelcome.length > 0 &&
+        !isGenericWelcomeMessage(trimmedWelcome);
       const agentConfig: AgentConfig = {
         ...prev,
         welcome_message: welcomeCustomized ? welcomeMessage.trim() : null,
@@ -503,7 +516,13 @@ export default function SettingsPage() {
                     <label className="text-xs text-slate-500">{t("dashboard.settings.language")}</label>
                     <select
                       value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
+                      onChange={(e) => {
+                        setLanguage(e.target.value);
+                        if (!welcomeTouched || isGenericWelcomeMessage(welcomeMessage)) {
+                          setWelcomeMessage("");
+                          setWelcomeTouched(false);
+                        }
+                      }}
                       className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
                     >
                       {SUPPORTED_LANGUAGES.map((l) => (
