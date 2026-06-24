@@ -71,6 +71,23 @@ export async function PATCH(
       whatsappNumber = siteRow.whatsapp_number ?? (prev.contact_whatsapp as string) ?? null;
     }
 
+    const prevConfig = (siteRow.agent_config as Record<string, unknown>) ?? {};
+    const oldLang = (prevConfig.language as string) ?? "fr";
+    const newLang = (agentConfig.language as string) ?? "fr";
+    const welcomeCustomized = Boolean(agentConfig.welcome_customized);
+
+    if (newLang !== oldLang && !welcomeCustomized) {
+      agentConfig = {
+        ...agentConfig,
+        welcome_intro: null,
+        welcome_intro_lang: null,
+        welcome_intros: {},
+        welcome_message: null,
+        welcome_message_lang: null,
+        welcome_auto_generated: false,
+      };
+    }
+
     const { error } = await admin
       .from("sites")
       .update({
