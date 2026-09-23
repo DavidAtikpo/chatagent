@@ -1,6 +1,7 @@
 "use client";
 
-import { SAAS_NAME } from "@/lib/branding";
+import { LegalPageShell } from "@/components/legal-page-shell";
+import { MOBILE_APP_NAME, SAAS_NAME } from "@/lib/branding";
 import { accountDeletionMailto, getSupportEmail } from "@/lib/support";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,27 +17,26 @@ export function DeleteAccountForm() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-[#F5F5F5]">
-      <div className="mx-auto max-w-3xl px-6 py-16">
+    <LegalPageShell>
         <Link href="/" className="text-sm text-[#D4A83A] hover:underline">
           ← Retour à l&apos;accueil
         </Link>
 
-        <h1 className="mt-8 text-3xl font-bold text-[#D4A83A]">
+        <h1 className="mt-8 text-balance text-2xl font-bold text-[#D4A83A] sm:text-3xl">
           Suppression de compte et des données
         </h1>
         <p className="mt-2 text-sm text-neutral-400">
-          {SAAS_NAME} — application ChatAgent Conseiller et dashboard web
+          {SAAS_NAME} — application {MOBILE_APP_NAME} et dashboard web
         </p>
 
-        <div className="mt-10 space-y-8 text-neutral-200">
-          <section className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
+        <div className="mt-10 space-y-8 break-words text-neutral-200">
+          <section className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-white">Comment demander la suppression</h2>
             <ol className="mt-4 list-decimal space-y-2 pl-6 text-sm">
               <li>Remplissez le formulaire ci-dessous ou envoyez un e-mail à {supportEmail}.</li>
               <li>Indiquez l&apos;e-mail utilisé pour vous connecter.</li>
               <li>
-                Précisez si la demande concerne l&apos;app mobile <strong>ChatAgent Conseiller</strong>,
+                Précisez si la demande concerne l&apos;app mobile <strong>{MOBILE_APP_NAME}</strong>,
                 le dashboard web, ou les deux.
               </li>
               <li>Nous traitons la demande sous <strong>30 jours</strong> et confirmons par e-mail.</li>
@@ -70,7 +70,7 @@ export function DeleteAccountForm() {
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 rounded-xl border border-neutral-800 bg-neutral-900/50 p-6"
+            className="space-y-4 rounded-xl border border-neutral-800 bg-neutral-900/50 p-4 sm:p-6"
           >
             <h2 className="text-lg font-semibold text-white">Formulaire de demande</h2>
             <div>
@@ -115,7 +115,6 @@ export function DeleteAccountForm() {
             </Link>
           </p>
         </div>
-      </div>
-    </main>
+    </LegalPageShell>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthPageCard, AuthPageShell } from "@/components/auth-page-shell";
 import { BrandLogo } from "@/components/brand-logo";
 import { LOGO_SIZE } from "@/lib/branding";
 import { useT } from "@/i18n/context";
@@ -43,8 +44,8 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-50 to-slate-50 px-6">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
+    <AuthPageShell>
+      <AuthPageCard>
         <div className="flex justify-center">
           <BrandLogo
             href="/"
@@ -53,7 +54,7 @@ function LoginForm() {
             className="flex-col gap-2"
           />
         </div>
-        <h1 className="mt-6 text-center text-2xl font-bold">{t("auth.login.title")}</h1>
+        <h1 className="mt-6 text-center text-xl font-bold sm:text-2xl">{t("auth.login.title")}</h1>
 
         {error && (
           <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
@@ -71,7 +72,7 @@ function LoginForm() {
             />
           </div>
           <div>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="block text-sm font-medium text-slate-700">{t("common.password")}</label>
               <Link
                 href="/login/forgot-password"
@@ -103,8 +104,8 @@ function LoginForm() {
             {t("auth.login.signupLink")}
           </Link>
         </p>
-      </div>
-    </div>
+      </AuthPageCard>
+    </AuthPageShell>
   );
 }
 

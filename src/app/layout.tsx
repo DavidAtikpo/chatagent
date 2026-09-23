@@ -1,6 +1,8 @@
 import { Providers } from "@/components/providers";
 import { WidgetEmbed } from "@/components/widget-embed";
-import { SAAS_LOGO_PATH } from "@/lib/branding";
+import { AI_ASSISTANT_AVATAR_PATH, SAAS_ICON_VERSION } from "@/lib/branding";
+
+const faviconUrl = `${AI_ASSISTANT_AVATAR_PATH}?v=${SAAS_ICON_VERSION}`;
 import {
   SITE_DESCRIPTION,
   SITE_KEYWORDS,
@@ -10,7 +12,7 @@ import {
   siteJsonLd,
   siteOgImage,
 } from "@/lib/seo";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -21,6 +23,11 @@ const geistSans = localFont({
 });
 
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -53,9 +60,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: SAAS_LOGO_PATH,
-    apple: SAAS_LOGO_PATH,
-    shortcut: SAAS_LOGO_PATH,
+    icon: [{ url: faviconUrl, type: "image/png" }],
+    apple: [{ url: faviconUrl, type: "image/png" }],
+    shortcut: faviconUrl,
   },
   openGraph: {
     type: "website",
@@ -96,7 +103,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Providers>
-          {children}
+          <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden">{children}</div>
           <WidgetEmbed embedKey={process.env.NEXT_PUBLIC_EMBED_WIDGET_KEY} />
         </Providers>
       </body>

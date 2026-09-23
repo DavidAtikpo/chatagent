@@ -1,4 +1,4 @@
-import { SAAS_LOGO_PATH, SAAS_NAME } from "@/lib/branding";
+import { AI_ASSISTANT_AVATAR_PATH, SAAS_NAME } from "@/lib/branding";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -20,11 +20,11 @@ export function BrandLogo({
   const content = (
     <>
       <Image
-        src={SAAS_LOGO_PATH}
+        src={AI_ASSISTANT_AVATAR_PATH}
         alt={SAAS_NAME}
         width={size}
         height={size}
-        className="shrink-0 rounded-lg object-contain"
+        className="shrink-0 rounded-full object-cover ring-1 ring-brand-200/80"
         style={{ width: size, height: size, minWidth: size }}
         priority
       />
@@ -33,11 +33,11 @@ export function BrandLogo({
   );
 
   if (!href) {
-    return <div className={`flex items-center gap-3 ${className}`}>{content}</div>;
+    return <div className={`flex min-w-0 items-center gap-2 ${className}`}>{content}</div>;
   }
 
   return (
-    <Link href={href} className={`flex items-center gap-3 ${className}`}>
+    <Link href={href} className={`flex min-w-0 items-center gap-2 ${className}`}>
       {content}
     </Link>
   );

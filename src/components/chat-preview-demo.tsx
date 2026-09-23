@@ -1,7 +1,8 @@
 "use client";
 
 import { useI18n } from "@/i18n/context";
-import { SAAS_NAME } from "@/lib/branding";
+import { AI_ASSISTANT_AVATAR_PATH, SAAS_NAME } from "@/lib/branding";
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
 type Phase =
@@ -66,12 +67,12 @@ function Bubble({
 }) {
   return (
     <div
-      className={`transition-all duration-300 ${
+      className={`max-w-full transition-all duration-300 ${
         visible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
-      } ${variant === "user" ? "ml-8 flex justify-end" : ""}`}
+      } ${variant === "user" ? "ml-2 flex justify-end sm:ml-8" : ""}`}
     >
       <div
-        className={`max-w-[92%] rounded-lg px-3 py-2 text-xs leading-relaxed ${
+        className={`max-w-[92%] break-words rounded-lg px-3 py-2 text-xs leading-relaxed ${
           variant === "assistant"
             ? "bg-slate-100 text-slate-700"
             : "bg-brand-50 text-slate-800 ring-1 ring-brand-100"
@@ -159,15 +160,19 @@ export function ChatPreviewDemo() {
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-md">
+    <div className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white p-3 shadow-md">
       <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-[10px] font-bold text-brand-700">
-          IA
-        </div>
+        <Image
+          src={AI_ASSISTANT_AVATAR_PATH}
+          alt=""
+          width={32}
+          height={32}
+          className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-brand-100"
+        />
         <div>
           <p className="text-xs font-semibold">{headerTitle}</p>
           <p className="flex items-center gap-1 text-[10px] text-emerald-600">
-            <span className="relative flex h-1.5 w-1.5">
+            <span className="relative flex h-1.5 w-1.5 shrink-0 overflow-hidden">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
             </span>
@@ -189,7 +194,7 @@ export function ChatPreviewDemo() {
         )}
 
         {phase === "typing-user" && (
-          <div className="ml-8 flex justify-end">
+          <div className="ml-4 flex justify-end sm:ml-8">
             <TypingIndicator />
           </div>
         )}

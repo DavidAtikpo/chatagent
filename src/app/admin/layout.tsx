@@ -1,6 +1,7 @@
 "use client";
 
-import { AdminSidebar } from "@/components/admin/sidebar";
+import { AdminMobileHeader, AdminSidebar } from "@/components/admin/sidebar";
+import { SAAS_NAME } from "@/lib/branding";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -48,7 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="max-w-md rounded-lg border border-red-200 bg-white p-6 text-center">
           <h1 className="text-lg font-semibold text-slate-900">Accès refusé</h1>
           <p className="mt-2 text-sm text-slate-600">
-            Cette zone est réservée aux administrateurs de la plateforme ChatAgent.
+            Cette zone est réservée aux administrateurs de la plateforme {SAAS_NAME}.
             Ajoutez votre email dans <code className="text-xs">PLATFORM_ADMIN_EMAILS</code>{" "}
             (fichier <code className="text-xs">web/.env.local</code>).
           </p>
@@ -64,9 +65,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-100">
+    <div className="flex h-[100dvh] w-full max-w-[100vw] flex-col overflow-hidden bg-slate-100 lg:flex-row">
+      <AdminMobileHeader email={email} />
       <AdminSidebar email={email} />
-      <main className="flex-1 overflow-y-auto p-4 text-slate-900 lg:p-5">{children}</main>
+      <main className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-3 text-slate-900 sm:p-4 lg:p-5">
+        <div className="mx-auto w-full max-w-6xl">{children}</div>
+      </main>
     </div>
   );
 }

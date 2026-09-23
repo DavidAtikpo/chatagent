@@ -5,15 +5,62 @@ import { ChatPreviewDemo } from "@/components/chat-preview-demo";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SignupFlowDemo } from "@/components/signup-flow-demo";
 import { useI18n } from "@/i18n/context";
-import { LOGO_SIZE, SAAS_NAME } from "@/lib/branding";
+import { SAAS_NAME } from "@/lib/branding";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const FEATURE_ICONS = ["💬", "🧠", "🔗", "📊", "🎙️", "🤝"];
 const STAT_VALUES = ["5 min", "24/7", "< 20kb", "0–100"];
 const STAT_KEYS = ["goLive", "availability", "widgetLight", "leadScore"] as const;
 
+const NAV_LINKS = [
+  { href: "#features", key: "nav.features" as const },
+  { href: "#use-cases", key: "nav.useCases" as const },
+  { href: "#pricing", key: "nav.pricing" as const },
+  { href: "/integration", key: "nav.integration" as const, internal: true },
+  { href: "#faq", key: "nav.faq" as const },
+];
+
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
+      {open ? (
+        <path
+          d="M6 6l12 12M18 6L6 18"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      ) : (
+        <path
+          d="M4 7h16M4 12h16M4 17h16"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      )}
+    </svg>
+  );
+}
+
 export function HomePageClient() {
   const { t, messages, ready } = useI18n();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    function onResize() {
+      if (window.matchMedia("(min-width: 1024px)").matches) setMenuOpen(false);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   if (!ready) {
     return (
@@ -31,72 +78,128 @@ export function HomePageClient() {
   const previewBullets = messages.home.preview.bullets;
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <header className="sticky top-0 z-50 border-b border-brand-100 bg-brand-50/90 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-2">
+    <div className="relative min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-white text-slate-900">
+      <header className="sticky top-0 z-50 overflow-x-hidden border-b border-brand-100 bg-brand-50/90 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-2 px-4 py-2 sm:px-6">
           <BrandLogo
             href="/"
-            size={LOGO_SIZE.header}
-            nameClassName="text-lg font-bold text-brand-600"
+            size={40}
+            className="min-w-0 max-w-[calc(100%-3rem)] shrink gap-2"
+            nameClassName="truncate text-base font-bold text-brand-600 sm:text-lg"
           />
-          <nav className="hidden items-center gap-5 text-sm sm:flex">
-            <a href="#features" className="text-slate-600 hover:text-brand-700">
-              {t("nav.features")}
-            </a>
-            <a href="#use-cases" className="text-slate-600 hover:text-brand-700">
-              {t("nav.useCases")}
-            </a>
-            <a href="#pricing" className="text-slate-600 hover:text-brand-700">
-              {t("nav.pricing")}
-            </a>
-            <Link href="/integration" className="text-slate-600 hover:text-brand-700">
-              {t("nav.integration")}
-            </Link>
-            <a href="#faq" className="text-slate-600 hover:text-brand-700">
-              {t("nav.faq")}
-            </a>
+          <nav className="hidden min-w-0 items-center gap-3 text-sm lg:flex xl:gap-5">
+            {NAV_LINKS.map((link) =>
+              link.internal ? (
+                <Link
+                  key={link.key}
+                  href={link.href}
+                  className="whitespace-nowrap text-slate-600 hover:text-brand-700"
+                >
+                  {t(link.key)}
+                </Link>
+              ) : (
+                <a
+                  key={link.key}
+                  href={link.href}
+                  className="whitespace-nowrap text-slate-600 hover:text-brand-700"
+                >
+                  {t(link.key)}
+                </a>
+              )
+            )}
             <LanguageSwitcher />
             <Link
               href="/login"
-              className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
+              className="shrink-0 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
             >
               {t("nav.login")}
             </Link>
           </nav>
-          <div className="flex items-center gap-2 sm:hidden">
-            <LanguageSwitcher />
-            <Link
-              href="/signup"
-              className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
+          <div className="flex shrink-0 items-center lg:hidden">
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700"
+              aria-expanded={menuOpen}
+              aria-controls="home-mobile-nav"
+              aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
+              onClick={() => setMenuOpen((open) => !open)}
             >
-              {t("nav.freeTrial")}
-            </Link>
+              <MenuIcon open={menuOpen} />
+            </button>
           </div>
         </div>
+        {menuOpen ? (
+          <div
+            id="home-mobile-nav"
+            className="border-t border-brand-100 bg-white px-4 py-3 shadow-sm lg:hidden"
+          >
+            <div className="mb-2 flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+              <span className="text-xs font-medium text-slate-500">{t("languageSwitcher.label")}</span>
+              <LanguageSwitcher className="w-auto shrink-0" />
+            </div>
+            <nav className="flex flex-col gap-1 text-sm">
+              {NAV_LINKS.map((link) =>
+                link.internal ? (
+                  <Link
+                    key={link.key}
+                    href={link.href}
+                    className="rounded-md px-2 py-2.5 text-slate-700 hover:bg-brand-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {t(link.key)}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.key}
+                    href={link.href}
+                    className="rounded-md px-2 py-2.5 text-slate-700 hover:bg-brand-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {t(link.key)}
+                  </a>
+                )
+              )}
+              <Link
+                href="/login"
+                className="rounded-md px-2 py-2.5 text-slate-700 hover:bg-brand-50"
+                onClick={() => setMenuOpen(false)}
+              >
+                {t("nav.login")}
+              </Link>
+              <Link
+                href="/signup"
+                className="mt-1 rounded-md bg-brand-600 px-3 py-2.5 text-center font-medium text-white hover:bg-brand-700"
+                onClick={() => setMenuOpen(false)}
+              >
+                {t("nav.freeTrial")}
+              </Link>
+            </nav>
+          </div>
+        ) : null}
       </header>
 
       <section className="bg-gradient-to-b from-brand-50/80 via-brand-50/30 to-white">
-        <div className="mx-auto max-w-5xl px-4 py-8 text-center sm:py-10">
-          <p className="inline-block rounded-full border border-brand-200 bg-white px-2.5 py-0.5 text-xs font-medium text-brand-700">
+        <div className="mx-auto max-w-5xl px-4 py-8 text-center sm:px-6 sm:py-12">
+          <p className="inline-block max-w-full rounded-full border border-brand-200 bg-white px-2.5 py-0.5 text-xs font-medium text-brand-700">
             {t("home.hero.badge")}
           </p>
-          <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="mt-3 text-balance text-2xl font-bold tracking-tight sm:text-4xl">
             {t("home.hero.title")}{" "}
             <span className="text-brand-600">{t("home.hero.titleHighlight")}</span>
           </h1>
-          <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+          <p className="mx-auto mt-2 max-w-2xl text-pretty text-sm leading-relaxed text-slate-600 sm:text-base">
             {t("home.hero.subtitle", { saasName: SAAS_NAME })}
           </p>
-          <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
+          <div className="mt-5 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-center">
             <Link
               href="/signup"
-              className="w-full rounded-lg bg-brand-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-brand-700 sm:w-auto"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-brand-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-brand-700 sm:w-auto"
             >
               {t("home.hero.ctaPrimary")}
             </Link>
             <a
               href="#how-it-works"
-              className="w-full rounded-lg border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 hover:border-brand-200 hover:bg-brand-50 sm:w-auto"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 hover:border-brand-200 hover:bg-brand-50 sm:w-auto"
             >
               {t("home.hero.ctaSecondary")}
             </a>
@@ -105,10 +208,10 @@ export function HomePageClient() {
             {STAT_KEYS.map((key, i) => (
               <div
                 key={key}
-                className="rounded-lg border border-brand-100 bg-white/80 px-2.5 py-2 shadow-sm"
+                className="min-w-0 rounded-lg border border-brand-100 bg-white/80 px-2 py-2 shadow-sm sm:px-2.5"
               >
                 <p className="text-base font-bold text-brand-600 sm:text-lg">{STAT_VALUES[i]}</p>
-                <p className="text-[11px] text-slate-500 sm:text-xs">
+                <p className="text-[11px] leading-snug text-slate-500 sm:text-xs">
                   {t(`home.stats.${key}`)}
                 </p>
               </div>
@@ -118,9 +221,9 @@ export function HomePageClient() {
       </section>
 
       <section className="border-y border-slate-100 bg-slate-50 py-6 sm:py-8">
-        <div className="mx-auto max-w-5xl px-4">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="grid items-center gap-5 lg:grid-cols-2">
-            <div>
+            <div className="min-w-0">
               <h2 className="text-lg font-bold sm:text-xl">
                 {t("home.preview.title")}{" "}
                 <span className="text-brand-600">{t("home.preview.titleHighlight")}</span>{" "}
@@ -130,19 +233,21 @@ export function HomePageClient() {
               <ul className="mt-2 space-y-1 text-sm text-slate-700">
                 {previewBullets.map((item) => (
                   <li key={item} className="flex items-start gap-2">
-                    <span className="mt-0.5 text-brand-600">✓</span>
-                    {item}
+                    <span className="mt-0.5 shrink-0 text-brand-600">✓</span>
+                    <span className="min-w-0">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <ChatPreviewDemo />
+            <div className="min-w-0">
+              <ChatPreviewDemo />
+            </div>
           </div>
         </div>
       </section>
 
       <section id="how-it-works" className="py-6 sm:py-8">
-        <div className="mx-auto max-w-5xl px-4">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-center text-lg font-bold sm:text-xl">
             {t("home.howItWorks.title")}
           </h2>
@@ -156,7 +261,7 @@ export function HomePageClient() {
       </section>
 
       <section id="features" className="bg-slate-50 py-6 sm:py-8">
-        <div className="mx-auto max-w-5xl px-4">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-center text-lg font-bold sm:text-xl">
             {t("home.features.title")}
           </h2>
@@ -167,7 +272,7 @@ export function HomePageClient() {
             {features.map((f, i) => (
               <div
                 key={f.title}
-                className="rounded-lg border border-slate-100 bg-white p-3 shadow-sm transition hover:border-brand-200"
+                className="min-w-0 rounded-lg border border-slate-100 bg-white p-3 shadow-sm transition hover:border-brand-200"
               >
                 <span className="text-xl" aria-hidden>
                   {FEATURE_ICONS[i]}
@@ -181,7 +286,7 @@ export function HomePageClient() {
       </section>
 
       <section id="use-cases" className="py-6 sm:py-8">
-        <div className="mx-auto max-w-5xl px-4">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-center text-lg font-bold sm:text-xl">
             {t("home.useCases.title")}
           </h2>
@@ -200,7 +305,7 @@ export function HomePageClient() {
       </section>
 
       <section className="border-y border-brand-100 bg-brand-50/50 py-6 sm:py-8">
-        <div className="mx-auto max-w-5xl px-4 text-center">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
           <h2 className="text-lg font-bold sm:text-xl">
             {t("home.dashboardHighlight.title")}
           </h2>
@@ -219,7 +324,7 @@ export function HomePageClient() {
           </div>
           <Link
             href="/signup"
-            className="mt-3 inline-block rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+            className="mt-3 inline-flex min-h-11 items-center justify-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
           >
             {t("home.dashboardHighlight.cta")}
           </Link>
@@ -227,18 +332,18 @@ export function HomePageClient() {
       </section>
 
       <section id="pricing" className="py-6 sm:py-8">
-        <div className="mx-auto max-w-5xl px-4">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-center text-lg font-bold sm:text-xl">
             {t("home.pricing.title")}
           </h2>
           <p className="mx-auto mt-1 max-w-md text-center text-sm text-slate-600">
             {t("home.pricing.subtitle")}
           </p>
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`flex flex-col rounded-lg bg-white p-4 shadow-sm ${
+                className={`flex min-w-0 flex-col rounded-lg bg-white p-4 shadow-sm ${
                   plan.popular ? "ring-2 ring-brand-600" : "border border-slate-100"
                 }`}
               >
@@ -264,7 +369,7 @@ export function HomePageClient() {
                 </ul>
                 <Link
                   href="/signup"
-                  className={`mt-3 block rounded-lg py-2 text-center text-sm font-semibold ${
+                  className={`mt-3 block rounded-lg px-2 py-2.5 text-center text-sm font-semibold ${
                     plan.popular
                       ? "bg-brand-600 text-white hover:bg-brand-700"
                       : "border border-slate-200 text-slate-700 hover:border-brand-200 hover:bg-brand-50"
@@ -279,7 +384,7 @@ export function HomePageClient() {
       </section>
 
       <section id="faq" className="bg-slate-50 py-6 sm:py-8">
-        <div className="mx-auto max-w-3xl px-4">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-center text-lg font-bold sm:text-xl">{t("home.faq.title")}</h2>
           <div className="mt-4 space-y-2">
             {faq.map((item) => (
@@ -288,9 +393,9 @@ export function HomePageClient() {
                 className="group rounded-lg border border-slate-100 bg-white p-3 shadow-sm"
               >
                 <summary className="cursor-pointer list-none font-medium text-slate-900 marker:content-none">
-                  <span className="flex items-center justify-between gap-2">
-                    {item.q}
-                    <span className="text-brand-600 transition group-open:rotate-45">+</span>
+                  <span className="flex items-start justify-between gap-2 text-left text-sm sm:text-base">
+                    <span className="min-w-0 break-words">{item.q}</span>
+                    <span className="shrink-0 text-brand-600 transition group-open:rotate-45">+</span>
                   </span>
                 </summary>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
@@ -311,14 +416,14 @@ export function HomePageClient() {
       </section>
 
       <section className="bg-gradient-to-br from-brand-600 to-brand-800 py-8 text-white sm:py-10">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <h2 className="text-xl font-bold sm:text-2xl">{t("home.cta.title")}</h2>
-          <p className="mt-2 text-sm text-brand-100">
+        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
+          <h2 className="text-balance text-xl font-bold sm:text-2xl">{t("home.cta.title")}</h2>
+          <p className="mt-2 text-pretty text-sm text-brand-100">
             {t("home.cta.subtitle", { saasName: SAAS_NAME })}
           </p>
           <Link
             href="/signup"
-            className="mt-4 inline-block rounded-lg bg-white px-5 py-2 text-sm font-semibold text-brand-800 hover:bg-brand-50"
+            className="mt-4 inline-flex min-h-11 items-center justify-center rounded-lg bg-white px-5 py-2 text-sm font-semibold text-brand-800 hover:bg-brand-50"
           >
             {t("home.cta.button")}
           </Link>
@@ -326,7 +431,7 @@ export function HomePageClient() {
       </section>
 
       <footer className="border-t border-slate-100 bg-white py-4">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 px-4 sm:flex-row">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 sm:px-6 md:flex-row md:flex-wrap">
           <BrandLogo href="/" size={40} showName={false} />
           <nav className="flex flex-wrap justify-center gap-4 text-xs text-slate-500">
             <a href="#features" className="hover:text-brand-600">

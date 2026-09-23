@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/i18n/context";
+import { getWidgetScriptUrl } from "@/lib/app-url";
 import { getDisplayApiHealthUrl } from "@/lib/render-api";
 import { useEffect, useState } from "react";
 
@@ -41,10 +42,10 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle, primaryColor 
     if (!widgetKey) return;
 
     const apiUrl = `${window.location.origin}/api/backend`;
-    const widgetUrl =
-      process.env.NEXT_PUBLIC_WIDGET_URL?.startsWith("http")
-        ? process.env.NEXT_PUBLIC_WIDGET_URL
-        : `${window.location.origin}${process.env.NEXT_PUBLIC_WIDGET_URL || "/widget.js"}`;
+    const scriptFromEnv = getWidgetScriptUrl();
+    const widgetUrl = scriptFromEnv.startsWith("http")
+      ? scriptFromEnv
+      : `${window.location.origin}${scriptFromEnv.startsWith("/") ? scriptFromEnv : `/${scriptFromEnv}`}`;
     const SCRIPT_ID = "chatagent-widget-script";
 
     const onReady = () => setStatus("ready");
@@ -119,7 +120,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle, primaryColor 
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-white px-4">
+    <div className="flex min-h-screen w-full max-w-[100vw] flex-col items-center justify-center overflow-x-hidden bg-gradient-to-b from-slate-50 to-white px-4 py-8">
       {status === "no-key" && (
         <div className="max-w-md rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
           {t("chatLanding.missingKey")}

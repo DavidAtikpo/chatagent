@@ -1,5 +1,12 @@
-export const SAAS_NAME = "ChatAgent";
+export const SAAS_NAME = "Yayra";
+/** App mobile conseillers (stores) */
+export const MOBILE_APP_NAME = `${SAAS_NAME} Conseiller`;
 export const SAAS_LOGO_PATH = "/logochatagent.png";
+/** Avatar IA par défaut dans le widget chat (en-tête + message d'accueil). */
+export const AI_ASSISTANT_AVATAR_PATH = "/ia-assistant.png";
+/** Incrémenter pour forcer le rechargement du widget.js chez les visiteurs. */
+export const WIDGET_SCRIPT_VERSION = "4";
+export const SAAS_ICON_VERSION = "3";
 
 /** Couleurs extraites du logo (texte or + fond noir) */
 export const BRAND_COLORS = {
@@ -24,5 +31,5 @@ import { getAppBaseUrl } from "@/lib/app-url";
 
 export function saasLogoUrl(baseUrl?: string): string {
   const base = (baseUrl || getAppBaseUrl()).replace(/\/$/, "");
-  return `${base}${SAAS_LOGO_PATH}`;
+  return `${base}${AI_ASSISTANT_AVATAR_PATH}`;
 }

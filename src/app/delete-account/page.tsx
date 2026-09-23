@@ -4,8 +4,7 @@ import { DeleteAccountForm } from "./delete-account-form";
 
 export const metadata: Metadata = {
   title: `Suppression de compte — ${SAAS_NAME}`,
-  description:
-    "Demandez la suppression de votre compte ChatAgent et des données associées (app mobile et dashboard).",
+  description: `Demandez la suppression de votre compte ${SAAS_NAME} et des données associées (app mobile et dashboard).`,
 };
 
 export default function DeleteAccountPage() {

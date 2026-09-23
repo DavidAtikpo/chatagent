@@ -1,5 +1,6 @@
 "use client";
 
+import { SAAS_NAME } from "@/lib/branding";
 import {
   planLabel,
   statusBadge,
@@ -72,7 +73,7 @@ export default function AdminOrganizationsPage() {
     <div>
       <h1 className="text-xl font-bold text-slate-900">Clients</h1>
       <p className="mt-0.5 text-sm text-slate-600">
-        Toutes les organisations inscrites sur ChatAgent
+        Toutes les organisations inscrites sur {SAAS_NAME}
       </p>
 
       {error && (
@@ -85,8 +86,8 @@ export default function AdminOrganizationsPage() {
         ) : orgs.length === 0 ? (
           <p className="p-4 text-sm text-slate-500">Aucun client.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px] text-sm">
+          <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
+            <table className="w-full min-w-[720px] text-sm sm:min-w-[900px]">
               <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
                 <tr>
                   <th className="px-3 py-2">Entreprise</th>

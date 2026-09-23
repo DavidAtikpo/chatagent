@@ -6,8 +6,7 @@ export const SITE_URL = (
   process.env.NEXT_PUBLIC_APP_URL || "https://chatagent.fr"
 ).replace(/\/$/, "");
 
-export const SITE_DESCRIPTION =
-  "ChatAgent déploie un agent commercial IA sur votre site en 5 minutes : crawl automatique, chatbot embed, qualification des leads, liens trackés et handoff WhatsApp.";
+export const SITE_DESCRIPTION = `${SAAS_NAME} déploie un agent commercial IA sur votre site en 5 minutes : crawl automatique, chatbot embed, qualification des leads, liens trackés et handoff WhatsApp.`;
 
 export const SITE_TAGLINE = "Agent commercial IA pour transformer vos visiteurs en clients qualifiés";
 
@@ -20,7 +19,7 @@ export const SITE_KEYWORDS = [
   "chatbot formation",
   "assistant virtuel",
   "SaaS chatbot",
-  "ChatAgent",
+  SAAS_NAME,
   "chatbot français",
   "liens trackés Facebook",
   "scoring leads",

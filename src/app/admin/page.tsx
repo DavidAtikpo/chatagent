@@ -1,5 +1,6 @@
 "use client";
 
+import { SAAS_NAME } from "@/lib/branding";
 import { planLabel, type PlatformOrganization, type PlatformStats } from "@/lib/platform-admin";
 import { formatDate } from "@/lib/dashboard-data";
 import Link from "next/link";
@@ -54,7 +55,7 @@ export default function AdminOverviewPage() {
         <div>
           <h1 className="text-xl font-bold text-slate-900">Administration SaaS</h1>
           <p className="mt-0.5 text-sm text-slate-600">
-            Vue d&apos;ensemble de tous les clients ChatAgent
+            Vue d&apos;ensemble de tous les clients {SAAS_NAME}
           </p>
         </div>
         <Link
@@ -104,12 +105,12 @@ export default function AdminOverviewPage() {
           ) : (
             <ul className="mt-2 divide-y divide-slate-100">
               {recentOrgs.map((org) => (
-                <li key={org.id} className="flex items-center justify-between py-2 text-sm">
-                  <div>
-                    <p className="font-medium">{org.name}</p>
-                    <p className="text-xs text-slate-500">{org.owner_email ?? "—"}</p>
+                <li key={org.id} className="flex items-start justify-between gap-2 py-2 text-sm">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{org.name}</p>
+                    <p className="truncate text-xs text-slate-500">{org.owner_email ?? "—"}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="shrink-0 text-right">
                     <p className="text-xs font-medium text-brand-600">{planLabel(org.subscription_plan)}</p>
                     <p className="text-xs text-slate-400">{formatDate(org.created_at)}</p>
                   </div>

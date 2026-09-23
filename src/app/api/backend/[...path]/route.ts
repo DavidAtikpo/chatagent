@@ -1,4 +1,5 @@
 import { getBackendApiUrl } from "@/lib/api-backend";
+import { enrichWidgetConfig } from "@/lib/widget-config-enrich";
 import { NextResponse } from "next/server";
 
 const ALLOWED_PREFIXES = ["widget/", "chat", "widget/event"];
@@ -52,6 +53,20 @@ async function proxy(request: Request, pathSegments: string[]) {
     const resType = res.headers.get("content-type");
     if (resType) resHeaders.set("Content-Type", resType);
     resHeaders.set("Cache-Control", "no-cache");
+
+    if (
+      request.method === "GET" &&
+      path.startsWith("widget/") &&
+      res.ok &&
+      resType?.includes("application/json")
+    ) {
+      const payload = (await res.json()) as Record<string, unknown>;
+      const origin = new URL(request.url).origin;
+      return NextResponse.json(enrichWidgetConfig(payload, origin), {
+        status: res.status,
+        headers: resHeaders,
+      });
+    }
 
     return new NextResponse(res.body, {
       status: res.status,

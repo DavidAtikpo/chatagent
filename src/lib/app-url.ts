@@ -1,3 +1,4 @@
+import { WIDGET_SCRIPT_VERSION } from "@/lib/branding";
 import { getApiHealthUrl, resolveApiUrl } from "@/lib/render-api";
 
 /** URL publique du dashboard (liens trackés, SEO, Open Graph). */
@@ -23,12 +24,17 @@ export function getApiBaseUrl(): string {
 /** URL absolue du widget.js (pour embed sur sites clients). */
 export function getWidgetScriptUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_WIDGET_URL?.trim();
-  if (fromEnv?.startsWith("http")) return fromEnv;
-  if (fromEnv) {
+  let base: string;
+  if (fromEnv?.startsWith("http")) {
+    base = fromEnv;
+  } else if (fromEnv) {
     const path = fromEnv.startsWith("/") ? fromEnv : `/${fromEnv}`;
-    return `${getAppBaseUrl()}${path}`;
+    base = `${getAppBaseUrl()}${path}`;
+  } else {
+    base = `${getAppBaseUrl()}/widget.js`;
   }
-  return `${getAppBaseUrl()}/widget.js`;
+  const sep = base.includes("?") ? "&" : "?";
+  return `${base}${sep}v=${WIDGET_SCRIPT_VERSION}`;
 }
 
 export function apiUnreachableMessage(): string {

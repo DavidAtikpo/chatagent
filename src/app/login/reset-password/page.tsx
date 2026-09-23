@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthPageCard, AuthPageShell } from "@/components/auth-page-shell";
 import { BrandLogo } from "@/components/brand-logo";
 import { useT } from "@/i18n/context";
 import { LOGO_SIZE } from "@/lib/branding";
@@ -71,8 +72,8 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-50 to-slate-50 px-6">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
+    <AuthPageShell>
+      <AuthPageCard>
         <div className="flex justify-center">
           <BrandLogo
             href="/"
@@ -81,7 +82,7 @@ export default function ResetPasswordPage() {
             className="flex-col gap-2"
           />
         </div>
-        <h1 className="mt-6 text-center text-2xl font-bold">{t("auth.resetPassword.title")}</h1>
+        <h1 className="mt-6 text-center text-xl font-bold sm:text-2xl">{t("auth.resetPassword.title")}</h1>
 
         {checkingSession ? (
           <p className="mt-6 text-center text-sm text-slate-500">{t("auth.resetPassword.checking")}</p>
@@ -151,7 +152,7 @@ export default function ResetPasswordPage() {
             </form>
           </>
         )}
-      </div>
-    </div>
+      </AuthPageCard>
+    </AuthPageShell>
   );
 }

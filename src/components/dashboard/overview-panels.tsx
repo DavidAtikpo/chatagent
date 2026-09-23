@@ -272,7 +272,7 @@ export function OverviewWidgetPanel({
           />
 
           {embedClickCards.length > 0 && (
-            <div className="mt-2 overflow-x-auto border-t border-slate-100 pt-2">
+            <div className="mt-2 max-w-full overflow-x-auto overscroll-x-contain border-t border-slate-100 pt-2">
               <p className="mb-2 text-xs font-medium text-slate-600">
                 {t("dashboard.overview.embed.clickBreakdown")}
               </p>
@@ -298,7 +298,7 @@ export function OverviewWidgetPanel({
           {embedSites.length > 1 && (
             <div className="mt-2 border-t border-slate-100 pt-2">
               <p className="text-xs font-medium text-slate-600">{t("dashboard.overview.embed.bySite")}</p>
-              <div className="mt-2 overflow-x-auto">
+              <div className="mt-2 max-w-full overflow-x-auto overscroll-x-contain">
                 <table className="w-full min-w-[420px] text-left text-sm">
                   <thead>
                     <tr className="border-b border-slate-100 text-xs text-slate-500">

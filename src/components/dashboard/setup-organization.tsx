@@ -58,7 +58,7 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
   }
 
   return (
-    <div className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <h1 className="text-xl font-bold text-slate-900">{t("setupOrg.title")}</h1>
       <p className="mt-2 text-sm text-slate-600">{t("setupOrg.subtitle")}</p>
 

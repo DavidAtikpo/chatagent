@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthPageCard, AuthPageShell } from "@/components/auth-page-shell";
 import { getAppBaseUrl } from "@/lib/app-url";
 import { BrandLogo } from "@/components/brand-logo";
 import { LOGO_SIZE } from "@/lib/branding";
@@ -64,8 +65,9 @@ export default function SignupPage() {
 
   if (emailSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-50 to-slate-50 px-6">
-        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm text-center">
+      <AuthPageShell>
+        <AuthPageCard>
+          <div className="text-center">
           <div className="flex justify-center">
             <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
           </div>
@@ -76,18 +78,19 @@ export default function SignupPage() {
           <Link href="/login" className="mt-6 inline-block text-sm text-brand-600 hover:underline">
             {t("auth.signup.goToLogin")}
           </Link>
-        </div>
-      </div>
+          </div>
+        </AuthPageCard>
+      </AuthPageShell>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-brand-50 to-slate-50 px-6">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
+    <AuthPageShell>
+      <AuthPageCard>
         <div className="flex justify-center">
           <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
         </div>
-        <h1 className="mt-6 text-center text-2xl font-bold">{t("auth.signup.title")}</h1>
+        <h1 className="mt-6 text-center text-xl font-bold sm:text-2xl">{t("auth.signup.title")}</h1>
         <p className="mt-2 text-sm text-slate-600">{t("auth.signup.subtitle")}</p>
 
         {error && (
@@ -156,7 +159,7 @@ export default function SignupPage() {
             {t("auth.signup.loginLink")}
           </Link>
         </p>
-      </div>
-    </div>
+      </AuthPageCard>
+    </AuthPageShell>
   );
 }

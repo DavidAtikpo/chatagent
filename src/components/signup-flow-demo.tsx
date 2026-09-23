@@ -156,7 +156,7 @@ export function SignupFlowDemo() {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-5">
+    <div className="grid min-w-0 gap-4 lg:grid-cols-5">
       <div className="space-y-2 lg:col-span-2">
         {steps.map((s, idx) => {
           const num = idx + 1;
@@ -195,11 +195,11 @@ export function SignupFlowDemo() {
         })}
       </div>
 
-      <div className="lg:col-span-3">
-        <div className="min-h-[260px] rounded-lg border border-slate-200 bg-white p-3 shadow-md">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-            <p className="text-xs font-semibold text-slate-800">{phaseTitle()}</p>
-            <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700">
+      <div className="min-w-0 lg:col-span-3">
+        <div className="min-h-[260px] overflow-hidden rounded-lg border border-slate-200 bg-white p-3 shadow-md">
+          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+            <p className="min-w-0 truncate text-xs font-semibold text-slate-800">{phaseTitle()}</p>
+            <span className="shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700">
               {t("home.demo.signupFlow.live")}
             </span>
           </div>
@@ -293,11 +293,11 @@ export function SignupFlowDemo() {
                     {t("home.demo.signupFlow.agentReady")}
                   </p>
                 </div>
-                <div className="rounded-lg bg-slate-900 p-3">
+                <div className="max-w-full overflow-x-auto rounded-lg bg-slate-900 p-3">
                   <p className="text-[10px] text-slate-400">
                     {t("home.demo.signupFlow.scriptHint")}
                   </p>
-                  <code className="mt-1 block text-[10px] text-emerald-400">
+                  <code className="mt-1 block break-all text-[10px] text-emerald-400">
                     {`<script src="…/widget.js" data-key="wk_…"></script>`}
                   </code>
                 </div>

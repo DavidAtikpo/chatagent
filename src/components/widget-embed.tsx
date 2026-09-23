@@ -36,10 +36,10 @@ function showWidget() {
 
 function loadWidgetScript(widgetKey: string) {
   const api = `${window.location.origin}/api/backend`;
-  const fromEnv = getWidgetScriptUrl();
-  const widgetUrl = fromEnv.startsWith("http")
-    ? fromEnv
-    : `${window.location.origin}${process.env.NEXT_PUBLIC_WIDGET_URL || "/widget.js"}`;
+  const scriptFromEnv = getWidgetScriptUrl();
+  const widgetUrl = scriptFromEnv.startsWith("http")
+    ? scriptFromEnv
+    : `${window.location.origin}${scriptFromEnv.startsWith("/") ? scriptFromEnv : `/${scriptFromEnv}`}`;
 
   window.ChatAgentBoot = {
     key: widgetKey,
@@ -51,7 +51,10 @@ function loadWidgetScript(widgetKey: string) {
     return;
   }
 
-  if (document.getElementById(SCRIPT_ID)) return;
+  const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
+  if (existing?.src && existing.src === widgetUrl) return;
+  if (existing) existing.remove();
+  document.getElementById("chatbot-root")?.remove();
 
   const script = document.createElement("script");
   script.id = SCRIPT_ID;
@@ -71,7 +74,7 @@ export function WidgetEmbed({ embedKey }: Props) {
     if (!widgetKey) {
       if (process.env.NODE_ENV === "development") {
         console.info(
-          "[ChatAgent] Widget désactivé — définissez NEXT_PUBLIC_EMBED_WIDGET_KEY dans .env.local"
+          "[Yayra] Widget désactivé — définissez NEXT_PUBLIC_EMBED_WIDGET_KEY dans .env.local"
         );
       }
       return;

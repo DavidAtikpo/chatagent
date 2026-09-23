@@ -1,19 +1,18 @@
-import { SAAS_NAME } from "@/lib/branding";
+import { LegalPageShell } from "@/components/legal-page-shell";
+import { MOBILE_APP_NAME, SAAS_NAME } from "@/lib/branding";
 import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: `Politique de confidentialité — ${SAAS_NAME}`,
-  description:
-    "Politique de confidentialité de l'application ChatAgent Conseiller et de la plateforme ChatAgent.",
+  description: `Politique de confidentialité de l'application ${MOBILE_APP_NAME} et de la plateforme ${SAAS_NAME}.`,
 };
 
 const LAST_UPDATED = "12 juin 2026";
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-[#F5F5F5]">
-      <div className="mx-auto max-w-3xl px-6 py-16">
+    <LegalPageShell>
         <Link
           href="/"
           className="text-sm text-[#D4A83A] hover:underline"
@@ -21,21 +20,21 @@ export default function PrivacyPage() {
           ← Retour à l&apos;accueil
         </Link>
 
-        <h1 className="mt-8 text-3xl font-bold text-[#D4A83A]">
+        <h1 className="mt-8 text-balance text-2xl font-bold text-[#D4A83A] sm:text-3xl">
           Politique de confidentialité
         </h1>
         <p className="mt-2 text-sm text-neutral-400">
           Dernière mise à jour : {LAST_UPDATED}
         </p>
 
-        <div className="prose prose-invert mt-10 max-w-none space-y-8 text-neutral-200">
+        <div className="prose prose-invert mt-10 max-w-none space-y-8 break-words text-neutral-200">
           <section>
             <h2 className="text-xl font-semibold text-white">1. Introduction</h2>
             <p>
               La présente politique décrit comment <strong>{SAAS_NAME}</strong> (« nous »)
               traite les données personnelles dans le cadre de la plateforme SaaS {SAAS_NAME}
               (dashboard web, widget de chat) et de l&apos;application mobile{" "}
-              <strong>ChatAgent Conseiller</strong> (« l&apos;Application »).
+              <strong>{MOBILE_APP_NAME}</strong> (« l&apos;Application »).
             </p>
             <p>
               L&apos;Application est réservée aux conseillers et propriétaires de compte
@@ -173,7 +172,6 @@ export default function PrivacyPage() {
             </p>
           </section>
         </div>
-      </div>
-    </main>
+    </LegalPageShell>
   );
 }

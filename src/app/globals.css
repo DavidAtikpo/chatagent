@@ -16,11 +16,26 @@
 
   html {
     color-scheme: light;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
   }
 
   body {
     @apply bg-white text-slate-900 antialiased;
     font-family: var(--font-geist-sans), system-ui, sans-serif;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  img,
+  video,
+  svg {
+    max-width: 100%;
   }
 
   ::selection {

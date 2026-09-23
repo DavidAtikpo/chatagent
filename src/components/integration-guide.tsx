@@ -86,8 +86,10 @@ export function IntegrationGuide({ config, siteUrl, variant = "dashboard" }: Pro
         Script universel (tous sites)
       </p>
       <pre
-        className={`mt-1 overflow-x-auto rounded-lg bg-slate-900 text-green-400 ${
-          isPublic ? "p-4 text-xs leading-relaxed sm:text-sm" : "p-3 text-[11px] leading-relaxed"
+        className={`mt-1 max-w-full overflow-x-auto rounded-lg bg-slate-900 text-green-400 ${
+          isPublic
+            ? "break-all p-3 text-[11px] leading-relaxed sm:p-4 sm:text-xs md:text-sm"
+            : "break-all p-3 text-[11px] leading-relaxed"
         }`}
       >
         {snippet}
@@ -141,8 +143,10 @@ export function IntegrationGuide({ config, siteUrl, variant = "dashboard" }: Pro
 
         <p className="mt-2 text-xs text-slate-600 sm:text-sm">{activeGuide.summary}</p>
         <pre
-          className={`mt-2 overflow-auto rounded-lg bg-slate-900 text-green-400 ${
-            isPublic ? "max-h-80 p-4 text-[11px] leading-relaxed sm:text-xs" : "max-h-64 p-3 text-[10px] leading-relaxed"
+          className={`mt-2 max-w-full overflow-x-auto rounded-lg bg-slate-900 text-green-400 ${
+            isPublic
+              ? "max-h-80 break-all p-3 text-[10px] leading-relaxed sm:p-4 sm:text-xs"
+              : "max-h-64 break-all p-3 text-[10px] leading-relaxed"
           }`}
         >
           {activeGuide.code(config)}
