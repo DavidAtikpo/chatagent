@@ -107,7 +107,45 @@ export default function LeadsPage() {
         ) : rows.length === 0 ? (
           <p className="p-4 text-sm text-slate-500">{t("dashboard.leads.emptyHint")}</p>
         ) : (
-          <ResponsiveTable>
+          <>
+            <div className="space-y-2 p-3 md:hidden">
+              {rows.map((row) => (
+                <article
+                  key={row.id}
+                  className="rounded-lg border border-slate-100 bg-slate-50/80 p-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="font-semibold text-slate-900">
+                      {row.name ?? t("common.anonymousVisitor")}
+                    </p>
+                    <span
+                      className={`shrink-0 text-sm ${row.score >= 60 ? "font-bold text-brand-600" : "font-medium text-slate-600"}`}
+                    >
+                      {row.score}/100
+                    </span>
+                  </div>
+                  <p className="mt-1 break-all text-xs text-slate-500">
+                    {[row.email, row.phone].filter(Boolean).join(" · ") || "—"}
+                  </p>
+                  <p className="mt-2 text-xs text-slate-600">
+                    {row.sites?.name ?? "—"}
+                    {row.country ? ` · ${row.country}` : ""}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-400">{formatDate(row.created_at)}</p>
+                  {row.conversation_id ? (
+                    <Link
+                      href={`/dashboard/conversations/${row.conversation_id}`}
+                      className="mt-2 inline-block text-xs font-medium text-brand-600 hover:underline"
+                    >
+                      {t("dashboard.leads.seeConv")}
+                    </Link>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+
+            <div className="hidden md:block">
+          <ResponsiveTable scrollHint={t("common.tableScrollHint")}>
             <table className="w-full text-sm">
               <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
                 <tr>
@@ -153,6 +191,8 @@ export default function LeadsPage() {
               </tbody>
             </table>
           </ResponsiveTable>
+            </div>
+          </>
         )}
       </div>
     </div>

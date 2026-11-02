@@ -55,12 +55,17 @@
   },
   "dashboard": {
     "loading": "Caricamento della dashboard...",
+    "shell": {
+      "collapseSidebar": "Comprimi menu",
+      "expandSidebar": "Espandi menu"
+    },
     "nav": {
       "overview": "Panoramica",
       "conversations": "Conversazioni",
       "leads": "Conduce",
       "advisors": "Consulenti",
       "sites": "Siti",
+      "integration": "Integrazione",
       "trackedLinks": "Link tracciati",
       "settings": "Impostazioni"
     },
@@ -124,6 +129,8 @@
       },
       "country": {
         "title": "Distribuzione per paese",
+        "distinctCountries": "Paesi distinti",
+        "topCountry": "Paese principale",
         "visitor": "{count} visitatore qualificato",
         "visitorPlural": "{count} visitatori qualificati",
         "desc": "Paesi rilevati all'apertura del collegamento tracciato o durante la qualificazione nella chat.",
@@ -136,7 +143,7 @@
     },
     "sites": {
       "title": "Siti",
-      "subtitle": "I tuoi siti e chiavi widget per l'integrazione.",
+      "subtitle": "Aggiungi siti e gestisci il crawl del contenuto.",
       "addSite": "+ Aggiungi un sito",
       "cancelAdd": "Annulla",
       "newSite": "Nuovo sito",
@@ -172,10 +179,23 @@
       "deleteFailed": "Impossibile eliminare il sito",
       "crawlPrefix": "Strisciare:"
     },
+    "integrationPage": {
+      "title": "Integrazione",
+      "subtitle": "Chiavi widget e script per il tuo sito web.",
+      "noSites": "Nessun sito. Aggiungine uno in Siti per ottenere una chiave widget.",
+      "widgetKey": "Chiave widget",
+      "copyKey": "Copia chiave",
+      "keyCopied": "Chiave copiata",
+      "copyScript": "Copia script",
+      "publicGuide": "Documentazione completa (WordPress, Next.js…)",
+      "showGuide": "Guida integrazione",
+      "hideGuide": "Nascondi guida"
+    },
     "links": {
       "title": "Link tracciati",
       "subtitle": "Crea link per campagna (Facebook, Instagram…) e monitora le visite.",
       "newLink": "Nuovo link",
+      "addLink": "+ Nuovo link",
       "slug": "Lumaca",
       "source": "Sorgente",
       "campaignName": "Nome campagna",

@@ -2,7 +2,7 @@ import { createAdminClient } from "@/lib/setup-account-server";
 import { requirePlatformAdmin } from "@/lib/platform-admin-server";
 import { NextResponse } from "next/server";
 
-const VALID_PLANS = new Set(["starter", "pro", "agency"]);
+const VALID_PLANS = new Set(["free", "starter", "pro", "agency"]);
 const VALID_STATUSES = new Set(["trialing", "active", "past_due", "canceled"]);
 
 export async function PATCH(

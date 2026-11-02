@@ -6,7 +6,6 @@ import {
   formatDate,
   statusBadge,
   WIDGET_CLICK_ORDER,
-  widgetScript,
   type TrackedLinkInteractionStat,
   type CountryStat,
   type EmbedWidgetStats,
@@ -78,6 +77,8 @@ export function OverviewSummaryPanel({
 
       <div className="grid gap-2 lg:grid-cols-2">
         <DashboardPanel
+          collapsible
+          defaultOpen={false}
           title={t("dashboard.overview.recentConversations")}
           action={
             <Link href="/dashboard/conversations" className="text-xs font-medium text-brand-600 hover:underline">
@@ -115,6 +116,8 @@ export function OverviewSummaryPanel({
         </DashboardPanel>
 
         <DashboardPanel
+          collapsible
+          defaultOpen={false}
           title={t("dashboard.overview.recentLeads")}
           action={
             <Link href="/dashboard/leads" className="text-xs font-medium text-brand-600 hover:underline">
@@ -206,17 +209,18 @@ export function OverviewWidgetPanel({
     embedStats.opens === 0 && embedStats.conversations === 0 && totalEmbedClicks === 0;
 
   return (
-    <DashboardPanel
-      title={t("dashboard.overview.embed.title")}
-      description={t("dashboard.overview.embed.desc")}
-    >
+    <div className="space-y-2">
       <StatGrid items={metricItems} />
 
+      <DashboardPanel
+        title={t("dashboard.overview.embedStats")}
+        description={t("dashboard.overview.embed.desc")}
+      >
       {noActivity ? (
-        <p className="mt-2 text-sm text-slate-500">{t("dashboard.overview.embed.noActivityTab")}</p>
+        <p className="text-sm text-slate-500">{t("dashboard.overview.embed.noActivityTab")}</p>
       ) : (
         <>
-          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap gap-1">
               {EMBED_METRIC_KEYS.map((key) => (
                 <button
@@ -272,7 +276,7 @@ export function OverviewWidgetPanel({
           />
 
           {embedClickCards.length > 0 && (
-            <div className="mt-2 max-w-full overflow-x-auto overscroll-x-contain border-t border-slate-100 pt-2">
+            <div className="mt-2 max-w-full overflow-x-auto overscroll-x-contain border-t border-slate-100 pt-3">
               <p className="mb-2 text-xs font-medium text-slate-600">
                 {t("dashboard.overview.embed.clickBreakdown")}
               </p>
@@ -313,7 +317,7 @@ export function OverviewWidgetPanel({
                       <tr key={site.site_id} className="border-b border-slate-50">
                         <td className="py-2">
                           <p className="font-medium text-slate-900">{site.site_name}</p>
-                          <p className="text-xs text-slate-500">{site.site_url}</p>
+                          <p className="break-all text-xs text-slate-500">{site.site_url}</p>
                         </td>
                         <td className="py-2 text-right text-slate-800">{site.opens}</td>
                         <td className="py-2 text-right text-slate-800">{site.conversations}</td>
@@ -327,7 +331,8 @@ export function OverviewWidgetPanel({
           )}
         </>
       )}
-    </DashboardPanel>
+      </DashboardPanel>
+    </div>
   );
 }
 
@@ -335,16 +340,39 @@ export function OverviewLinksPanel({ trackedLinks }: { trackedLinks: TrackedLink
   const t = useT();
   const { widgetClickLabel, sourceLabel } = useDashboardLabels();
 
+  const totalVisits = trackedLinks.reduce((sum, link) => sum + link.click_count, 0);
+  const totalInteractions = trackedLinks.reduce((sum, link) => sum + link.interaction_total, 0);
+
+  const statItems = [
+    {
+      label: t("dashboard.links.title"),
+      value: trackedLinks.length,
+      hint: t("common.total"),
+      highlight: true,
+    },
+    {
+      label: t("dashboard.overview.trackedLinks.visitsLabel"),
+      value: totalVisits,
+    },
+    {
+      label: t("dashboard.overview.trackedLinks.interactionsLabel"),
+      value: totalInteractions,
+    },
+  ];
+
   return (
-    <DashboardPanel
-      title={t("dashboard.overview.trackedLinks.title")}
-      description={t("dashboard.overview.trackedLinks.desc")}
-      action={
-        <Link href="/dashboard/links" className="text-xs font-medium text-brand-600 hover:underline">
-          {t("dashboard.overview.trackedLinks.manage")}
-        </Link>
-      }
-    >
+    <div className="space-y-2">
+      <StatGrid items={statItems} />
+
+      <DashboardPanel
+        title={t("dashboard.overview.trackedLinks.title")}
+        description={t("dashboard.overview.trackedLinks.desc")}
+        action={
+          <Link href="/dashboard/links" className="text-xs font-medium text-brand-600 hover:underline">
+            {t("dashboard.overview.trackedLinks.manage")}
+          </Link>
+        }
+      >
       {trackedLinks.length === 0 ? (
         <p className="text-sm text-slate-500">{t("dashboard.overview.trackedLinks.empty")}</p>
       ) : (
@@ -408,7 +436,8 @@ export function OverviewLinksPanel({ trackedLinks }: { trackedLinks: TrackedLink
           ))}
         </div>
       )}
-    </DashboardPanel>
+      </DashboardPanel>
+    </div>
   );
 }
 
@@ -416,21 +445,39 @@ export function OverviewAudiencePanel({ countryStats }: { countryStats: CountryS
   const t = useT();
   const totalCountryVisitors = countryStats.reduce((sum, c) => sum + c.count, 0);
   const maxCountryCount = countryStats[0]?.count ?? 0;
+  const topCountry = countryStats[0];
+
+  const statItems = [
+    {
+      label: t("dashboard.overview.country.title"),
+      value: totalCountryVisitors,
+      hint:
+        totalCountryVisitors === 1
+          ? t("dashboard.overview.country.visitor", { count: totalCountryVisitors })
+          : t("dashboard.overview.country.visitorPlural", { count: totalCountryVisitors }),
+      highlight: true,
+    },
+    {
+      label: t("dashboard.overview.country.distinctCountries"),
+      value: countryStats.length,
+    },
+    {
+      label: t("dashboard.overview.country.topCountry"),
+      value: topCountry?.country ?? "—",
+      hint: topCountry ? `${topCountry.count}` : undefined,
+    },
+  ];
 
   return (
-    <DashboardPanel
-      title={t("dashboard.overview.country.title")}
-      description={t("dashboard.overview.country.desc")}
-      action={
-        totalCountryVisitors > 0 ? (
-          <span className="text-xs text-slate-500">
-            {totalCountryVisitors === 1
-              ? t("dashboard.overview.country.visitor", { count: totalCountryVisitors })
-              : t("dashboard.overview.country.visitorPlural", { count: totalCountryVisitors })}
-          </span>
-        ) : undefined
-      }
-    >
+    <div className="space-y-2">
+      <StatGrid items={statItems} />
+
+      <DashboardPanel
+        collapsible
+        defaultOpen={false}
+        title={t("dashboard.overview.country.title")}
+        description={t("dashboard.overview.country.desc")}
+      >
       {countryStats.length === 0 ? (
         <p className="text-sm text-slate-500">{t("dashboard.overview.country.empty")}</p>
       ) : (
@@ -461,38 +508,7 @@ export function OverviewAudiencePanel({ countryStats }: { countryStats: CountryS
           })}
         </ul>
       )}
-    </DashboardPanel>
-  );
-}
-
-export function OverviewDeployPanel({
-  siteName,
-  widgetKey,
-  copied,
-  onCopy,
-}: {
-  siteName: string;
-  widgetKey: string;
-  copied: boolean;
-  onCopy: () => void;
-}) {
-  const t = useT();
-
-  return (
-    <DashboardPanel
-      title={t("dashboard.overview.quickDeploy.title", { name: siteName })}
-      description={t("dashboard.overview.quickDeploy.hint")}
-    >
-      <pre className="overflow-x-auto rounded-md bg-slate-900 p-3 text-xs leading-relaxed text-green-400">
-        {widgetScript(widgetKey)}
-      </pre>
-      <button
-        type="button"
-        onClick={onCopy}
-        className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
-      >
-        {copied ? t("common.copied") : t("dashboard.overview.copyScript")}
-      </button>
-    </DashboardPanel>
+      </DashboardPanel>
+    </div>
   );
 }

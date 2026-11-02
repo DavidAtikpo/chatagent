@@ -1,5 +1,7 @@
+import { createPasswordResetToken } from "@/lib/auth/reset-token";
+import { sendPasswordResetEmail } from "@/lib/email/send-reset-password";
 import { getAuthBaseUrl } from "@/lib/request-origin";
-import { createClient } from "@/lib/supabase/server";
+import { queryOne } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -17,16 +19,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Email invalide" }, { status: 400 });
   }
 
-  const baseUrl = getAuthBaseUrl(request);
-  const redirectTo = `${baseUrl}/auth/callback?next=/login/reset-password`;
+  try {
+    const user = await queryOne<{ id: string; email: string }>(
+      `SELECT id, email FROM app_users WHERE email = $1`,
+      [email]
+    );
 
-  const supabase = createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-
-  if (error) {
-    console.error("[forgot-password]", error.message, { redirectTo, email });
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    if (user) {
+      const raw = await createPasswordResetToken(user.id);
+      const baseUrl = getAuthBaseUrl(request);
+      const resetUrl = `${baseUrl}/login/reset-password?token=${encodeURIComponent(raw)}`;
+      await sendPasswordResetEmail(user.email, resetUrl);
+    }
+  } catch (err) {
+    console.error("[forgot-password]", err);
+    return NextResponse.json({ error: "Impossible d'envoyer l'email" }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+    ok: true,
+    message:
+      "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.",
+  });
 }

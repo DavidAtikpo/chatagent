@@ -1,6 +1,5 @@
 import { createAdminClient } from "@/lib/setup-account-server";
 import { createClient } from "@/lib/supabase/server";
-import { isMissingTrafficLinkImageColumn } from "@/lib/traffic-links-db";
 import { NextResponse } from "next/server";
 
 async function userOwnsLink(userId: string, linkId: string) {
@@ -55,35 +54,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     }
 
     const admin = createAdminClient();
-    let result = await admin
+    const result = await admin
       .from("traffic_links")
       .update(updates)
       .eq("id", params.id)
       .select("id, slug, source, label, image_url, click_count, created_at")
       .single();
-
-    if (result.error && isMissingTrafficLinkImageColumn(result.error) && "image_url" in updates) {
-      const rest = { ...updates };
-      delete rest.image_url;
-      if (!Object.keys(rest).length) {
-        return NextResponse.json(
-          {
-            error:
-              "Colonne image_url absente — exécutez supabase/migrations/008_traffic_link_image.sql dans Supabase.",
-          },
-          { status: 503 }
-        );
-      }
-      result = await admin
-        .from("traffic_links")
-        .update(rest)
-        .eq("id", params.id)
-        .select("id, slug, source, label, click_count, created_at")
-        .single();
-      if (!result.error && result.data) {
-        result = { ...result, data: { ...result.data, image_url: null } };
-      }
-    }
 
     const { data, error } = result;
     if (error) {

@@ -45,7 +45,7 @@ export async function fetchPlatformStats(): Promise<PlatformStats> {
 
   const planMap = new Map<string, number>();
   for (const row of orgs ?? []) {
-    const plan = (row.subscription_plan || "starter").toLowerCase();
+    const plan = (row.subscription_plan || "free").toLowerCase();
     planMap.set(plan, (planMap.get(plan) ?? 0) + 1);
   }
 
@@ -53,7 +53,7 @@ export async function fetchPlatformStats(): Promise<PlatformStats> {
   return {
     organizations: orgCount ?? 0,
     sites: siteRows.length,
-    activeSites: siteRows.filter((s) => s.is_active).length,
+    activeSites: siteRows.filter((s: { is_active?: boolean }) => s.is_active).length,
     conversations: convCount ?? 0,
     leads: leadCount ?? 0,
     plans: Array.from(planMap.entries())
@@ -94,8 +94,8 @@ export async function fetchPlatformOrganizations(): Promise<PlatformOrganization
 
   if (error || !orgs?.length) return [];
 
-  const orgIds = orgs.map((o) => o.id);
-  const ownerIds = orgs.map((o) => o.owner_id);
+  const orgIds = (orgs as { id: string }[]).map((o) => o.id);
+  const ownerIds = (orgs as { owner_id: string }[]).map((o) => o.owner_id);
 
   const [{ data: sites }, { data: leads }, emails] = await Promise.all([
     admin.from("sites").select("id, organization_id").in("organization_id", orgIds),
@@ -125,12 +125,12 @@ export async function fetchPlatformOrganizations(): Promise<PlatformOrganization
     leadsByOrg.set(l.organization_id, (leadsByOrg.get(l.organization_id) ?? 0) + 1);
   }
 
-  return orgs.map((o) => ({
+  return (orgs as PlatformOrganization[]).map((o) => ({
     id: o.id,
     name: o.name,
     owner_id: o.owner_id,
     owner_email: emails.get(o.owner_id) ?? null,
-    subscription_plan: o.subscription_plan ?? "starter",
+    subscription_plan: o.subscription_plan ?? "free",
     subscription_status: o.subscription_status ?? "trialing",
     sites_count: sitesByOrg.get(o.id) ?? 0,
     conversations_count: convsByOrg.get(o.id) ?? 0,

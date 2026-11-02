@@ -5,7 +5,7 @@ export const SAAS_LOGO_PATH = "/logochatagent.png";
 /** Avatar IA par défaut dans le widget chat (en-tête + message d'accueil). */
 export const AI_ASSISTANT_AVATAR_PATH = "/ia-assistant.png";
 /** Incrémenter pour forcer le rechargement du widget.js chez les visiteurs. */
-export const WIDGET_SCRIPT_VERSION = "4";
+export const WIDGET_SCRIPT_VERSION = "16";
 export const SAAS_ICON_VERSION = "3";
 
 /** Couleurs extraites du logo (texte or + fond noir) */

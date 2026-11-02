@@ -1,4 +1,6 @@
-import { createAdminClient } from "@/lib/setup-account-server";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { queryOne } from "@/lib/db";
+import { hasStarterFeatures } from "@/lib/plans";
 import { userOwnsSite } from "@/lib/site-access";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
@@ -25,6 +27,20 @@ export async function POST(
       return NextResponse.json({ error: "Site non autorisé" }, { status: 403 });
     }
 
+    const orgPlan = await queryOne<{ subscription_plan: string; subscription_status: string }>(
+      `SELECT o.subscription_plan, o.subscription_status
+       FROM sites s
+       JOIN organizations o ON o.id = s.organization_id
+       WHERE s.id = $1`,
+      [siteId]
+    );
+    if (!hasStarterFeatures(orgPlan)) {
+      return NextResponse.json(
+        { error: "Logo réservé au plan Starter ou supérieur", code: "plan_starter_required" },
+        { status: 403 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get("file");
     if (!file || !(file instanceof File)) {
@@ -40,38 +56,26 @@ export async function POST(
     }
 
     const ext = file.name.split(".").pop()?.toLowerCase() || "png";
-    const path = `${siteId}/logo.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const admin = createAdminClient();
-    const { error: uploadError } = await admin.storage.from("branding").upload(path, buffer, {
-      contentType: file.type,
-      upsert: true,
+    const { url: logoUrl } = await uploadToCloudinary(buffer, {
+      folder: `yayra/branding/${siteId}`,
+      publicId: `logo-${Date.now()}`,
+      mimeType: file.type,
     });
 
-    if (uploadError) {
-      return NextResponse.json(
-        {
-          error:
-            uploadError.message +
-            " — exécutez supabase/migrations/006_branding_storage.sql si le bucket n'existe pas.",
-        },
-        { status: 500 }
-      );
-    }
+    const site = await queryOne<{ agent_config: Record<string, unknown> }>(
+      `SELECT agent_config FROM sites WHERE id = $1`,
+      [siteId]
+    );
 
-    const { data: publicUrl } = admin.storage.from("branding").getPublicUrl(path);
+    const config = { ...(site?.agent_config ?? {}), logo_url: logoUrl };
+    await queryOne(`UPDATE sites SET agent_config = $1::jsonb WHERE id = $2 RETURNING id`, [
+      JSON.stringify(config),
+      siteId,
+    ]);
 
-    const { data: site } = await admin
-      .from("sites")
-      .select("agent_config")
-      .eq("id", siteId)
-      .single();
-
-    const config = { ...(site?.agent_config ?? {}), logo_url: publicUrl.publicUrl };
-    await admin.from("sites").update({ agent_config: config }).eq("id", siteId);
-
-    return NextResponse.json({ logo_url: publicUrl.publicUrl });
+    return NextResponse.json({ logo_url: logoUrl });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur serveur";
     return NextResponse.json({ error: message }, { status: 500 });

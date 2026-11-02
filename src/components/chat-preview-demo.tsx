@@ -5,6 +5,8 @@ import { AI_ASSISTANT_AVATAR_PATH, SAAS_NAME } from "@/lib/branding";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
+export type ProfileDemoVariant = "website" | "emploi" | "autres";
+
 type Phase =
   | "idle"
   | "typing-assistant-1"
@@ -84,15 +86,19 @@ function Bubble({
   );
 }
 
-export function ChatPreviewDemo() {
-  const { t, ready } = useI18n();
+function chatKey(variant: ProfileDemoVariant, field: string) {
+  return `home.demo.profiles.${variant}.chat.${field}`;
+}
+
+export function ChatPreviewDemo({ variant = "website" }: { variant?: ProfileDemoVariant }) {
+  const { t, messages, ready } = useI18n();
   const [phase, setPhase] = useState<Phase>("idle");
   const [cycle, setCycle] = useState(0);
 
-  const welcome = t("home.demo.chatPreview.welcome");
-  const userMsg = t("home.demo.chatPreview.userMessage");
-  const replyIntro = t("home.demo.chatPreview.replyIntro");
-  const sessionCta = t("home.demo.chatPreview.sessionCta");
+  const welcome = t(chatKey(variant, "welcome"));
+  const userMsg = t(chatKey(variant, "userMessage"));
+  const replyIntro = t(chatKey(variant, "replyIntro"));
+  const sessionCta = t(chatKey(variant, "sessionCta"));
 
   useEffect(() => {
     if (!ready) return;
@@ -126,7 +132,7 @@ export function ChatPreviewDemo() {
 
     runStep();
     return () => window.clearTimeout(timeoutId);
-  }, [cycle, ready, welcome, userMsg]);
+  }, [cycle, ready, welcome, userMsg, variant]);
 
   const welcomeTyping = useTypewriter(welcome, phase === "message-1", TIMING.message1Char);
   const userTyping = useTypewriter(userMsg, phase === "message-user", TIMING.messageUserChar);
@@ -150,10 +156,14 @@ export function ChatPreviewDemo() {
 
   const showReply = phase === "message-2" || phase === "hold";
 
-  const headerTitle = useMemo(
-    () => t("home.demo.chatPreview.assistantTitle", { saasName: SAAS_NAME }),
-    [t]
-  );
+  const headerTitle = useMemo(() => {
+    const raw = t(chatKey(variant, "assistantTitle"), { saasName: SAAS_NAME });
+    return raw;
+  }, [t, variant]);
+
+  const pills =
+    (messages.home?.demo?.profiles?.[variant] as { chat?: { pills?: string[] } } | undefined)?.chat
+      ?.pills ?? [];
 
   if (!ready) {
     return <div className="min-h-[220px] rounded-lg border border-slate-200 bg-white" />;
@@ -169,14 +179,14 @@ export function ChatPreviewDemo() {
           height={32}
           className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-brand-100"
         />
-        <div>
-          <p className="text-xs font-semibold">{headerTitle}</p>
+        <div className="min-w-0">
+          <p className="truncate text-xs font-semibold">{headerTitle}</p>
           <p className="flex items-center gap-1 text-[10px] text-emerald-600">
             <span className="relative flex h-1.5 w-1.5 shrink-0 overflow-hidden">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
             </span>
-            {t("home.demo.chatPreview.online")}
+            {t(chatKey(variant, "online"))}
           </p>
         </div>
       </div>
@@ -224,9 +234,19 @@ export function ChatPreviewDemo() {
         )}
       </div>
 
-      <p className="mt-2 text-center text-[10px] text-slate-400">
-        {t("home.demo.chatPreview.footer")}
-      </p>
+      {pills.length > 0 ? (
+        <div className="mt-2 flex flex-wrap justify-center gap-1">
+          {pills.map((pill) => (
+            <span
+              key={pill}
+              className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[10px] text-slate-600"
+            >
+              {pill}
+            </span>
+          ))}
+        </div>
+      ) : null}
+      <p className="mt-2 text-center text-[10px] text-slate-400">{t(chatKey(variant, "footer"))}</p>
     </div>
   );
 }

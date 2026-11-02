@@ -1,12 +1,17 @@
 "use client";
 
+import {
+  TrackedLinkShareButtons,
+  TrackedLinkSharePanel,
+} from "@/components/dashboard/tracked-link-share-buttons";
 import { trackedLinkUrl } from "@/lib/app-url";
+import { DashboardPanel, StatGrid } from "@/components/dashboard/dashboard-tabs";
 import { ResponsiveTable } from "@/components/dashboard/responsive-table";
 import { formatDate, type TrackedLinkInteractionStat } from "@/lib/dashboard-data";
 import { useT } from "@/i18n/context";
 import { useDashboardLabels } from "@/i18n/use-dashboard-labels";
 import { useOrganization } from "@/hooks/use-organization";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const SOURCE_VALUES = [
   "facebook",
@@ -46,7 +51,9 @@ export default function LinksPage() {
   const [creating, setCreating] = useState(false);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [shareLinkUrl, setShareLinkUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
   const editImageRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   async function loadLinks() {
@@ -115,9 +122,16 @@ export default function LinksPage() {
         await uploadLinkImage(linkId, imageFile);
       }
 
+      const createdSlug = data.link?.slug as string | undefined;
+      const site = sites.find((s) => s.id === siteId);
+      if (createdSlug && site?.widget_key) {
+        setShareLinkUrl(trackedLinkUrl(createdSlug, site.widget_key));
+      }
+
       setSlug("");
       setLabel("");
       setImageFile(null);
+      setShowForm(false);
       await loadLinks();
     } catch (err) {
       setError(
@@ -169,22 +183,91 @@ export default function LinksPage() {
     setTimeout(() => setCopied(null), 2000);
   }
 
+  const linkStats = useMemo(() => {
+    const visits = links.reduce((sum, l) => sum + l.click_count, 0);
+    const interactions = links.reduce((sum, l) => sum + l.interaction_total, 0);
+    return { count: links.length, visits, interactions };
+  }, [links]);
+
+  const statItems = useMemo(
+    () => [
+      {
+        label: t("dashboard.links.title"),
+        value: linkStats.count,
+        highlight: true,
+      },
+      {
+        label: t("dashboard.links.visits"),
+        value: linkStats.visits,
+      },
+      {
+        label: t("dashboard.links.interactions"),
+        value: linkStats.interactions,
+      },
+      {
+        label: t("dashboard.nav.sites"),
+        value: sites.length,
+      },
+    ],
+    [linkStats, sites.length, t]
+  );
+
   if (orgLoading) {
-    return <p className="text-sm text-slate-500">{t("common.loading")}</p>;
+    return (
+      <div className="space-y-3 animate-pulse">
+        <div className="h-8 w-44 rounded bg-slate-200" />
+        <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-16 rounded-md bg-slate-100" />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1 className="text-xl font-bold text-slate-900">{t("dashboard.links.title")}</h1>
-      <p className="mt-0.5 text-sm text-slate-600">{t("dashboard.links.subtitleExtended")}</p>
+    <div className="space-y-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900">{t("dashboard.links.title")}</h1>
+          <p className="mt-0.5 text-sm text-slate-600">{t("dashboard.links.subtitle")}</p>
+        </div>
+        {sites.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => setShowForm((open) => !open)}
+            className="shrink-0 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
+          >
+            {showForm ? t("dashboard.sites.cancelAdd") : t("dashboard.links.addLink")}
+          </button>
+        ) : null}
+      </div>
 
-      {error && (
-        <div className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
-      )}
+      <StatGrid items={statItems} />
 
-      {sites.length > 0 ? (
-        <form onSubmit={createLink} className="mt-3 rounded-lg border border-slate-200 bg-white p-4">
-          <h2 className="text-sm font-semibold">{t("dashboard.links.newLink")}</h2>
+      {error ? (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </div>
+      ) : null}
+
+      {shareLinkUrl ? (
+        <TrackedLinkSharePanel
+          url={shareLinkUrl}
+          continueLabel={t("dashboard.links.shareDismiss")}
+          onContinue={() => setShareLinkUrl(null)}
+        />
+      ) : null}
+
+      {sites.length === 0 ? (
+        <DashboardPanel title={t("dashboard.links.title")}>
+          <p className="text-sm text-slate-500">{t("dashboard.links.noSiteYet")}</p>
+        </DashboardPanel>
+      ) : null}
+
+      {sites.length > 0 && showForm ? (
+        <DashboardPanel title={t("dashboard.links.newLink")}>
+        <form onSubmit={createLink}>
           <div className="mt-2 grid gap-2 sm:grid-cols-2">
             <div>
               <label className="text-xs text-slate-500">{t("dashboard.links.siteLabel")}</label>
@@ -259,22 +342,145 @@ export default function LinksPage() {
           <button
             type="submit"
             disabled={creating}
-            className="mt-2 rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+            className="mt-3 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {creating ? t("dashboard.links.creating") : t("dashboard.links.createLink")}
           </button>
         </form>
-      ) : (
-        <p className="mt-3 text-sm text-slate-500">{t("dashboard.links.noSiteYet")}</p>
-      )}
+        </DashboardPanel>
+      ) : null}
 
-      <div className="mt-3 overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <DashboardPanel title={t("dashboard.links.title")} description={t("dashboard.links.subtitleExtended")}>
         {loading ? (
-          <p className="p-4 text-sm text-slate-500">{t("common.loading")}</p>
+          <div className="space-y-2 animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-12 rounded-md bg-slate-100" />
+            ))}
+          </div>
         ) : links.length === 0 ? (
-          <p className="p-4 text-sm text-slate-500">{t("dashboard.links.emptyTable")}</p>
+          <p className="text-sm text-slate-500">{t("dashboard.links.emptyTable")}</p>
         ) : (
-          <ResponsiveTable>
+          <>
+          <div className="space-y-3 md:hidden">
+            {links.map((link) => (
+              <article
+                key={link.id}
+                className="rounded-lg border border-slate-100 bg-slate-50/80 p-3"
+              >
+                <div className="flex gap-3">
+                  <div className="shrink-0">
+                    {link.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={link.image_url}
+                        alt={link.label ?? link.slug}
+                        className="h-14 w-20 rounded border border-slate-200 object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-14 w-20 items-center justify-center rounded border border-dashed border-slate-200 text-[10px] text-slate-400">
+                        {t("dashboard.links.noImage")}
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-slate-900">{link.label ?? link.slug}</p>
+                    <p className="text-xs text-slate-500">{link.site_name}</p>
+                    <p className="mt-1 text-xs text-slate-600">
+                      {sourceLabel(link.source)} · {t("dashboard.links.visits")}{" "}
+                      <span className="font-medium">{link.click_count}</span> ·{" "}
+                      {t("dashboard.links.interactions")}{" "}
+                      <span className="font-medium text-brand-600">{link.interaction_total}</span>
+                    </p>
+                    <a
+                      href={trackingUrl(link)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 inline-block break-all text-xs text-brand-600 hover:underline"
+                    >
+                      {trackingUrl(link)}
+                    </a>
+                  </div>
+                </div>
+                {link.countries.length > 0 ? (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {link.countries.map((row) => (
+                      <span
+                        key={row.country}
+                        className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] text-blue-800"
+                      >
+                        {row.country} {row.count}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+                <div className="mt-3">
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-500">
+                    {t("dashboard.links.colShare")}
+                  </p>
+                  <div className="mt-1">
+                    <TrackedLinkShareButtons
+                      url={trackingUrl(link)}
+                      shareMessage={
+                        link.label
+                          ? `${link.label} — ${t("dashboard.links.shareDefaultMessage")}`
+                          : undefined
+                      }
+                      compact
+                    />
+                  </div>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2 border-t border-slate-100 pt-3">
+                  <input
+                    ref={(el) => {
+                      editImageRefs.current[link.id] = el;
+                    }}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) void changeLinkImage(link.id, file);
+                      e.target.value = "";
+                    }}
+                  />
+                  <button
+                    type="button"
+                    disabled={uploadingId === link.id}
+                    onClick={() => editImageRefs.current[link.id]?.click()}
+                    className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700"
+                  >
+                    {uploadingId === link.id
+                      ? t("dashboard.settings.uploading")
+                      : link.image_url
+                        ? t("dashboard.links.changeImage")
+                        : t("dashboard.links.addImage")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => copyUrl(link)}
+                    className="rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-brand-700"
+                  >
+                    {copied === link.id ? t("common.copied") : t("common.copy")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteLink(link.id)}
+                    className="rounded-md border border-red-100 bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700"
+                  >
+                    {t("dashboard.links.deleteShort")}
+                  </button>
+                </div>
+                {link.created_at ? (
+                  <p className="mt-2 text-[11px] text-slate-400">
+                    {t("dashboard.links.colCreated")} · {formatDate(link.created_at)}
+                  </p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+
+          <div className="hidden md:block">
+          <ResponsiveTable scrollHint={t("common.tableScrollHint")} minWidthClassName="min-w-[960px]">
             <table className="w-full text-sm">
             <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs text-slate-500">
               <tr>
@@ -286,6 +492,7 @@ export default function LinksPage() {
                 <th className="px-3 py-2">{t("dashboard.links.interactions")}</th>
                 <th className="px-3 py-2">{t("dashboard.links.colUrl")}</th>
                 <th className="px-3 py-2">{t("dashboard.links.colCreated")}</th>
+                <th className="px-3 py-2">{t("dashboard.links.colShare")}</th>
                 <th className="px-3 py-2"></th>
               </tr>
             </thead>
@@ -383,6 +590,17 @@ export default function LinksPage() {
                   <td className="px-3 py-2 text-slate-500">
                     {link.created_at ? formatDate(link.created_at) : "—"}
                   </td>
+                  <td className="px-3 py-2 align-top">
+                    <TrackedLinkShareButtons
+                      url={trackingUrl(link)}
+                      shareMessage={
+                        link.label
+                          ? `${link.label} — ${t("dashboard.links.shareDefaultMessage")}`
+                          : undefined
+                      }
+                      inline
+                    />
+                  </td>
                   <td className="px-3 py-2">
                     <div className="flex gap-2">
                       <button
@@ -406,8 +624,10 @@ export default function LinksPage() {
             </tbody>
             </table>
           </ResponsiveTable>
+          </div>
+          </>
         )}
-      </div>
+      </DashboardPanel>
     </div>
   );
 }

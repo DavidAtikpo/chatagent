@@ -55,12 +55,17 @@
   },
   "dashboard": {
     "loading": "Das Dashboard wird geladen...",
+    "shell": {
+      "collapseSidebar": "Menü einklappen",
+      "expandSidebar": "Menü ausklappen"
+    },
     "nav": {
       "overview": "Überblick",
       "conversations": "Gespräche",
       "leads": "Führt",
       "advisors": "Berater",
       "sites": "Websites",
+      "integration": "Integration",
       "trackedLinks": "Verfolgte Links",
       "settings": "Einstellungen"
     },
@@ -124,6 +129,8 @@
       },
       "country": {
         "title": "Verteilung nach Ländern",
+        "distinctCountries": "Verschiedene Länder",
+        "topCountry": "Hauptland",
         "visitor": "{count} qualifizierter Besucher",
         "visitorPlural": "{count} qualifizierte Besucher",
         "desc": "Länder, die beim Öffnen des verfolgten Links oder beim Qualifizieren im Chat erkannt wurden.",
@@ -136,7 +143,7 @@
     },
     "sites": {
       "title": "Websites",
-      "subtitle": "Ihre Websites und Widget-Schlüssel für die Integration.",
+      "subtitle": "Websites hinzufügen und Content-Crawl verwalten.",
       "addSite": "+ Fügen Sie eine Website hinzu",
       "cancelAdd": "Stornieren",
       "newSite": "Neue Website",
@@ -172,10 +179,23 @@
       "deleteFailed": "Die Website konnte nicht gelöscht werden",
       "crawlPrefix": "Kriechen:"
     },
+    "integrationPage": {
+      "title": "Integration",
+      "subtitle": "Widget-Schlüssel und Einbettungsskript für Ihre Website.",
+      "noSites": "Keine Websites. Fügen Sie unter Websites eine Site hinzu, um einen Widget-Schlüssel zu erhalten.",
+      "widgetKey": "Widget-Schlüssel",
+      "copyKey": "Schlüssel kopieren",
+      "keyCopied": "Schlüssel kopiert",
+      "copyScript": "Skript kopieren",
+      "publicGuide": "Vollständige Dokumentation (WordPress, Next.js…)",
+      "showGuide": "Integrationsleitfaden",
+      "hideGuide": "Leitfaden ausblenden"
+    },
     "links": {
       "title": "Verfolgte Links",
       "subtitle": "Erstellen Sie Links nach Kampagne (Facebook, Instagram usw.) und verfolgen Sie Besuche.",
       "newLink": "Neuer Link",
+      "addLink": "+ Neuer Link",
       "slug": "Schnecke",
       "source": "Quelle",
       "campaignName": "Kampagnenname",

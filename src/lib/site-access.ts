@@ -1,21 +1,14 @@
-import { createAdminClient } from "@/lib/setup-account-server";
+import { queryRows } from "@/lib/db";
 
 export async function getUserOrgSiteIds(userId: string): Promise<string[]> {
-  const admin = createAdminClient();
-  const { data: orgs } = await admin
-    .from("organizations")
-    .select("id")
-    .eq("owner_id", userId);
-
-  if (!orgs?.length) return [];
-
-  const orgIds = orgs.map((o) => o.id);
-  const { data: sites } = await admin
-    .from("sites")
-    .select("id")
-    .in("organization_id", orgIds);
-
-  return sites?.map((s) => s.id) ?? [];
+  const sites = await queryRows<{ id: string }>(
+    `SELECT s.id
+     FROM sites s
+     INNER JOIN organizations o ON o.id = s.organization_id
+     WHERE o.owner_id = $1`,
+    [userId]
+  );
+  return sites.map((s) => s.id);
 }
 
 export async function userOwnsSite(userId: string, siteId: string): Promise<boolean> {

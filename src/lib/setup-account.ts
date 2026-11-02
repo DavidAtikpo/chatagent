@@ -1,15 +1,8 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-
-export async function setupAccount(
-  _supabase: SupabaseClient,
-  _userId: string,
-  companyName: string,
-  siteUrl: string
-) {
+export async function setupAccount(_client: unknown, _userId: string, companyName: string) {
   const res = await fetch("/api/setup-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ companyName, siteUrl }),
+    body: JSON.stringify({ companyName }),
   });
 
   const data = await res.json();
@@ -17,5 +10,5 @@ export async function setupAccount(
     throw new Error(data.error ?? "Impossible de créer l'organisation");
   }
 
-  return data as { organizationId: string; siteId: string };
+  return data as { organizationId: string; siteId: string | null };
 }

@@ -57,23 +57,6 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle, primaryColor 
     window.addEventListener("chatagent:ready", onReady);
     window.addEventListener("chatagent:error", onError);
 
-    const visitKey = `chatagent_visit_${widgetKey}_${slug}`;
-    if (!sessionStorage.getItem(visitKey)) {
-      sessionStorage.setItem(visitKey, "1");
-      fetch(`${apiUrl}/widget/event`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          widget_key: widgetKey,
-          event_type: "open",
-          placement: "dock",
-          page_url: window.location.href,
-          traffic_slug: slug,
-        }),
-        keepalive: true,
-      }).catch(() => {});
-    }
-
     window.ChatAgentBoot = {
       key: widgetKey,
       api: apiUrl,
@@ -100,6 +83,7 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle, primaryColor 
       script.setAttribute("data-traffic-slug", slug);
       script.setAttribute("data-auto-open", "true");
       script.setAttribute("data-mode", "page");
+      script.setAttribute("fetchpriority", "high");
 
       script.onerror = () => {
         setErrorDetail(t("chatLanding.widgetMissing"));
@@ -107,6 +91,23 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle, primaryColor 
       };
 
       document.body.appendChild(script);
+    }
+
+    const visitKey = `chatagent_visit_${widgetKey}_${slug}`;
+    if (!sessionStorage.getItem(visitKey)) {
+      sessionStorage.setItem(visitKey, "1");
+      fetch(`${apiUrl}/widget/event`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          widget_key: widgetKey,
+          event_type: "open",
+          placement: "dock",
+          page_url: window.location.href,
+          traffic_slug: slug,
+        }),
+        keepalive: true,
+      }).catch(() => {});
     }
 
     return () => {
@@ -142,6 +143,9 @@ export function ChatLandingClient({ slug, widgetKey, previewTitle, primaryColor 
           <div className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
             <p className="font-medium">{t("chatLanding.unavailable")}</p>
             {errorDetail && <p className="mt-1">{errorDetail}</p>}
+            {errorDetail === "Config not found" ? (
+              <p className="mt-2 text-xs text-amber-800/90">{t("chatLanding.configNotFoundHint")}</p>
+            ) : null}
             <p className="mt-2 text-xs text-amber-800/80">
               {t("chatLanding.apiCheck")}{" "}
               <code className="break-all">{apiHealthUrl}</code>

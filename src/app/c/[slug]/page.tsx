@@ -36,11 +36,14 @@ export default async function ChatLandingPage({ params, searchParams }: PageProp
   const preview = await getTrafficLinkPreview(params.slug, searchParams.key ?? "");
 
   return (
-    <ChatLandingClient
-      slug={params.slug}
-      widgetKey={searchParams.key ?? ""}
-      previewTitle={preview?.title}
-      primaryColor={preview?.primaryColor}
-    />
+    <>
+      <link rel="preload" href="/widget.js" as="script" />
+      <ChatLandingClient
+        slug={params.slug}
+        widgetKey={searchParams.key ?? ""}
+        previewTitle={preview?.title}
+        primaryColor={preview?.primaryColor}
+      />
+    </>
   );
 }

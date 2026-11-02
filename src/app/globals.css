@@ -30,6 +30,8 @@
     overflow-x: hidden;
     overscroll-behavior-x: none;
     touch-action: pan-y pinch-zoom;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
   img,

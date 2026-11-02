@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/setup-account-server";
 import { isGenericWelcomeMessage } from "@/lib/generic-welcome";
-import { hasProFeatures } from "@/lib/plans";
+import { hasProFeatures, hasStarterFeatures } from "@/lib/plans";
 import { userOwnsSite } from "@/lib/site-access";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
@@ -49,16 +49,16 @@ export async function PATCH(
       .eq("id", siteRow.organization_id)
       .single();
 
-    const pro = hasProFeatures(
-      org
-        ? {
-            id: siteRow.organization_id,
-            name: "",
-            subscription_plan: org.subscription_plan,
-            subscription_status: org.subscription_status,
-          }
-        : null
-    );
+    const orgCtx = org
+      ? {
+          id: siteRow.organization_id,
+          name: "",
+          subscription_plan: org.subscription_plan,
+          subscription_status: org.subscription_status,
+        }
+      : null;
+    const pro = hasProFeatures(orgCtx);
+    const starter = hasStarterFeatures(orgCtx);
 
     if (!pro) {
       const prev = (siteRow.agent_config as Record<string, unknown>) ?? {};
@@ -70,6 +70,11 @@ export async function PATCH(
         cta_url: prev.cta_url ?? null,
       };
       whatsappNumber = siteRow.whatsapp_number ?? (prev.contact_whatsapp as string) ?? null;
+    }
+
+    if (!starter) {
+      const prev = (siteRow.agent_config as Record<string, unknown>) ?? {};
+      agentConfig = { ...agentConfig, logo_url: prev.logo_url ?? null };
     }
 
     const prevConfig = (siteRow.agent_config as Record<string, unknown>) ?? {};

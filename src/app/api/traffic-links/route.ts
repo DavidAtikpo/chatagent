@@ -1,29 +1,9 @@
 import { buildTrackedLinkStats } from "@/lib/dashboard-data";
+import { getUserOrgSiteIds } from "@/lib/site-access";
 import { createAdminClient } from "@/lib/setup-account-server";
 import { createClient } from "@/lib/supabase/server";
-import {
-  isMissingTrafficLinkImageColumn,
-  listTrafficLinksForSites,
-} from "@/lib/traffic-links-db";
+import { listTrafficLinksForSites } from "@/lib/traffic-links-db";
 import { NextResponse } from "next/server";
-
-async function getUserOrgSiteIds(userId: string) {
-  const admin = createAdminClient();
-  const { data: orgs } = await admin
-    .from("organizations")
-    .select("id")
-    .eq("owner_id", userId);
-
-  if (!orgs?.length) return [];
-
-  const orgIds = orgs.map((o) => o.id);
-  const { data: sites } = await admin
-    .from("sites")
-    .select("id")
-    .in("organization_id", orgIds);
-
-  return sites?.map((s) => s.id) ?? [];
-}
 
 export async function GET() {
   try {
@@ -41,14 +21,13 @@ export async function GET() {
       return NextResponse.json({ links: [] });
     }
 
-    const admin = createAdminClient();
-    const { data, error } = await listTrafficLinksForSites(admin, siteIds);
+    const { data, error } = await listTrafficLinksForSites(siteIds);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const links = buildTrackedLinkStats(data ?? []);
+    const links = buildTrackedLinkStats((data ?? []) as Parameters<typeof buildTrackedLinkStats>[0]);
 
     return NextResponse.json({ links });
   } catch (err) {
@@ -97,23 +76,11 @@ export async function POST(request: Request) {
     };
     if (imageUrl) insertPayload.image_url = imageUrl;
 
-    let result = await admin
+    const result = await admin
       .from("traffic_links")
       .insert(insertPayload)
-      .select("id, slug, source, label, image_url, click_count, created_at, sites(name, widget_key)")
+      .select("id, slug, source, label, image_url, click_count, created_at, site_id")
       .single();
-
-    if (result.error && isMissingTrafficLinkImageColumn(result.error)) {
-      delete insertPayload.image_url;
-      result = await admin
-        .from("traffic_links")
-        .insert(insertPayload)
-        .select("id, slug, source, label, click_count, created_at, sites(name, widget_key)")
-        .single();
-      if (!result.error && result.data) {
-        result = { ...result, data: { ...result.data, image_url: null } };
-      }
-    }
 
     const { data, error } = result;
     if (error) {

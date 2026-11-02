@@ -1,46 +1,42 @@
-import { createAdminClient } from "@/lib/setup-account-server";
-import { createClient } from "@/lib/supabase/server";
+import { isSessionUser, requireSession } from "@/lib/auth/require-session";
+import { queryOne, queryRows } from "@/lib/db";
+import { expireEventSitesForOrganization } from "@/lib/expire-event-sites";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const session = await requireSession();
+    if (!isSessionUser(session)) return session;
 
-    if (!user) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-    }
-
-    const admin = createAdminClient();
-    const { data: organization, error: orgError } = await admin
-      .from("organizations")
-      .select("id, name, subscription_plan, subscription_status")
-      .eq("owner_id", user.id)
-      .maybeSingle();
-
-    if (orgError) {
-      return NextResponse.json({ error: orgError.message }, { status: 500 });
-    }
+    const organization = await queryOne<{
+      id: string;
+      name: string;
+      subscription_plan: string;
+      subscription_status: string;
+    }>(
+      `SELECT id, name, subscription_plan, subscription_status
+       FROM organizations
+       WHERE owner_id = $1
+       LIMIT 1`,
+      [session.id]
+    );
 
     if (!organization) {
       return NextResponse.json({ organization: null, sites: [] });
     }
 
-    const { data: sites, error: sitesError } = await admin
-      .from("sites")
-      .select(
-        "id, name, url, widget_key, crawl_status, is_active, organization_id, whatsapp_number, agent_config"
-      )
-      .eq("organization_id", organization.id)
-      .order("created_at", { ascending: false });
+    await expireEventSitesForOrganization(organization.id);
 
-    if (sitesError) {
-      return NextResponse.json({ error: sitesError.message }, { status: 500 });
-    }
+    const sites = await queryRows(
+      `SELECT id, name, url, widget_key, crawl_status, is_active, organization_id,
+              whatsapp_number, agent_config, business_description
+       FROM sites
+       WHERE organization_id = $1
+       ORDER BY created_at DESC`,
+      [organization.id]
+    );
 
-    return NextResponse.json({ organization, sites: sites ?? [] });
+    return NextResponse.json({ organization, sites });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur serveur";
     return NextResponse.json({ error: message }, { status: 500 });
@@ -49,14 +45,8 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-    }
+    const session = await requireSession();
+    if (!isSessionUser(session)) return session;
 
     let body: { name?: string };
     try {
@@ -73,17 +63,17 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Nom trop long (120 caractères max)" }, { status: 400 });
     }
 
-    const admin = createAdminClient();
-    const { data: organization, error } = await admin
-      .from("organizations")
-      .update({ name })
-      .eq("owner_id", user.id)
-      .select("id, name, subscription_plan, subscription_status")
-      .maybeSingle();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const organization = await queryOne<{
+      id: string;
+      name: string;
+      subscription_plan: string;
+      subscription_status: string;
+    }>(
+      `UPDATE organizations SET name = $1
+       WHERE owner_id = $2
+       RETURNING id, name, subscription_plan, subscription_status`,
+      [name, session.id]
+    );
 
     if (!organization) {
       return NextResponse.json({ error: "Organisation introuvable" }, { status: 404 });

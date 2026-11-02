@@ -1,6 +1,7 @@
-import { createAdminClient } from "@/lib/setup-account-server";
-import { createClient } from "@/lib/supabase/server";
+import { requireSession, isSessionUser } from "@/lib/auth/require-session";
+import { queryOne, queryRows } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/setup-account-server";
 
 export type OrgMemberRow = {
   id: string;
@@ -15,59 +16,56 @@ export type OrgMemberRow = {
   email?: string | null;
 };
 
-async function getOwnerOrganization(userId: string) {
-  const admin = createAdminClient();
-  const { data, error } = await admin
-    .from("organizations")
-    .select("id, owner_id")
-    .eq("owner_id", userId)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  return data;
-}
-
 export async function GET() {
   try {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-    }
+    const session = await requireSession();
+    if (!isSessionUser(session)) return session;
 
-    const org = await getOwnerOrganization(user.id);
+    const org = await queryOne<{ id: string; owner_id: string }>(
+      `SELECT id, owner_id FROM organizations WHERE owner_id = $1 LIMIT 1`,
+      [session.id]
+    );
     if (!org) {
       return NextResponse.json({ members: [] });
     }
 
-    const admin = createAdminClient();
-    const { data: members, error } = await admin
-      .from("organization_members")
-      .select("id, organization_id, user_id, role, display_name, is_available, site_id, created_at, sites(name)")
-      .eq("organization_id", org.id)
-      .order("created_at", { ascending: true });
+    const rows = await queryRows<{
+      id: string;
+      organization_id: string;
+      user_id: string;
+      role: string;
+      display_name: string | null;
+      is_available: boolean;
+      site_id: string | null;
+      created_at: string;
+      site_name: string | null;
+      email: string | null;
+    }>(
+      `SELECT om.id, om.organization_id, om.user_id, om.role, om.display_name,
+              om.is_available, om.site_id, om.created_at,
+              s.name AS site_name, u.email
+       FROM organization_members om
+       LEFT JOIN sites s ON s.id = om.site_id
+       LEFT JOIN app_users u ON u.id = om.user_id
+       WHERE om.organization_id = $1
+       ORDER BY om.created_at ASC`,
+      [org.id]
+    );
 
-    if (error) {
-      const msg = error.message.includes("organization_members")
-        ? "Table organization_members absente — exécutez la migration 009_human_handoff.sql dans Supabase (SQL Editor)."
-        : error.message;
-      return NextResponse.json({ error: msg, code: "migration_required" }, { status: 500 });
-    }
+    const members: OrgMemberRow[] = rows.map((m) => ({
+      id: m.id,
+      organization_id: m.organization_id,
+      user_id: m.user_id,
+      role: m.role,
+      display_name: m.display_name,
+      is_available: m.is_available,
+      site_id: m.site_id,
+      created_at: m.created_at,
+      site_name: m.site_name,
+      email: m.email,
+    }));
 
-    const enriched: OrgMemberRow[] = [];
-    for (const m of members ?? []) {
-      const { data: authUser } = await admin.auth.admin.getUserById(m.user_id);
-      const sites = m.sites as { name: string } | { name: string }[] | null;
-      const siteName = Array.isArray(sites) ? sites[0]?.name : sites?.name;
-      enriched.push({
-        ...m,
-        site_name: siteName ?? null,
-        email: authUser.user?.email ?? null,
-      });
-    }
-
-    return NextResponse.json({ members: enriched });
+    return NextResponse.json({ members });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur serveur";
     return NextResponse.json({ error: message }, { status: 500 });
@@ -76,15 +74,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-    }
+    const session = await requireSession();
+    if (!isSessionUser(session)) return session;
 
-    const org = await getOwnerOrganization(user.id);
+    const org = await queryOne<{ id: string }>(
+      `SELECT id FROM organizations WHERE owner_id = $1 LIMIT 1`,
+      [session.id]
+    );
     if (!org) {
       return NextResponse.json({ error: "Organisation introuvable" }, { status: 404 });
     }
@@ -107,13 +103,11 @@ export async function POST(request: Request) {
     const displayName = String(body.display_name ?? "").trim() || email.split("@")[0];
     const siteId = body.site_id ? String(body.site_id).trim() : null;
 
-    const admin = createAdminClient();
-
-    const { data: orgSites } = await admin
-      .from("sites")
-      .select("id")
-      .eq("organization_id", org.id);
-    const validSiteIds = new Set((orgSites ?? []).map((s) => s.id));
+    const orgSites = await queryRows<{ id: string }>(
+      `SELECT id FROM sites WHERE organization_id = $1`,
+      [org.id]
+    );
+    const validSiteIds = new Set(orgSites.map((s) => s.id));
 
     if (role === "agent") {
       if (!siteId || !validSiteIds.has(siteId)) {
@@ -126,18 +120,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Site invalide" }, { status: 400 });
     }
 
-    let targetUserId: string | null = null;
+    const admin = createAdminClient();
 
-    const { data: listData } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
-    const existing = listData.users.find((u) => u.email?.toLowerCase() === email);
-    if (existing) {
-      targetUserId = existing.id;
-    } else {
+    const { data: listData } = await admin.auth.admin.listUsers();
+    const existing = listData.users.find((u: { email?: string }) => u.email?.toLowerCase() === email);
+    let targetUserId: string | null = existing?.id ?? null;
+
+    if (!targetUserId) {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-      const { data: inviteData, error: inviteError } =
-        await admin.auth.admin.inviteUserByEmail(email, {
-          redirectTo: `${appUrl}/login`,
-        });
+      const { data: inviteData, error: inviteError } = await admin.auth.admin.inviteUserByEmail(
+        email,
+        { redirectTo: `${appUrl}/login` }
+      );
       if (inviteError || !inviteData.user) {
         return NextResponse.json(
           { error: inviteError?.message ?? "Invitation impossible" },
@@ -147,14 +141,12 @@ export async function POST(request: Request) {
       targetUserId = inviteData.user.id;
     }
 
-    const { data: existingMember } = await admin
-      .from("organization_members")
-      .select("id, role")
-      .eq("organization_id", org.id)
-      .eq("user_id", targetUserId)
-      .maybeSingle();
+    const existingMember = await queryOne<{ id: string; role: string }>(
+      `SELECT id, role FROM organization_members
+       WHERE organization_id = $1 AND user_id = $2 LIMIT 1`,
+      [org.id, targetUserId]
+    );
 
-    // Membre déjà présent → mise à jour du site et du nom affiché
     if (existingMember) {
       if (existingMember.role === "owner") {
         return NextResponse.json(
@@ -162,20 +154,13 @@ export async function POST(request: Request) {
           { status: 409 }
         );
       }
-      const { data: updated, error: updateError } = await admin
-        .from("organization_members")
-        .update({
-          site_id: role === "agent" ? siteId : null,
-          display_name: displayName,
-          role,
-        })
-        .eq("id", existingMember.id)
-        .select("id, organization_id, user_id, role, display_name, is_available, site_id, created_at")
-        .single();
-
-      if (updateError) {
-        return NextResponse.json({ error: updateError.message }, { status: 500 });
-      }
+      const updated = await queryOne<OrgMemberRow>(
+        `UPDATE organization_members
+         SET site_id = $1, display_name = $2, role = $3
+         WHERE id = $4
+         RETURNING id, organization_id, user_id, role, display_name, is_available, site_id, created_at`,
+        [role === "agent" ? siteId : null, displayName, role, existingMember.id]
+      );
 
       return NextResponse.json({
         member: { ...updated, email },
@@ -184,22 +169,13 @@ export async function POST(request: Request) {
       });
     }
 
-    const { data: member, error: insertError } = await admin
-      .from("organization_members")
-      .insert({
-        organization_id: org.id,
-        user_id: targetUserId,
-        role,
-        display_name: displayName,
-        is_available: true,
-        site_id: role === "agent" ? siteId : null,
-      })
-      .select("id, organization_id, user_id, role, display_name, is_available, site_id, created_at")
-      .single();
-
-    if (insertError) {
-      return NextResponse.json({ error: insertError.message }, { status: 500 });
-    }
+    const member = await queryOne<OrgMemberRow>(
+      `INSERT INTO organization_members
+         (organization_id, user_id, role, display_name, is_available, site_id)
+       VALUES ($1, $2, $3, $4, true, $5)
+       RETURNING id, organization_id, user_id, role, display_name, is_available, site_id, created_at`,
+      [org.id, targetUserId, role, displayName, role === "agent" ? siteId : null]
+    );
 
     return NextResponse.json({
       member: { ...member, email },

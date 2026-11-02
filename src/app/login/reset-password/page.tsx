@@ -4,41 +4,35 @@ import { AuthPageCard, AuthPageShell } from "@/components/auth-page-shell";
 import { BrandLogo } from "@/components/brand-logo";
 import { useT } from "@/i18n/context";
 import { LOGO_SIZE } from "@/lib/branding";
-import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token")?.trim() ?? "";
   const t = useT();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
-  const [hasSession, setHasSession] = useState(false);
+  const [checkingToken, setCheckingToken] = useState(true);
+  const [tokenValid, setTokenValid] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "PASSWORD_RECOVERY" || session) {
-        setHasSession(!!session);
-        setCheckingSession(false);
-      }
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setHasSession(!!session);
-      setCheckingSession(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+    if (!token) {
+      setCheckingToken(false);
+      setTokenValid(false);
+      return;
+    }
+    fetch(`/api/auth/reset-password/validate?token=${encodeURIComponent(token)}`)
+      .then((r) => r.json())
+      .then((data) => setTokenValid(Boolean(data.valid)))
+      .catch(() => setTokenValid(false))
+      .finally(() => setCheckingToken(false));
+  }, [token]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -54,11 +48,15 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true);
-    const supabase = createClient();
-    const { error: updateError } = await supabase.auth.updateUser({ password });
+    const res = await fetch("/api/auth/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, password }),
+    });
+    const data = await res.json();
 
-    if (updateError) {
-      setError(updateError.message);
+    if (!res.ok) {
+      setError(data.error ?? t("auth.resetPassword.failed"));
       setLoading(false);
       return;
     }
@@ -66,7 +64,7 @@ export default function ResetPasswordPage() {
     setDone(true);
     setLoading(false);
     setTimeout(() => {
-      router.push("/dashboard");
+      router.push("/dashboard/add-profile");
       router.refresh();
     }, 1500);
   }
@@ -75,18 +73,13 @@ export default function ResetPasswordPage() {
     <AuthPageShell>
       <AuthPageCard>
         <div className="flex justify-center">
-          <BrandLogo
-            href="/"
-            size={LOGO_SIZE.auth}
-            showName={false}
-            className="flex-col gap-2"
-          />
+          <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} className="flex-col gap-2" />
         </div>
         <h1 className="mt-6 text-center text-xl font-bold sm:text-2xl">{t("auth.resetPassword.title")}</h1>
 
-        {checkingSession ? (
+        {checkingToken ? (
           <p className="mt-6 text-center text-sm text-slate-500">{t("auth.resetPassword.checking")}</p>
-        ) : !hasSession ? (
+        ) : !tokenValid ? (
           <div className="mt-6 space-y-4">
             <div className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
               {t("auth.resetPassword.invalidLink")}
@@ -97,10 +90,7 @@ export default function ResetPasswordPage() {
             >
               {t("auth.resetPassword.forgotLink")}
             </Link>
-            <Link
-              href="/login"
-              className="block text-center text-sm text-brand-600 hover:underline"
-            >
+            <Link href="/login" className="block text-center text-sm text-brand-600 hover:underline">
               {t("auth.forgotPassword.backToLogin")}
             </Link>
           </div>
@@ -154,5 +144,21 @@ export default function ResetPasswordPage() {
         )}
       </AuthPageCard>
     </AuthPageShell>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <AuthPageShell>
+          <AuthPageCard>
+            <p className="text-center text-sm text-slate-500">…</p>
+          </AuthPageCard>
+        </AuthPageShell>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

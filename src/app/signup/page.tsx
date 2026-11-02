@@ -14,7 +14,6 @@ import { useState } from "react";
 export default function SignupPage() {
   const router = useRouter();
   const t = useT();
-  const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +35,6 @@ export default function SignupPage() {
         emailRedirectTo: `${getAppBaseUrl()}/auth/callback`,
         data: {
           company_name: name,
-          site_url: url,
         },
       },
     });
@@ -54,8 +52,8 @@ export default function SignupPage() {
     }
 
     try {
-      await setupAccount(supabase, data.user.id, name, url);
-      router.push("/dashboard");
+      await setupAccount(supabase, data.user.id, name);
+      router.push("/dashboard/add-profile");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : t("auth.signup.setupError"));
@@ -68,16 +66,16 @@ export default function SignupPage() {
       <AuthPageShell>
         <AuthPageCard>
           <div className="text-center">
-          <div className="flex justify-center">
-            <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
-          </div>
-          <h1 className="mt-6 text-2xl font-bold">{t("auth.signup.emailConfirmTitle")}</h1>
-          <p className="mt-3 text-sm text-slate-600">
-            {t("auth.signup.emailConfirmBody", { email })}
-          </p>
-          <Link href="/login" className="mt-6 inline-block text-sm text-brand-600 hover:underline">
-            {t("auth.signup.goToLogin")}
-          </Link>
+            <div className="flex justify-center">
+              <BrandLogo href="/" size={LOGO_SIZE.auth} showName={false} />
+            </div>
+            <h1 className="mt-6 text-2xl font-bold">{t("auth.signup.emailConfirmTitle")}</h1>
+            <p className="mt-3 text-sm text-slate-600">
+              {t("auth.signup.emailConfirmBody", { email })}
+            </p>
+            <Link href="/login" className="mt-6 inline-block text-sm text-brand-600 hover:underline">
+              {t("auth.signup.goToLogin")}
+            </Link>
           </div>
         </AuthPageCard>
       </AuthPageShell>
@@ -111,19 +109,6 @@ export default function SignupPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">
-              {t("auth.signup.siteUrl")}
-            </label>
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-brand-500"
-              placeholder="https://monsite.com"
-              required
-            />
-          </div>
-          <div>
             <label className="block text-sm font-medium text-slate-700">{t("common.email")}</label>
             <input
               type="email"
@@ -140,7 +125,7 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-brand-500"
-              minLength={6}
+              minLength={8}
               required
             />
           </div>

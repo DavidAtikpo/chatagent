@@ -24,6 +24,7 @@ export type PlatformOrganization = {
 
 export function planLabel(plan: string): string {
   const p = plan.toLowerCase();
+  if (p === "free") return "Free";
   if (p === "pro") return "Pro";
   if (p === "agency") return "Agency";
   if (p === "starter") return "Starter";

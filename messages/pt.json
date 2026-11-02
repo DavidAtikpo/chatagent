@@ -55,12 +55,17 @@
   },
   "dashboard": {
     "loading": "Carregando o dashboard...",
+    "shell": {
+      "collapseSidebar": "Recolher menu",
+      "expandSidebar": "Expandir menu"
+    },
     "nav": {
       "overview": "Visão geral",
       "conversations": "Conversas",
       "leads": "Pistas",
       "advisors": "Consultores",
       "sites": "Locais",
+      "integration": "Integração",
       "trackedLinks": "Links rastreados",
       "settings": "Configurações"
     },
@@ -124,6 +129,8 @@
       },
       "country": {
         "title": "Distribuição por país",
+        "distinctCountries": "Países distintos",
+        "topCountry": "País principal",
         "visitor": "{count} visitante qualificado",
         "visitorPlural": "{count} visitantes qualificados",
         "desc": "Países detectados ao abrir o link rastreado ou ao se qualificar no chat.",
@@ -136,7 +143,7 @@
     },
     "sites": {
       "title": "Locais",
-      "subtitle": "Seus sites e chaves de widget para integração.",
+      "subtitle": "Adicione sites e gerencie o crawl de conteúdo.",
       "addSite": "+ Adicionar um site",
       "cancelAdd": "Cancelar",
       "newSite": "Novo site",
@@ -172,10 +179,23 @@
       "deleteFailed": "Não foi possível excluir o site",
       "crawlPrefix": "Arrastar:"
     },
+    "integrationPage": {
+      "title": "Integração",
+      "subtitle": "Chaves widget e script para o seu site.",
+      "noSites": "Nenhum site. Adicione um em Locais para obter uma chave widget.",
+      "widgetKey": "Chave widget",
+      "copyKey": "Copiar chave",
+      "keyCopied": "Chave copiada",
+      "copyScript": "Copiar script",
+      "publicGuide": "Documentação completa (WordPress, Next.js…)",
+      "showGuide": "Guia de integração",
+      "hideGuide": "Ocultar guia"
+    },
     "links": {
       "title": "Links rastreados",
       "subtitle": "Crie links por campanha (Facebook, Instagram…) e acompanhe as visitas.",
       "newLink": "Novo link",
+      "addLink": "+ Novo link",
       "slug": "Lesma",
       "source": "Fonte",
       "campaignName": "Nome da campanha",

@@ -3,12 +3,13 @@
 import { useT } from "@/i18n/context";
 import { setupAccount } from "@/lib/setup-account";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function SetupOrganizationForm({ onComplete }: { onComplete: () => void | Promise<void> }) {
   const t = useT();
+  const router = useRouter();
   const [name, setName] = useState("");
-  const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +22,6 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
       if (!user) return;
       const meta = user.user_metadata ?? {};
       if (meta.company_name) setName(String(meta.company_name));
-      if (meta.site_url) setUrl(String(meta.site_url));
     }
     prefill();
   }, []);
@@ -42,8 +42,10 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
         return;
       }
 
-      await setupAccount(supabase, user.id, name, url);
+      await setupAccount(supabase, user.id, name);
       await onComplete();
+      router.push("/dashboard/add-profile");
+      router.refresh();
     } catch (err) {
       const message =
         err && typeof err === "object" && "message" in err
@@ -75,19 +77,6 @@ export function SetupOrganizationForm({ onComplete }: { onComplete: () => void |
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-900"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700">
-            {t("auth.signup.siteUrl")}
-          </label>
-          <input
-            type="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://monsite.com"
             className="mt-1 w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-900"
             required
           />

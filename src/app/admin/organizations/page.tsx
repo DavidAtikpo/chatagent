@@ -9,7 +9,7 @@ import {
 import { formatDate } from "@/lib/dashboard-data";
 import { useEffect, useState } from "react";
 
-const PLANS = ["starter", "pro", "agency"];
+const PLANS = ["free", "starter", "pro", "agency"];
 const STATUSES = ["trialing", "active", "past_due", "canceled"];
 
 export default function AdminOrganizationsPage() {

@@ -1,35 +1,20 @@
-import { createAdminClient } from "@/lib/setup-account-server";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { queryOne } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
-import { isMissingTrafficLinkImageColumn } from "@/lib/traffic-links-db";
 import { NextResponse } from "next/server";
 
 const MAX_BYTES = 2 * 1024 * 1024;
 const ALLOWED = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
 
 async function userOwnsLink(userId: string, linkId: string) {
-  const admin = createAdminClient();
-  const { data: link } = await admin
-    .from("traffic_links")
-    .select("site_id, slug")
-    .eq("id", linkId)
-    .maybeSingle();
-  if (!link) return null;
-
-  const { data: site } = await admin
-    .from("sites")
-    .select("organization_id")
-    .eq("id", link.site_id)
-    .maybeSingle();
-  if (!site) return null;
-
-  const { data: org } = await admin
-    .from("organizations")
-    .select("id")
-    .eq("id", site.organization_id)
-    .eq("owner_id", userId)
-    .maybeSingle();
-
-  return org ? link : null;
+  return queryOne<{ site_id: string; slug: string }>(
+    `SELECT tl.site_id, tl.slug
+     FROM traffic_links tl
+     INNER JOIN sites s ON s.id = tl.site_id
+     INNER JOIN organizations o ON o.id = s.organization_id
+     WHERE tl.id = $1 AND o.owner_id = $2`,
+    [linkId, userId]
+  );
 }
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
@@ -59,46 +44,22 @@ export async function POST(request: Request, { params }: { params: { id: string 
     }
 
     if (file.size > MAX_BYTES) {
-      return NextResponse.json({ error: "Image trop lourde (max 2 Mo)" }, { status: 400 });
+      return NextResponse.json({ error: "Image trop lourde (max 2 Mo)" }, { status: 500 });
     }
 
-    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const path = `${link.site_id}/traffic/${link.slug}.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
-
-    const admin = createAdminClient();
-    const { error: uploadError } = await admin.storage.from("branding").upload(path, buffer, {
-      contentType: file.type,
-      upsert: true,
+    const { url: imageUrl } = await uploadToCloudinary(buffer, {
+      folder: `yayra/traffic/${link.site_id}`,
+      publicId: link.slug,
+      mimeType: file.type,
     });
 
-    if (uploadError) {
-      return NextResponse.json(
-        {
-          error:
-            uploadError.message +
-            " — exécutez supabase/migrations/006_branding_storage.sql si le bucket n'existe pas.",
-        },
-        { status: 500 }
-      );
-    }
+    await queryOne(`UPDATE traffic_links SET image_url = $1 WHERE id = $2 RETURNING id`, [
+      imageUrl,
+      params.id,
+    ]);
 
-    const { data: publicUrl } = admin.storage.from("branding").getPublicUrl(path);
-    const imageUrl = publicUrl.publicUrl;
-
-    const { error: updateError } = await admin
-      .from("traffic_links")
-      .update({ image_url: imageUrl })
-      .eq("id", params.id);
-
-    if (updateError && !isMissingTrafficLinkImageColumn(updateError)) {
-      return NextResponse.json({ error: updateError.message }, { status: 500 });
-    }
-
-    return NextResponse.json({
-      image_url: imageUrl,
-      storage_only: !!updateError,
-    });
+    return NextResponse.json({ image_url: imageUrl });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur serveur";
     return NextResponse.json({ error: message }, { status: 500 });

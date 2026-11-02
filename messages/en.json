@@ -16,6 +16,7 @@
     "copy": "Copy",
     "copied": "Copied!",
     "close": "Close",
+    "tableScrollHint": "Swipe horizontally to see all columns.",
     "back": "Back",
     "yes": "Yes",
     "no": "No",
@@ -38,6 +39,7 @@
     "ariaLabel": "Change the language of the site"
   },
   "nav": {
+    "profiles": "Profiles & demos",
     "features": "Features",
     "useCases": "Use cases",
     "pricing": "Prices",
@@ -55,18 +57,125 @@
   },
   "dashboard": {
     "loading": "Loading the dashboard...",
+    "shell": {
+      "collapseSidebar": "Collapse menu",
+      "expandSidebar": "Expand menu"
+    },
+    "plans": {
+      "currentPlan": "Current plan: {plan}",
+      "requiredStarter": "Starter plan required",
+      "requiredPro": "Pro plan required",
+      "viewPricing": "View pricing",
+      "integrationTitle": "Widget integration — Starter plan",
+      "integrationBody": "Widget keys and embed script for your website require Starter or above. On the Free plan, share chat via tracked links.",
+      "logoTitle": "Company logo — Starter plan",
+      "logoBody": "Custom logo in the widget header is available from Starter upward.",
+      "proProfilesTitle": "Jobs & Other — Pro plan",
+      "proProfilesBody": "Employment/recruitment and Other profiles (freelance, NGO, events, real estate, training…) require Pro. Free and Starter focus on website profiles with tracked links.",
+      "addProfileProHintTitle": "Advanced profiles (Pro)",
+      "addProfileProHintBody": "Explore Jobs and Other tabs — creating those profiles requires Pro. Website profiles work on Free (tracked link).",
+      "proProfilesEmptyPreview": "No profiles yet — upgrade to Pro to create one from Add profile.",
+      "upgradeToCreate": "Upgrade to Pro to create",
+      "previewLabel": "Preview",
+      "integrationPreviewSite": "Example — your website",
+      "integrationGuideLocked": "Integration guide unlocks with the Starter plan."
+    },
+    "pricing": {
+      "title": "Pricing",
+      "subtitle": "Pick a plan and pay in USD — your subscription activates after payment.",
+      "currentPlan": "Current plan: {plan}",
+      "yourPlan": "Your plan",
+      "popular": "Most popular",
+      "perMonth": "USD / month",
+      "freePrice": "Free",
+      "freeHint": "Default plan when you sign up",
+      "choosePlan": "Choose {plan}",
+      "currentButton": "Current plan",
+      "processing": "Redirecting…",
+      "checkoutSuccess": "Payment received — your plan is active.",
+      "checkoutCancel": "Payment canceled.",
+      "checkoutFailed": "Could not start checkout. Check STRIPE_SECRET_KEY and webhook.",
+      "planUpdated": "Plan updated."
+    },
+    "billing": {
+      "title": "Billing",
+      "subtitle": "Payment history and PDF invoices.",
+      "changePlan": "Change plan",
+      "empty": "No invoices yet. Subscribe from Pricing.",
+      "loadFailed": "Could not load invoices.",
+      "colDate": "Date",
+      "colPlan": "Plan",
+      "colAmount": "Amount",
+      "colStatus": "Status",
+      "colInvoice": "Invoice",
+      "download": "Download PDF"
+    },
     "nav": {
-      "overview": "Overview",
+      "addProfile": "Add profile",
+      "overview": "Statistics",
       "conversations": "Conversations",
       "leads": "Leads",
+      "inbox": "Advisor inbox",
       "advisors": "Advisors",
-      "sites": "Sites",
+      "sites": "Websites",
+      "emploi": "Jobs & hiring",
+      "autres": "Other",
+      "integration": "Integration",
       "trackedLinks": "Tracked links",
+      "pricing": "Pricing",
+      "billing": "Billing",
+      "support": "Support",
       "settings": "Settings"
     },
+    "support": {
+      "title": "Contact the team",
+      "subtitle": "Questions about your account, billing, or integration? Tell us what you need — we’ll reply by email.",
+      "orgContext": "Organization: {name}",
+      "category": "Category",
+      "categories": {
+        "general": "General question",
+        "billing": "Billing & subscription",
+        "technical": "Technical (widget, crawl, chat)",
+        "account": "Account & access"
+      },
+      "subject": "Subject",
+      "subjectPlaceholder": "e.g. Widget integration issue",
+      "message": "Message",
+      "messagePlaceholder": "Describe your situation in as much detail as you can (site URL, error messages, screenshots…).",
+      "replyHint": "We’ll reply to your account email address.",
+      "submit": "Send message",
+      "sending": "Sending…",
+      "sendFailed": "Could not send your message. Please try again.",
+      "successTitle": "Message sent",
+      "successBody": "Thanks! Our team will get back to you as soon as possible at your account email.",
+      "sendAnother": "Send another message"
+    },
+    "addProfile": {
+      "title": "Add a profile",
+      "subtitle": "Website, job seeker or hiring campaign, or other — pick a tab below.",
+      "listHint": "Find your profiles in:"
+    },
+    "profiles": {
+      "websites": {
+        "title": "Websites",
+        "subtitle": "Crawled URLs — edit knowledge, re-crawl, or delete.",
+        "empty": "No websites yet. Create one from Add profile (Add website tab)."
+      },
+      "emploi": {
+        "title": "Jobs & hiring",
+        "subtitle": "Candidate profiles or hiring campaigns — AI presentation and shareable tracked links.",
+        "empty": "No profiles yet. Create one from Add profile (Jobs tab, candidate or hiring mode).",
+        "manageLinks": "Manage tracked links →"
+      },
+      "autres": {
+        "title": "Other profiles",
+        "subtitle": "Freelance, NGO, event, real estate, training…",
+        "empty": "No profiles yet. Create one from Add profile (Other tab)."
+      }
+    },
     "overview": {
-      "title": "Overview",
-      "subtitle": "Activity of your organization.",
+      "title": "Statistics",
+      "subtitle": "Conversations, leads, embed widget, tracked links, and audience — all your metrics in one place.",
       "tabs": {
         "summary": "Summary",
         "widget": "Site widget",
@@ -136,6 +245,8 @@
       },
       "country": {
         "title": "Distribution by country",
+        "distinctCountries": "Distinct countries",
+        "topCountry": "Top country",
         "visitor": "{count} qualified visitor",
         "visitorPlural": "{count} qualified visitors",
         "desc": "Countries detected when opening the tracked link or when qualifying in the chat.",
@@ -148,10 +259,11 @@
     },
     "sites": {
       "title": "Sites",
-      "subtitle": "Your sites and widget keys for integration.",
+      "subtitle": "Add your sites and manage content crawling.",
       "addSite": "+ Add a site",
       "cancelAdd": "Cancel",
-      "newSite": "New website",
+      "newSite": "Create a profile",
+      "yourSites": "Your sites and profiles",
       "siteName": "Name",
       "siteUrl": "URL",
       "urlPlaceholder": "https://monsite.com",
@@ -182,12 +294,135 @@
       "formationsFailed": "Failed training indexing",
       "sessionsFailed": "Import sessions failed",
       "deleteFailed": "Unable to delete site",
+      "noWebsite": "No website (description / PDF)",
+      "businessDescriptionShort": "Business description",
+      "createWithoutCrawl": "Create and index",
+      "addTabs": {
+        "website": "Add website",
+        "jobSearch": "Jobs & hiring",
+        "other": "Other",
+        "hintWebsite": "Yayra reads your site automatically. Add contacts below only if the site does not show (or poorly) email, phone, or WhatsApp.",
+        "hintJob": "Candidate: CV (PDF) and/or text → pro presentation for recruiters + tracked link.",
+        "hintJobRecruitment": "Hiring: describe the role (optional job PDF) → AI job post for candidates + tracked link to share.",
+        "hintOther": "Freelance, NGO, event, real estate, artist, training… Describe your project; the assistant answers visitors accordingly.",
+        "helpButton": "Help",
+        "helpClose": "Close help",
+        "helpIntro": "Pick the tab that matches your situation. Each type feeds the assistant differently.",
+        "helpWebsiteTitle": "Add website",
+        "helpWebsiteBody": "For a business with a website. Yayra crawls pages (services, FAQ, pricing…) to answer visitors. Optional contacts are a fallback when crawl finds no Contact page.",
+        "helpJobOverviewTitle": "Jobs & hiring",
+        "helpJobOverviewBody": "Two use cases: candidate profile (CV, link for recruiters) or hiring campaign (job post, link for applicants). Each profile gets an AI presentation and a tracked link.",
+        "helpJobCandidateTitle": "I'm job hunting",
+        "helpJobCandidateBody": "Candidate profile: skills + PDF CV. Yayra writes a pro presentation and creates a tracked link to share. Recruiters see the profile and can contact you.",
+        "helpJobRecruitTitle": "I'm hiring",
+        "helpJobRecruitBody": "Hiring campaign: role title, missions, requirements, benefits. Yayra writes an engaging job post and creates a tracked link to share. Candidates can ask questions and apply via the widget.",
+        "jobMode": "You are",
+        "jobModeCandidate": "Job seeker",
+        "jobModeRecruitment": "Employer / recruiter",
+        "jobBadgeCandidate": "Candidate",
+        "jobBadgeRecruitment": "Hiring",
+        "recruitmentName": "Company or campaign title",
+        "recruitmentRole": "Role to fill",
+        "recruitmentRolePlaceholder": "e.g. B2B sales, nurse, React developer…",
+        "recruitmentDetails": "Job description, requirements, benefits, hiring process",
+        "recruitmentPdf": "Job description PDF (optional)",
+        "submitRecruitment": "Launch campaign and link",
+        "jobRecruitStep1": "Source: job text and/or PDF job description.",
+        "jobRecruitStep2": "Target: specify the role and ideal profile.",
+        "jobRecruitStep3": "Indexing: Yayra stores and prepares the post.",
+        "jobRecruitStep4": "Tracked link: generated for LinkedIn, job boards, WhatsApp…",
+        "jobRecruitStep5": "Candidate view: reformulated presentation when opening the link.",
+        "jobRecruitStep6": "Contact: candidates can apply or ask questions via the widget.",
+        "helpOtherTitle": "Other",
+        "helpOtherBody": "Freelance, NGO, event, real estate, artist, training… Describe the offer or project; chat answers visitor questions from that content.",
+        "websiteContactSection": "Contact (fallback)",
+        "websiteContactHint": "Optional — used when the site has no contact page or crawl misses these details.",
+        "contactWhatsapp": "WhatsApp",
+        "otherLocation": "Address / location (optional)",
+        "contactPhone": "Phone",
+        "contactEmail": "Email",
+        "photosAfterCreate": "Photos: add PDFs in Knowledge sources after creation.",
+        "candidateName": "Candidate name (or profile title)",
+        "jobTarget": "Target role or job type",
+        "jobTargetPlaceholder": "e.g. full-stack developer, project manager…",
+        "jobSkills": "Skills and background (free text)",
+        "jobCv": "CV (PDF, optional)",
+        "jobStep1": "Source: PDF CV and/or skills description.",
+        "jobStep2": "Goal: specify the role you are looking for.",
+        "jobStep3": "Indexing: Yayra stores and prepares the presentation.",
+        "jobStep4": "Tracked link: auto-generated for LinkedIn, Facebook, WhatsApp…",
+        "jobStep5": "Recruiter view: reformulated presentation when opening the link.",
+        "jobStep6": "Contact: recruiters can reach you via the widget.",
+        "submitJob": "Create profile and link",
+        "jobLinkCreated": "Profile created. Share this tracked link: {url}",
+        "profileComposed": "AI presentation generated — visible on the tracked link and in the widget.",
+        "eventEnds": "Event ends: {date}",
+        "otherType": "Profile type",
+        "otherSummary": "Summary (offer, cause, property, event…)",
+        "otherDetails": "Details (program, services, specs, FAQ…)",
+        "otherPricing": "Pricing / donations (optional)",
+        "eventEndDate": "End date (event)",
+        "otherTypes": {
+          "freelance": "Freelance / service provider",
+          "ngo": "NGO / community",
+          "event": "Event",
+          "real_estate": "Real estate",
+          "artist": "Artist / creator",
+          "training": "Training / courses",
+          "custom": "Other"
+        },
+        "profileBadge": {
+          "job_search": "Jobs",
+          "other": "Other"
+        }
+      },
+      "knowledge": {
+        "title": "Knowledge sources",
+        "subtitle": "Crawled website + text + PDF (menu, catalog, price list). The agent combines all indexed sources.",
+        "webHint": "The website is also crawled automatically; add text or PDF if needed.",
+        "descriptionLabel": "Describe your business",
+        "descriptionLabelEmploi": "Job or candidate profile description",
+        "descriptionPlaceholder": "Hours, address, products, services, prices, delivery…",
+        "descriptionPlaceholderEmploi": "Role, skills, benefits, application process… (Markdown: headings, lists)",
+        "descriptionHint": "Indexed for the agent — Markdown headings and lists are supported.",
+        "descriptionPreview": "Formatted preview",
+        "descriptionMinChars": "{count} more character(s) required to save.",
+        "subtitleEmploi": "Job posting, careers page or candidate profile: text + PDF + crawled link when available.",
+        "saveDescription": "Save and index",
+        "saved": "Description indexed — the agent can use it.",
+        "saveFailed": "Could not index description",
+        "documents": "PDF documents",
+        "uploadPdf": "+ PDF",
+        "uploadDocument": "+ PDF",
+        "uploading": "Uploading…",
+        "uploadOk": "PDF indexed.",
+        "uploadFailed": "Upload or indexing failed",
+        "pdfHint": "PDF only (max 10 MB, 10 files). For PowerPoint, export as PDF before uploading.",
+        "noDocuments": "No PDF yet — great for menu, catalog or price list.",
+        "deleteConfirm": "Remove this document and its content from the agent?",
+        "statusReady": "{count} chunk(s) indexed",
+        "statusError": "Indexing error",
+        "statusProcessing": "Indexing…"
+      },
       "crawlPrefix": "Crawl:"
+    },
+    "integrationPage": {
+      "title": "Integration",
+      "subtitle": "Widget keys and embed script for your website.",
+      "noSites": "No sites yet. Add a site under Sites to get a widget key.",
+      "widgetKey": "Widget key",
+      "copyKey": "Copy key",
+      "keyCopied": "Key copied",
+      "copyScript": "Copy script",
+      "publicGuide": "Full documentation (WordPress, Next.js…)",
+      "showGuide": "Integration guide",
+      "hideGuide": "Hide guide"
     },
     "links": {
       "title": "Tracked links",
       "subtitle": "Create links by campaign (Facebook, Instagram, etc.) and track visits.",
       "newLink": "New link",
+      "addLink": "+ New link",
       "slug": "Slug",
       "source": "Source",
       "campaignName": "Campaign Name",
@@ -198,6 +433,46 @@
       "country": "Country",
       "interactions": "Interactions",
       "copyUrl": "Copy URL",
+      "copied": "Copied",
+      "shareOn": "Share on",
+      "sharePanelTitle": "Tracked link created",
+      "sharePanelHint": "Share this link on social — visits will be tracked.",
+      "shareContinue": "View my profiles",
+      "shareDismiss": "Close",
+      "shareDefaultMessage": "Check out this profile and chat live:",
+      "shareInstagramCopied": "Text and link copied. Instagram is opening — paste (Ctrl+V) in story, bio, or DM.",
+      "shareInstagramShared": "Share menu opened — pick Instagram or another app.",
+      "shareFacebookCopied": "Text and link copied. In Facebook, paste (Ctrl+V) your caption — the link URL is also loaded in the share dialog.",
+      "shareFacebookUrlOnly": "Facebook opened with the URL. Auto-copy failed — use Copy and paste into your post.",
+      "shareCopyFailed": "Could not copy automatically. Copy the URL manually (Copy button).",
+      "shareInstagramPopupBlocked": "Allow pop-ups for this site, then click Instagram again. Text may already be copied.",
+      "shareInstagramDialogTitle": "Share on Instagram",
+      "shareInstagramDialogBody": "Instagram does not allow pre-filled posts from websites (unlike WhatsApp or Threads). Your text and tracked link are copied — paste them into your post or story.",
+      "shareInstagramStep1": "The text below is already copied (or click Copy).",
+      "shareInstagramStep2": "Open Create post (logged into Instagram).",
+      "shareInstagramStep3": "Add photo/video if needed, then paste the caption (Ctrl+V).",
+      "shareInstagramStep4": "Publish — the link stays clickable in the caption.",
+      "shareInstagramTextLabel": "Text + tracked link to paste",
+      "shareInstagramCopiedShort": "Copied to clipboard.",
+      "shareInstagramCopyBtn": "Copy again",
+      "shareInstagramOpenCreate": "Create post",
+      "shareInstagramNativeShare": "Share (mobile app)",
+      "shareInstagramNativeFailed": "System share unavailable — use copy + create post.",
+      "shareNetworks": {
+        "whatsapp": "WhatsApp",
+        "facebook": "Facebook",
+        "linkedin": "LinkedIn",
+        "instagram": "Instagram",
+        "threads": "Threads"
+      },
+      "shareNetworksShort": {
+        "whatsapp": "WA",
+        "facebook": "FB",
+        "linkedin": "in",
+        "instagram": "IG",
+        "threads": "@"
+      },
+      "colShare": "Share",
       "deleteConfirm": "Delete this tracked link?",
       "noLinks": "No tracked links.",
       "subtitleExtended": "Create links for your Facebook, Instagram, Google Ads, etc. campaigns. Add a preview image visible when the link is shared (WhatsApp, Facebook, etc.).",
@@ -213,7 +488,7 @@
       "imageFailed": "Unable to send image",
       "imageUpdateFailed": "Unable to update image",
       "deleteFailed": "Unable to delete",
-      "emptyTable": "No tracked links. Create one above to get your Facebook URL.",
+      "emptyTable": "No tracked links. Click “+ New link” at the top to create one.",
       "colImage": "Picture",
       "colLabel": "Label / Slug",
       "colUrl": "URL",
@@ -261,11 +536,84 @@
       "status": "Status",
       "page": "Page",
       "lastActivity": "Last activity",
-      "empty": "No conversations yet."
+      "empty": "No conversations yet.",
+      "detail": {
+        "back": "Back to conversations",
+        "transcript": "Conversation thread",
+        "noMessages": "No messages yet.",
+        "associatedLead": "Associated lead",
+        "viewLead": "View lead",
+        "context": "Context",
+        "originPage": "Origin page",
+        "openPage": "Open page",
+        "qualification": "Qualification",
+        "agent": "AI agent",
+        "score": "Score",
+        "messages": "Messages",
+        "started": "Started",
+        "lastUpdate": "Last activity",
+        "site": "Site",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone"
+      }
+    },
+    "inbox": {
+      "title": "Advisor inbox",
+      "subtitle": "When the AI hands off to a human, respond here (same role as the Yayra Advisor mobile app).",
+      "pendingTitle": "Waiting ({count})",
+      "pendingDesc": "The visitor asked for an advisor — first available agent claims the chat.",
+      "pendingEmpty": "No pending requests.",
+      "activeTitle": "My conversations ({count})",
+      "activeDesc": "Chats you have claimed.",
+      "activeEmpty": "No active conversations.",
+      "poolTitle": "Claimed by others",
+      "poolDesc": "Already assigned to a colleague — view only.",
+      "takeConversation": "Take →",
+      "continueChat": "Continue →",
+      "viewOnly": "View →",
+      "alertTitle": "Visitor waiting for an advisor",
+      "alertBody": "New request on {site} — a visitor is online.",
+      "alertOpen": "Open conversation",
+      "alertDismiss": "Dismiss alert",
+      "enableNotify": "Enable browser notifications",
+      "notifyDenied": "Notifications blocked — allow them in your browser settings.",
+      "loadFailed": "Could not load advisor inbox.",
+      "apiHint": "Make sure the API (chatagentapi) is running on port 8000.",
+      "dbHint": "Check DATABASE_URL in chatagent/.env.local and that handoff columns exist (schema.sql).",
+      "back": "Back to inbox",
+      "convTitle": "Visitor conversation",
+      "convNotFound": "Conversation not found or access denied.",
+      "statusLabel": "Handoff:",
+      "claimBtn": "Take conversation",
+      "claiming": "Claiming…",
+      "claimFailed": "Could not claim conversation.",
+      "claimHint": "Click “Take conversation” to send your welcome message to the visitor (same as the mobile app).",
+      "messagePlaceholder": "Your message to the visitor…",
+      "sendBtn": "Send",
+      "sending": "Sending…",
+      "sendFailed": "Could not send message.",
+      "replyLocked": "Claim the conversation to reply to the visitor.",
+      "releaseBtn": "Return to AI",
+      "releaseConfirm": "Return this conversation to the AI assistant?",
+      "releaseFailed": "Could not release conversation.",
+      "viewDashboard": "Conversation details",
+      "reasonDefault": "Human handoff",
+      "reasons": {
+        "user_request": "Visitor asked for an advisor",
+        "hot_lead": "Hot lead",
+        "ai_escalation": "AI escalated"
+      },
+      "status": {
+        "none": "None",
+        "requested": "Waiting for advisor",
+        "active": "Advisor active",
+        "returned": "Back to AI"
+      }
     },
     "advisors": {
       "title": "Advisors",
-      "subtitle": "Invite advisors to respond to handoffs from the mobile app.",
+      "subtitle": "Invite advisors — they handle handoffs from the web (Advisor inbox) or the mobile app.",
       "addAdvisor": "Add an advisor",
       "displayName": "Display Name",
       "namePlaceholder": "Marie Dupont",
@@ -274,7 +622,7 @@
       "roleAgent": "Advise",
       "available": "Available",
       "unavailable": "Unavailable",
-      "inviteSent": "Invitation sent by email — the advisor will be able to connect to the mobile app.",
+      "inviteSent": "Invitation sent — the advisor can use the dashboard (Advisor inbox) or the mobile app.",
       "siteUpdated": "Advisor website updated.",
       "advisorAdded": "Advisor added.",
       "subtitleExtended": "Invite as many advisors as necessary to the same site — they receive all handoffs and the first available takes the conversation.",
@@ -282,7 +630,8 @@
       "step1": "Create a site per page/brand (Dashboard → Sites)",
       "step2": "Install the widget or share a tracked link (Dashboard → Links)",
       "step3": "Invite one or more advisors to the same site",
-      "step4": "Each advisor connects to the mobile app — everyone receives the notification, the first to respond takes the visitor",
+      "step4": "Respond from Advisor inbox (web) or the mobile app — everyone gets the alert; whoever claims first talks to the visitor",
+      "openInbox": "Open advisor inbox →",
       "inviteTitle": "Invite an advisor",
       "assignedSite": "Assigned site",
       "createSiteFirst": "First create a site",
@@ -332,6 +681,7 @@
       "welcomeMessage": "Greeting message",
       "welcomeHint": "Write a custom message, or leave blank for automatic generation in the selected language.",
       "welcomeAutoHint": "Auto-generated from your site — updates when you change the agent language.",
+      "welcomePreview": "Widget preview",
       "defaultWelcome": "Good morning ! How can I help you?",
       "tone": "Your",
       "language": "Language",
@@ -438,11 +788,14 @@
       "error": "Connection error. Try again."
     },
     "signup": {
-      "title": "Create your AI agent",
-      "subtitle": "Enter your site URL. The analysis starts automatically.",
+      "title": "Create your account",
+      "subtitle": "Sign up in seconds. You will set up your site and business from the dashboard.",
+      "submit": "Create my account",
       "companyName": "Company Name",
       "siteUrl": "Site URL",
-      "submit": "Launch my agent",
+      "noWebsite": "I don't have a website (description + documents)",
+      "businessDescription": "Describe your business",
+      "businessDescriptionPlaceholder": "E.g. Italian restaurant in Lyon, hours, specialties, average prices, delivery…",
       "submitting": "Creation in progress...",
       "hasAccount": "Already registered?",
       "loginLink": "Log in",
@@ -459,7 +812,7 @@
       "backToLogin": "Return to login",
       "sendFailed": "Unable to send email. Try again later.",
       "sentBody": "If an account exists for {email}, an email has just been sent. Also check your spam.",
-      "gmailHint": "Gmail: also consult the Promotions tab and search for “Supabase” or “Reset password”. Supabase auth emails are sometimes filtered by Gmail."
+      "gmailHint": "Gmail: check Promotions and spam. Search for “Yayra” or “password reset”."
     },
     "resetPassword": {
       "title": "New Password",
@@ -472,15 +825,16 @@
       "forgotLink": "Forgotten password",
       "success": "Password updated. Redirection to the dashboard...",
       "newPassword": "New Password",
-      "confirmPassword": "Confirm password"
+      "confirmPassword": "Confirm password",
+      "failed": "Unable to update password"
     }
   },
   "home": {
     "hero": {
-      "badge": "AI Sales Agent · Embed · Qualified Leads",
+      "badge": "Crawled site · Tracked link · Widget · Advisor app",
       "title": "Transform your visitors into",
       "titleHighlight": "qualified customers",
-      "subtitle": "{saasName} analyzes your website, deploys an intelligent chatbot on your pages or advertising campaigns, and alerts you when a prospect is ready to buy or register.",
+      "subtitle": "{saasName}: website profile (crawl), Jobs & hiring and Other profiles (AI presentation + PDF). Share via tracked link or widget, qualify leads and alert advisors.",
       "ctaPrimary": "Create my agent for free",
       "ctaSecondary": "See how it works"
     },
@@ -490,44 +844,132 @@
       "widgetLight": "Lightweight widget",
       "leadScore": "Lead score"
     },
-    "preview": {
-      "title": "An assistant who knows",
-      "titleHighlight": "your",
-      "titleEnd": "business",
-      "body": "No endless manual configuration: our engine reads your product pages, training courses, prices and sessions. Claude writes natural responses in 6 languages ​​(French, English, Italian, Spanish, Portuguese, German), with your registration links and contact buttons.",
-      "bullets": [
-        "Greeting message generated after the crawl",
-        "Automatic session [[registration]] buttons",
-        "Dashboard: countries, campaigns, widget clicks"
-      ]
+    "profilesSection": {
+      "title": "Website, Jobs or Other — same smart chat",
+      "subtitle": "Pick a profile type in Add profile. Website is available on Free; Jobs & Other are created on Pro (preview and links visible before upgrade).",
+      "setupDefaultTitle": "Steps in the dashboard",
+      "tabs": {
+        "website": "Website",
+        "emploi": "Jobs & hiring",
+        "autres": "Other profiles"
+      },
+      "planBadge": {
+        "website": "Free · Starter · Pro — URL crawl + tracked link on Free",
+        "emploi": "Pro plan — candidate or hiring campaign",
+        "autres": "Pro plan — freelance, NGO, event, real estate…"
+      }
     },
     "howItWorks": {
       "title": "How it works",
       "subtitle": "From registration to first qualified lead — follow the journey live."
     },
     "demo": {
-      "chatPreview": {
-        "assistantTitle": "Assistant {saasName}",
-        "online": "Online",
-        "welcome": "Good morning ! I am your company's assistant. What training are you interested in?",
-        "userMessage": "IRATA rope access technician in Togo, next session?",
-        "replyIntro": "Here are the upcoming sessions:",
-        "sessionCta": "March 2026 — Registration",
-        "footer": "Live demo — just like on your site"
+      "profiles": {
+        "website": {
+          "title": "An assistant who knows",
+          "titleHighlight": "your website",
+          "titleEnd": "",
+          "body": "Enter your URL: crawling indexes pages, PDFs and pricing. The agent answers in 6 languages with your signup and session links.",
+          "bullets": [
+            "Automatic crawl + business description",
+            "Tracked link /c/… on Free plan",
+            "Widget + logo from Starter",
+            "Campaign stats & advisor handoff (Pro)"
+          ],
+          "setupTitle": "Create — Website tab",
+          "setupSteps": [
+            "Name + site URL",
+            "Crawl & welcome message",
+            "Tracked links per campaign",
+            "Widget embed (Starter+)"
+          ],
+          "chat": {
+            "assistantTitle": "Assistant {saasName}",
+            "online": "Online",
+            "welcome": "Hello 👋 I know the courses and prices on your site. Dates, syllabus or registration?",
+            "userMessage": "IRATA rope access in Togo, next session?",
+            "replyIntro": "Upcoming sessions (from your site):",
+            "sessionCta": "March 2026 — Register",
+            "pills": ["Site crawl", "6 languages", "Link /c/…", "Widget Starter+"],
+            "footer": "Website demo — tracked link or widget"
+          }
+        },
+        "emploi": {
+          "title": "",
+          "titleHighlight": "Jobs & hiring",
+          "titleEnd": "profile",
+          "body": "Two modes: job seeker (CV, skills, availability) or hiring campaign (role, criteria, process). AI public presentation + PDF, share via LinkedIn / WhatsApp tracked link.",
+          "bullets": [
+            "Candidate or recruitment mode",
+            "Text + PDF (CV, job description)",
+            "Showcase welcome for recruiters or applicants",
+            "Dedicated Jobs pages in the dashboard"
+          ],
+          "setupTitle": "Create — Jobs tab (Pro)",
+          "setupSteps": [
+            "Pick candidate or hiring",
+            "Role, skills, contacts",
+            "Upload PDF & AI presentation",
+            "Copy tracked link to share"
+          ],
+          "chat": {
+            "assistantTitle": "Amadou D. — Full-stack developer",
+            "online": "Candidate profile",
+            "welcome": "Hello 👋 React/Node developer, 4 years experience, based in Paris, open to EU remote. Here is my background and recent projects.",
+            "userMessage": "Available for a 6-month mission from March? React stack?",
+            "replyIntro": "Yes — React, TypeScript, Node. Available mid-March, remote or hybrid Paris:",
+            "sessionCta": "📄 CV & contact",
+            "pills": ["Candidate / HR", "PDF CV", "LinkedIn link", "Pro plan"],
+            "footer": "Jobs demo — same chat your visitors get on /c/…"
+          }
+        },
+        "autres": {
+          "title": "",
+          "titleHighlight": "Other",
+          "titleEnd": "profiles (freelance, NGO, event…)",
+          "body": "Freelance, nonprofit, festival, real estate, training without full crawl: describe the offer, pricing, location or dates. AI writes the public presentation; share a tracked link per channel.",
+          "bullets": [
+            "Subtypes: freelance, NGO, event, real estate, artist…",
+            "Offer summary + details + pricing / location",
+            "Auto expiry for events (end date)",
+            "Other list in the dashboard"
+          ],
+          "setupTitle": "Create — Other tab (Pro)",
+          "setupSteps": [
+            "Choose project type",
+            "Offer, details, pricing or location",
+            "End date for events",
+            "Tracked link for campaigns"
+          ],
+          "chat": {
+            "assistantTitle": "Light Festival — Event",
+            "online": "Tickets open",
+            "welcome": "Hello 👋 Arts & music festival June 12-14 in Lyon: lineup, access and group rates. What would you like to know?",
+            "userMessage": "Group rate for 15 people and Saturday schedule?",
+            "replyIntro": "Group pass −20% from 10 people. Saturday: main stage from 6pm:",
+            "sessionCta": "Online ticketing",
+            "pills": ["Event", "Pricing & venue", "Campaign link", "Pro plan"],
+            "footer": "Other demo — great for social without a full site"
+          }
+        }
       },
       "signupFlow": {
         "steps": [
           {
-            "title": "Connect your site",
-            "desc": "Registration + automatic crawl of your pages."
+            "title": "Account & profile",
+            "desc": "Organization then Website, Jobs or Other (Add profile tabs)."
           },
           {
-            "title": "Deploy everywhere",
-            "desc": "Widget ready to paste on your site."
+            "title": "Crawl & knowledge",
+            "desc": "Pages read, embeddings, welcome message ready."
           },
           {
-            "title": "Convert",
-            "desc": "First qualified lead in the dashboard."
+            "title": "Share the chat",
+            "desc": "Tracked link instantly (Free) · widget + logo (Starter)."
+          },
+          {
+            "title": "Qualify & convert",
+            "desc": "Scored leads, advisor inbox, campaign stats."
           }
         ],
         "demoName": "My Training Center",
@@ -546,8 +988,12 @@
         "crawlEmbedding": "Semantic Analysis (AI)",
         "pageProgress": "Page {current}/{total} analyzed",
         "indexing": "Knowledge indexing for chat…",
-        "agentReady": "Agent ready — generated widget",
-        "scriptHint": "Script to paste on your site",
+        "agentReady": "Agent ready — tracked link + widget key",
+        "trackedLinkTitle": "Free plan — tracked link",
+        "trackedLinkHint": "Copy the URL from Tracked links (Facebook, Instagram, QR code…).",
+        "trackedLinkExample": "https://your-domain.com/c/code?key=wk_…",
+        "scriptHint": "Starter plan — widget script",
+        "scriptPlanHint": "Paste before </body> on WordPress, Next.js, HTML…",
         "newLead": "New qualified lead",
         "leadDetail": "Togo · Rope training · Budget OK",
         "leadScore": "Score 80/100 — notification sent",
@@ -559,16 +1005,24 @@
       "subtitle": "Everything you need to sell and qualify, without a technical team.",
       "items": [
         {
-          "title": "Lightweight embed widget",
-          "desc": "A script on your site. The chat opens in a bubble or full screen page, without slowing down your pages."
+          "title": "Embed widget (Starter+)",
+          "desc": "Lightweight script on your site: bubble or full-page chat, company logo, step-by-step integration guide."
         },
         {
-          "title": "AI trained on your site",
-          "desc": "Automatic crawling of your pages, training and FAQs. The agent responds with your real pricing and listing links."
+          "title": "AI trained on your content",
+          "desc": "Crawled site, PDF CV (Jobs) or project sheet (Other). The agent only answers from what you provided."
         },
         {
-          "title": "Links tracked by campaign",
-          "desc": "Create a slug by source (Facebook, Instagram, Google Ads, etc.) and track visits and interactions."
+          "title": "Jobs & hiring (Pro)",
+          "desc": "Candidate or hiring campaign: skills, PDF, AI public presentation, Jobs pages and dedicated tracked links."
+        },
+        {
+          "title": "Other profiles (Pro)",
+          "desc": "Freelance, NGO, event, real estate… structured offer, end date for events, shareable chat without a full website."
+        },
+        {
+          "title": "Tracked links (from Free)",
+          "desc": "URL /c/your-slug per campaign — chat without installing a script. Click and open stats in the dashboard."
         },
         {
           "title": "Qualification & scoring",
@@ -579,8 +1033,8 @@
           "desc": "Your visitors can speak into the microphone and listen to responses — ideal for mobile and accessibility."
         },
         {
-          "title": "Human handoff",
-          "desc": "One-click WhatsApp, call and email buttons. The conversation history remains available."
+          "title": "Human handoff (Pro+)",
+          "desc": "WhatsApp, call, email in the widget · advisor inbox · mobile app with push when a visitor asks for a human."
         }
       ]
     },
@@ -598,6 +1052,10 @@
         {
           "title": "Social ads campaigns",
           "desc": "One /c/your-slug link per campaign. See where clicks are coming from and what visitors are doing in chat."
+        },
+        {
+          "title": "Hiring & projects",
+          "desc": "Jobs & Other profiles (Pro): candidates, hiring campaigns, freelancers, NGOs, events — with dedicated AI presentation."
         }
       ]
     },
@@ -605,54 +1063,63 @@
       "title": "A dashboard that speaks business",
       "subtitle": "KPIs, conversations, leads, country breakdown, tracked link performance and widget interactions — all in one place.",
       "tags": [
-        "Live Chats",
+        "Chats & advisor inbox",
         "Lead score 0–100",
         "Stats by country",
-        "WhatsApp clicks/session",
-        "Facebook & Instagram links",
-        "Export leads"
+        "Tracked links per campaign",
+        "Billing & PDF (Stripe)",
+        "Built-in support"
       ],
       "cta": "Access the dashboard"
     },
     "pricing": {
-      "title": "Simple rates",
-      "subtitle": "Start small, go Pro when your campaigns take off.",
-      "popular": "The most chosen",
+      "title": "Simple pricing",
+      "subtitle": "Free to test in campaigns · Starter for widget on your site · Pro for humans and advanced profiles.",
+      "billingNote": "Monthly billing in USD (Stripe). Change plan anytime from the dashboard after signup.",
+      "popular": "Most popular",
+      "freeLabel": "Free",
+      "cta": "Get started — {plan}",
       "choosePlan": "Choose {plan}",
       "plans": [
         {
-          "name": "Starter",
-          "price": "29",
+          "name": "Free",
+          "price": "0",
           "features": [
-            "1 site",
-            "500 conversations/month",
-            "Embed widget",
-            "Scoring leads",
-            "Dashboard KPIs"
+            "1 website profile",
+            "Chat via tracked link /c/…",
+            "Crawl + agent on your content",
+            "Preview Jobs / Other / integration"
+          ]
+        },
+        {
+          "name": "Starter",
+          "price": "10",
+          "features": [
+            "Widget on your site + logo",
+            "Script & integration guide",
+            "Conversations & dashboard stats",
+            "Lead scoring"
           ]
         },
         {
           "name": "Pro",
-          "price": "79",
+          "price": "20",
           "popular": true,
           "features": [
-            "5 sites",
-            "Unlimited conversations",
-            "Tracked links + preview image",
-            "WhatsApp, call & email",
-            "Real-time notifications",
-            "Country & campaign statistics"
+            "Create Jobs & Other profiles",
+            "WhatsApp, call & email (widget)",
+            "Advisor inbox + mobile app",
+            "Tracked links & campaign stats"
           ]
         },
         {
           "name": "Agency",
-          "price": "199",
+          "price": "40",
           "features": [
-            "Unlimited sites",
-            "White label",
-            "Multi-client",
-            "Full API",
-            "Priority Support"
+            "Multi-org / clients",
+            "All Pro features",
+            "Centralized billing",
+            "Priority support"
           ]
         }
       ]
@@ -680,6 +1147,14 @@
         {
           "q": "What languages ​​are supported?",
           "a": "French, English, Italian, Spanish, Portuguese and German. The agent detects the visitor's language and responds in the same language."
+        },
+        {
+          "q": "Free vs Starter vs Pro — what's the difference?",
+          "a": "Free: website + tracked link to share chat (social, QR). Starter: widget embedded on your site + logo. Pro: Jobs/Other profiles, WhatsApp/call/email contacts, advisor handoff and mobile app."
+        },
+        {
+          "q": "How do I contact support?",
+          "a": "A Support page in the dashboard lets you message the team (reply by email). Agency customers get priority handling."
         }
       ]
     },
@@ -695,8 +1170,9 @@
     "missingKey": "Incomplete link: the widget key (?key=...) is missing. Copy the URL from Dashboard → Tracked Links → Copy.",
     "widgetMissing": "Widget.js file not found on this site",
     "loadError": "Loading error",
-    "apiCheck": "Verify that the Render API responds:",
-    "freePlanHint": "Free Plan: the first call may take ~1 min (wake-up).",
+    "configNotFoundHint": "Use the full URL from Tracked links (?key=…). On Free, public chat works via that link; embedding on your site requires Starter.",
+    "apiCheck": "Verify the API responds (local or Render):",
+    "freePlanHint": "Free plan: first Render request ~1 min (cold start). Locally, run the API (chatagentapi → .\\start-api.ps1).",
     "reload": "Reload"
   },
   "integration": {
@@ -712,7 +1188,7 @@
   },
   "setupOrg": {
     "title": "Finalize your account",
-    "subtitle": "Your account exists but the organization has not yet been created. Enter your business information to continue.",
+    "subtitle": "Enter your company name. Then add your website or describe your business from Sites.",
     "submit": "Create my organization",
     "submitting": "Creation in progress...",
     "sessionExpired": "Session expired — log back in.",

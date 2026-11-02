@@ -1,40 +1,32 @@
+import { isSessionUser, requireSession } from "@/lib/auth/require-session";
 import { setupAccountForUser } from "@/lib/setup-account-server";
-import { createClient } from "@/lib/supabase/server";
+import { queryOne } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-    }
+    const session = await requireSession();
+    if (!isSessionUser(session)) return session;
 
     const body = await request.json();
     const companyName = String(body.companyName ?? "").trim();
-    const siteUrl = String(body.siteUrl ?? "").trim();
-
-    if (!companyName || !siteUrl) {
-      return NextResponse.json({ error: "Nom et URL requis" }, { status: 400 });
+    if (!companyName) {
+      return NextResponse.json({ error: "Nom requis" }, { status: 400 });
     }
 
-    await supabase.auth.updateUser({
-      data: { company_name: companyName, site_url: siteUrl },
+    const { organizationId, siteId } = await setupAccountForUser(session.id, {
+      companyName,
     });
 
-    const { organizationId, siteId } = await setupAccountForUser(
-      user.id,
-      companyName,
-      siteUrl
+    const org = await queryOne<{ name: string }>(
+      `SELECT name FROM organizations WHERE id = $1`,
+      [organizationId]
     );
 
     return NextResponse.json({
       organizationId,
       siteId,
-      organization: { id: organizationId, name: companyName },
+      organization: { id: organizationId, name: org?.name ?? companyName },
     });
   } catch (err) {
     const message =

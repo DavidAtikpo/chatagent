@@ -55,12 +55,17 @@
   },
   "dashboard": {
     "loading": "Cargando el dashboard...",
+    "shell": {
+      "collapseSidebar": "Contraer menú",
+      "expandSidebar": "Expandir menú"
+    },
     "nav": {
       "overview": "Resumen",
       "conversations": "Conversaciones",
       "leads": "Dirige",
       "advisors": "Asesores",
       "sites": "Sitios",
+      "integration": "Integración",
       "trackedLinks": "Enlaces rastreados",
       "settings": "Configuración"
     },
@@ -124,6 +129,8 @@
       },
       "country": {
         "title": "Distribución por país",
+        "distinctCountries": "Países distintos",
+        "topCountry": "País principal",
         "visitor": "{count} visitante calificado",
         "visitorPlural": "{count} visitantes calificados",
         "desc": "Países detectados al abrir el enlace rastreado o al calificar en el chat.",
@@ -136,7 +143,7 @@
     },
     "sites": {
       "title": "Sitios",
-      "subtitle": "Sus sitios y claves de widget para la integración.",
+      "subtitle": "Añada sitios y gestione el rastreo de contenido.",
       "addSite": "+ Añadir un sitio",
       "cancelAdd": "Cancelar",
       "newSite": "Nuevo sitio",
@@ -172,10 +179,23 @@
       "deleteFailed": "No se puede eliminar el sitio",
       "crawlPrefix": "Gatear:"
     },
+    "integrationPage": {
+      "title": "Integración",
+      "subtitle": "Claves widget y script para su sitio web.",
+      "noSites": "Ningún sitio. Añada uno en Sitios para obtener una clave widget.",
+      "widgetKey": "Clave widget",
+      "copyKey": "Copiar clave",
+      "keyCopied": "Clave copiada",
+      "copyScript": "Copiar script",
+      "publicGuide": "Documentación completa (WordPress, Next.js…)",
+      "showGuide": "Guía de integración",
+      "hideGuide": "Ocultar guía"
+    },
     "links": {
       "title": "Enlaces rastreados",
       "subtitle": "Cree enlaces por campaña (Facebook, Instagram…) y realice un seguimiento de las visitas.",
       "newLink": "Nuevo enlace",
+      "addLink": "+ Nuevo enlace",
       "slug": "Babosa",
       "source": "Fuente",
       "campaignName": "Nombre de campaña",

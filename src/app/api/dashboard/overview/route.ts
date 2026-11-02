@@ -1,7 +1,8 @@
-import { createAdminClient } from "@/lib/setup-account-server";
-import { getOwnerSiteIds } from "@/lib/org-server";
-import { createClient } from "@/lib/supabase/server";
 import { getDashboardStats } from "@/lib/dashboard-data";
+import { queryOne, queryRows } from "@/lib/db";
+import { getOwnerSiteIds } from "@/lib/org-server";
+import { createAdminClient } from "@/lib/setup-account-server";
+import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -18,11 +19,15 @@ export async function GET() {
     const siteIds = await getOwnerSiteIds(user.id);
     const admin = createAdminClient();
 
-    const { data: organization } = await admin
-      .from("organizations")
-      .select("id, name, subscription_plan, subscription_status")
-      .eq("owner_id", user.id)
-      .maybeSingle();
+    const organization = await queryOne<{
+      id: string;
+      name: string;
+      subscription_plan: string;
+      subscription_status: string;
+    }>(
+      `SELECT id, name, subscription_plan, subscription_status FROM organizations WHERE owner_id = $1`,
+      [user.id]
+    );
 
     if (!organization) {
       return NextResponse.json({
@@ -36,26 +41,34 @@ export async function GET() {
 
     let recentConversations: unknown[] = [];
     if (siteIds.length) {
-      const { data: convs } = await admin
-        .from("conversations")
-        .select("id, status, lead_score, updated_at, sites(name)")
-        .in("site_id", siteIds)
-        .order("updated_at", { ascending: false })
-        .limit(5);
-      recentConversations = convs ?? [];
+      recentConversations = await queryRows(
+        `SELECT c.id, c.status, c.lead_score, c.updated_at, s.name AS site_name
+         FROM conversations c
+         INNER JOIN sites s ON s.id = c.site_id
+         WHERE c.site_id = ANY($1::uuid[])
+         ORDER BY c.updated_at DESC
+         LIMIT 5`,
+        [siteIds]
+      );
+      recentConversations = recentConversations.map((row) => {
+        const r = row as Record<string, unknown>;
+        return { ...r, sites: { name: r.site_name } };
+      });
     }
 
-    const { data: leads } = await admin
-      .from("leads")
-      .select("id, score, name, email, created_at")
-      .eq("organization_id", organization.id)
-      .order("created_at", { ascending: false })
-      .limit(5);
+    const leads = await queryRows(
+      `SELECT id, score, name, email, created_at
+       FROM leads
+       WHERE organization_id = $1
+       ORDER BY created_at DESC
+       LIMIT 5`,
+      [organization.id]
+    );
 
     return NextResponse.json({
       stats,
       recentConversations,
-      recentLeads: leads ?? [],
+      recentLeads: leads,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur serveur";

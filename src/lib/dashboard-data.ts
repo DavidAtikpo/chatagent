@@ -1,5 +1,6 @@
 import { apiUnreachableMessage } from "@/lib/app-url";
-import { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { PostgresAdmin } from "@/lib/postgres-admin";
 
 export type Organization = {
   id: string;
@@ -11,16 +12,24 @@ export type Organization = {
 export type Site = {
   id: string;
   name: string;
-  url: string;
+  url: string | null;
   widget_key: string;
   crawl_status: string;
   is_active: boolean;
   organization_id: string;
   whatsapp_number?: string | null;
+  business_description?: string | null;
   agent_config?: AgentConfig;
 };
 
 export type AgentConfig = {
+  profile_type?: "website" | "shop" | "job_search" | "other"; // shop: legacy, affiché sous Autres
+  profile_subtype?: string;
+  profile_meta?: Record<string, unknown>;
+  profile_event_end_date?: string;
+  public_presentation?: string;
+  profile_composed_at?: string;
+  profile_expired?: boolean;
   tone?: string;
   language?: string;
   welcome_message?: string | null;
@@ -292,7 +301,7 @@ export async function getSites(supabase: SupabaseClient, organizationId: string)
 }
 
 export async function getDashboardStats(
-  supabase: SupabaseClient,
+  supabase: PostgresAdmin,
   organizationId: string,
   siteIds: string[]
 ): Promise<DashboardStats> {
@@ -310,8 +319,12 @@ export async function getDashboardStats(
     .select("score")
     .eq("organization_id", organizationId);
 
-  const scores = (leads ?? []).map((l) => l.score).filter((s) => s != null);
-  const avgScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const scores = (leads ?? [])
+    .map((l: { score: number }) => l.score)
+    .filter((s: number | null) => s != null);
+  const avgScore = scores.length
+    ? Math.round(scores.reduce((a: number, b: number) => a + b, 0) / scores.length)
+    : 0;
   const leadCount = leads?.length ?? 0;
   const convCount = conversations ?? 0;
   const conversionRate = convCount ? Math.round((leadCount / convCount) * 100) : 0;
@@ -632,7 +645,7 @@ function embedOpensFromConfig(config: AgentConfig | null | undefined): number {
 }
 
 export async function fetchEmbedWidgetStats(
-  admin: SupabaseClient,
+  admin: PostgresAdmin,
   siteIds: string[]
 ): Promise<{ totals: EmbedWidgetStats; sites: EmbedWidgetSiteStats[] }> {
   const empty: EmbedWidgetStats = {
@@ -658,7 +671,7 @@ export async function fetchEmbedWidgetStats(
     .is("traffic_link_id", null);
 
   const convs = convRows ?? [];
-  const convIds = convs.map((c) => c.id);
+  const convIds = convs.map((c: { id: string }) => c.id);
 
   let visitorMessages = 0;
   if (convIds.length) {
@@ -797,7 +810,7 @@ function incrementBucket(
 }
 
 export async function fetchEmbedWidgetTimeseries(
-  admin: SupabaseClient,
+  admin: PostgresAdmin,
   siteIds: string[]
 ): Promise<{ daily: EmbedTimeseriesPoint[]; monthly: EmbedTimeseriesPoint[] }> {
   const dayRange = buildDayRange(30);

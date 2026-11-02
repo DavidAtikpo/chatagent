@@ -15,6 +15,32 @@ type OrganizationContextValue = {
 
 const OrganizationContext = createContext<OrganizationContextValue | null>(null);
 
+const ORG_CACHE_KEY = "yayra-dashboard-org-v1";
+
+function readOrgCache(): { organization: Organization | null; sites: Site[] } | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(ORG_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { organization: Organization | null; sites: Site[] };
+    if (!parsed || typeof parsed !== "object") return null;
+    return {
+      organization: parsed.organization ?? null,
+      sites: Array.isArray(parsed.sites) ? parsed.sites : [],
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeOrgCache(organization: Organization | null, sites: Site[]) {
+  try {
+    sessionStorage.setItem(ORG_CACHE_KEY, JSON.stringify({ organization, sites }));
+  } catch {
+    /* quota / private mode */
+  }
+}
+
 async function fetchOrganizationFromApi(): Promise<{
   organization: Organization | null;
   sites: Site[];
@@ -35,7 +61,8 @@ function sameSites(a: Site[], b: Site[]) {
       site.crawl_status === other.crawl_status &&
       site.is_active === other.is_active &&
       site.name === other.name &&
-      site.url === other.url
+      site.url === other.url &&
+      (site.business_description ?? "") === (other.business_description ?? "")
     );
   });
 }
@@ -80,6 +107,7 @@ export function OrganizationProvider({ children }: { children: React.ReactNode }
           return data.organization;
         });
         setSites((prev) => (sameSites(prev, data.sites) ? prev : data.sites));
+        writeOrgCache(data.organization, data.sites);
       } catch (err) {
         console.error("[OrganizationProvider]", err);
         setOrganization(null);
@@ -94,7 +122,15 @@ export function OrganizationProvider({ children }: { children: React.ReactNode }
   }, []);
 
   useEffect(() => {
-    refresh();
+    const cached = readOrgCache();
+    if (cached?.organization) {
+      setOrganization(cached.organization);
+      setSites(cached.sites);
+      setLoading(false);
+      void refresh({ silent: true });
+    } else {
+      void refresh();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

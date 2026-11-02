@@ -44,8 +44,9 @@ function useTypewriter(text: string, active: boolean, msPerChar: number) {
 }
 
 function activeStep(phase: Phase): number {
-  if (phase === "deploy") return 2;
-  if (phase === "lead" || phase === "hold") return 3;
+  if (phase === "lead" || phase === "hold") return 4;
+  if (phase === "deploy") return 3;
+  if (phase === "crawling" || phase === "embedding") return 2;
   if (phase === "idle") return 0;
   return 1;
 }
@@ -293,9 +294,23 @@ export function SignupFlowDemo() {
                     {t("home.demo.signupFlow.agentReady")}
                   </p>
                 </div>
+                <div className="rounded-lg border border-brand-100 bg-brand-50/80 p-2.5">
+                  <p className="text-[10px] font-medium text-brand-800">
+                    {t("home.demo.signupFlow.trackedLinkTitle")}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-slate-600">
+                    {t("home.demo.signupFlow.trackedLinkHint")}
+                  </p>
+                  <code className="mt-1 block break-all rounded bg-white px-2 py-1 text-[10px] text-slate-700 ring-1 ring-brand-100">
+                    {t("home.demo.signupFlow.trackedLinkExample")}
+                  </code>
+                </div>
                 <div className="max-w-full overflow-x-auto rounded-lg bg-slate-900 p-3">
                   <p className="text-[10px] text-slate-400">
                     {t("home.demo.signupFlow.scriptHint")}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-slate-500">
+                    {t("home.demo.signupFlow.scriptPlanHint")}
                   </p>
                   <code className="mt-1 block break-all text-[10px] text-emerald-400">
                     {`<script src="…/widget.js" data-key="wk_…"></script>`}

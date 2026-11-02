@@ -39,7 +39,7 @@ function LoginForm() {
 
     await ensureOrganization(supabase);
 
-    router.push("/dashboard");
+    router.push("/dashboard/add-profile");
     router.refresh();
   }
 

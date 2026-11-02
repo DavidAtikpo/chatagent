@@ -11,13 +11,17 @@
     "i18n:sync": "node scripts/sync-locales.mjs"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.10.3",
+    "@neondatabase/serverless": "^0.10.4",
     "@supabase/supabase-js": "^2.107.0",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.9.6",
     "next": "14.2.33",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "stripe": "^17.7.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

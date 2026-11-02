@@ -16,6 +16,7 @@
     "copy": "Copier",
     "copied": "Copié !",
     "close": "Fermer",
+    "tableScrollHint": "Glissez horizontalement pour voir toutes les colonnes.",
     "back": "Retour",
     "yes": "Oui",
     "no": "Non",
@@ -38,6 +39,7 @@
     "ariaLabel": "Changer la langue du site"
   },
   "nav": {
+    "profiles": "Profils & démos",
     "features": "Fonctionnalités",
     "useCases": "Cas d'usage",
     "pricing": "Tarifs",
@@ -55,18 +57,125 @@
   },
   "dashboard": {
     "loading": "Chargement du dashboard...",
+    "shell": {
+      "collapseSidebar": "Réduire le menu",
+      "expandSidebar": "Agrandir le menu"
+    },
+    "plans": {
+      "currentPlan": "Plan actuel : {plan}",
+      "requiredStarter": "Plan Starter requis",
+      "requiredPro": "Plan Pro requis",
+      "viewPricing": "Voir les tarifs",
+      "integrationTitle": "Intégration widget — Plan Starter",
+      "integrationBody": "Les clés widget et le script pour afficher le chatbot sur votre site web sont réservés au plan Starter (ou supérieur). En plan Free, partagez votre chat via les liens trackés.",
+      "logoTitle": "Logo entreprise — Plan Starter",
+      "logoBody": "Le logo affiché dans l'en-tête du widget est disponible à partir du plan Starter.",
+      "proProfilesTitle": "Emploi & Autre — Plan Pro",
+      "proProfilesBody": "Les profils Emploi & recrutement et Autre (freelance, ONG, événement, immobilier, formation…) nécessitent le plan Pro. Le plan Free et Starter restent centrés sur le site web avec lien tracké.",
+      "addProfileProHintTitle": "Profils avancés (Pro)",
+      "addProfileProHintBody": "Explorez les onglets Emploi et Autre : la création est réservée au plan Pro. Le site web reste disponible en plan Free (lien tracké).",
+      "proProfilesEmptyPreview": "Aucun profil pour l'instant — passez au plan Pro pour en créer un depuis « Ajouter profil ».",
+      "upgradeToCreate": "Passer au plan Pro pour créer",
+      "previewLabel": "Aperçu",
+      "integrationPreviewSite": "Exemple — votre site",
+      "integrationGuideLocked": "Guide d'intégration disponible après activation du plan Starter."
+    },
+    "pricing": {
+      "title": "Tarifs",
+      "subtitle": "Choisissez un plan, payez en dollars (USD) — votre abonnement s'active après paiement.",
+      "currentPlan": "Plan actuel : {plan}",
+      "yourPlan": "Votre plan",
+      "popular": "Le plus choisi",
+      "perMonth": "USD / mois",
+      "freePrice": "Gratuit",
+      "freeHint": "Plan par défaut à l'inscription",
+      "choosePlan": "Choisir {plan}",
+      "currentButton": "Plan actuel",
+      "processing": "Redirection…",
+      "checkoutSuccess": "Paiement reçu — votre plan est activé.",
+      "checkoutCancel": "Paiement annulé.",
+      "checkoutFailed": "Impossible de démarrer le paiement. Vérifiez STRIPE_SECRET_KEY et le webhook.",
+      "planUpdated": "Plan mis à jour."
+    },
+    "billing": {
+      "title": "Facturation",
+      "subtitle": "Historique des paiements et factures PDF.",
+      "changePlan": "Changer de plan",
+      "empty": "Aucune facture pour le moment. Souscrivez un plan payant depuis Tarifs.",
+      "loadFailed": "Impossible de charger les factures.",
+      "colDate": "Date",
+      "colPlan": "Plan",
+      "colAmount": "Montant",
+      "colStatus": "Statut",
+      "colInvoice": "Facture",
+      "download": "Télécharger PDF"
+    },
     "nav": {
-      "overview": "Vue d'ensemble",
+      "addProfile": "Ajouter profil",
+      "overview": "Statistiques",
       "conversations": "Conversations",
       "leads": "Leads",
+      "inbox": "Boîte conseiller",
       "advisors": "Conseillers",
       "sites": "Sites",
+      "emploi": "Emploi & recrutement",
+      "autres": "Autres",
+      "integration": "Intégration",
       "trackedLinks": "Liens trackés",
+      "pricing": "Tarifs",
+      "billing": "Facturation",
+      "support": "Support",
       "settings": "Paramètres"
     },
+    "support": {
+      "title": "Contacter l'équipe",
+      "subtitle": "Une question sur votre compte, la facturation ou l'intégration ? Décrivez votre besoin — nous vous répondons par e-mail.",
+      "orgContext": "Organisation : {name}",
+      "category": "Catégorie",
+      "categories": {
+        "general": "Question générale",
+        "billing": "Facturation & abonnement",
+        "technical": "Technique (widget, crawl, chat)",
+        "account": "Compte & accès"
+      },
+      "subject": "Sujet",
+      "subjectPlaceholder": "Ex. Problème d'intégration du widget",
+      "message": "Message",
+      "messagePlaceholder": "Décrivez votre situation le plus précisément possible (URL du site, messages d'erreur, captures…).",
+      "replyHint": "La réponse sera envoyée à l'adresse e-mail de votre compte.",
+      "submit": "Envoyer le message",
+      "sending": "Envoi…",
+      "sendFailed": "Impossible d'envoyer le message. Réessayez ou contactez-nous par un autre canal.",
+      "successTitle": "Message envoyé",
+      "successBody": "Merci ! Notre équipe vous répondra dès que possible à l'adresse e-mail de votre compte.",
+      "sendAnother": "Envoyer un autre message"
+    },
+    "addProfile": {
+      "title": "Ajouter un profil",
+      "subtitle": "Site web, candidature ou campagne de recrutement, ou autre projet — choisissez un onglet ci-dessous.",
+      "listHint": "Retrouvez vos créations dans :"
+    },
+    "profiles": {
+      "websites": {
+        "title": "Sites web",
+        "subtitle": "Sites avec URL crawlée — modifiez la connaissance, relancez le crawl ou supprimez.",
+        "empty": "Aucun site web. Créez-en un depuis Ajouter profil (onglet Ajouter site)."
+      },
+      "emploi": {
+        "title": "Emploi & recrutement",
+        "subtitle": "Profils candidats ou campagnes de recrutement — présentation IA et liens trackés à partager.",
+        "empty": "Aucun profil. Créez-en un depuis Ajouter profil (onglet Emploi, mode candidat ou recrutement).",
+        "manageLinks": "Gérer les liens trackés →"
+      },
+      "autres": {
+        "title": "Autres profils",
+        "subtitle": "Freelance, ONG, événement, immobilier, formation…",
+        "empty": "Aucun profil. Créez-en un depuis Ajouter profil (onglet Autre)."
+      }
+    },
     "overview": {
-      "title": "Vue d'ensemble",
-      "subtitle": "Activité de votre organisation.",
+      "title": "Statistiques",
+      "subtitle": "Conversations, leads, widget embed, liens trackés et audience — toutes vos métriques au même endroit.",
       "tabs": {
         "summary": "Résumé",
         "widget": "Widget site",
@@ -136,6 +245,8 @@
       },
       "country": {
         "title": "Répartition par pays",
+        "distinctCountries": "Pays distincts",
+        "topCountry": "Pays principal",
         "visitor": "{count} visiteur qualifié",
         "visitorPlural": "{count} visiteurs qualifiés",
         "desc": "Pays détectés à l'ouverture du lien tracké ou lors de la qualification dans le chat.",
@@ -148,10 +259,11 @@
     },
     "sites": {
       "title": "Sites",
-      "subtitle": "Vos sites et clés widget pour l'intégration.",
+      "subtitle": "Ajoutez vos sites et gérez le crawl du contenu.",
       "addSite": "+ Ajouter un site",
       "cancelAdd": "Annuler",
-      "newSite": "Nouveau site",
+      "newSite": "Créer un profil",
+      "yourSites": "Vos sites et profils",
       "siteName": "Nom",
       "siteUrl": "URL",
       "urlPlaceholder": "https://monsite.com",
@@ -182,12 +294,135 @@
       "formationsFailed": "Indexation formations échouée",
       "sessionsFailed": "Import sessions échoué",
       "deleteFailed": "Impossible de supprimer le site",
+      "noWebsite": "Sans site web (description / PDF)",
+      "businessDescriptionShort": "Description activité",
+      "createWithoutCrawl": "Créer et indexer",
+      "addTabs": {
+        "website": "Ajouter site",
+        "jobSearch": "Emploi & recrutement",
+        "other": "Autre",
+        "hintWebsite": "Yayra lit votre site automatiquement. Ajoutez les contacts ci-dessous seulement si le site n'affiche pas (ou mal) email, téléphone ou WhatsApp.",
+        "hintJob": "Candidat : CV (PDF) et/ou texte → présentation pro pour recruteurs + lien tracké.",
+        "hintJobRecruitment": "Recrutement : décrivez le poste (PDF fiche de poste optionnel) → annonce IA pour candidats + lien tracké à diffuser.",
+        "hintOther": "Freelance, ONG, événement, immobilier, artiste, formation… Décrivez votre projet ; l'assistant répond aux visiteurs selon ce profil.",
+        "helpButton": "Aide",
+        "helpClose": "Fermer l'aide",
+        "helpIntro": "Choisissez l'onglet qui correspond à votre situation. Chaque type alimente l'assistant différemment.",
+        "helpWebsiteTitle": "Ajouter site",
+        "helpWebsiteBody": "Pour une entreprise avec un site web. Yayra crawl les pages (services, FAQ, tarifs…) pour répondre aux visiteurs. Les contacts optionnels servent de secours si le crawl ne trouve pas de page « Contact ».",
+        "helpJobOverviewTitle": "Emploi & recrutement",
+        "helpJobOverviewBody": "Deux usages : profil candidat (CV, lien pour recruteurs) ou campagne de recrutement (annonce de poste, lien pour candidats). Chaque profil a sa présentation IA et son lien tracké.",
+        "helpJobCandidateTitle": "Je cherche un emploi",
+        "helpJobCandidateBody": "Profil candidat : compétences + CV PDF. Yayra rédige une présentation pro et crée un lien tracké à partager (LinkedIn, WhatsApp…). Les recruteurs voient le profil et peuvent vous contacter.",
+        "helpJobRecruitTitle": "Je recrute",
+        "helpJobRecruitBody": "Campagne d'embauche : intitulé du poste, missions, profil recherché, avantages. Yayra rédige une annonce attractive et crée un lien tracké à diffuser. Les candidats posent leurs questions et peuvent postuler via le widget.",
+        "jobMode": "Vous êtes",
+        "jobModeCandidate": "Candidat",
+        "jobModeRecruitment": "Recruteur / employeur",
+        "jobBadgeCandidate": "Candidat",
+        "jobBadgeRecruitment": "Recrutement",
+        "recruitmentName": "Entreprise ou titre de la campagne",
+        "recruitmentRole": "Poste à pourvoir",
+        "recruitmentRolePlaceholder": "Ex. commercial B2B, infirmier(ère), développeur React…",
+        "recruitmentDetails": "Description du poste, profil recherché, avantages, processus",
+        "recruitmentPdf": "Fiche de poste (PDF, optionnel)",
+        "submitRecruitment": "Lancer la campagne et le lien",
+        "jobRecruitStep1": "Source : texte de l'offre et/ou fiche de poste PDF.",
+        "jobRecruitStep2": "Cible : précisez le poste et le profil recherché.",
+        "jobRecruitStep3": "Indexation : Yayra enregistre et prépare l'annonce.",
+        "jobRecruitStep4": "Lien tracké : généré pour LinkedIn, Indeed, WhatsApp, réseaux…",
+        "jobRecruitStep5": "Vue candidat : présentation reformulée à l'ouverture du lien.",
+        "jobRecruitStep6": "Contact : le candidat peut postuler ou poser des questions via le widget.",
+        "helpOtherTitle": "Autre",
+        "helpOtherBody": "Freelance, ONG, événement, immobilier, artiste, formation… Décrivez l'offre ou le projet ; le chat répond aux questions des visiteurs selon ce contenu.",
+        "websiteContactSection": "Contacts (secours)",
+        "websiteContactHint": "Optionnel — utilisé si le site n'a pas de page contact ou si le crawl ne récupère pas ces infos.",
+        "contactWhatsapp": "WhatsApp",
+        "otherLocation": "Adresse / localisation (optionnel)",
+        "contactPhone": "Téléphone",
+        "contactEmail": "Email",
+        "photosAfterCreate": "Photos : ajoutez des PDF ou images (export PDF) dans « Sources de connaissance » après création.",
+        "candidateName": "Nom du candidat (ou titre du profil)",
+        "jobTarget": "Poste ou type de travail recherché",
+        "jobTargetPlaceholder": "Ex. développeur full-stack, chef de projet…",
+        "jobSkills": "Compétences et parcours (texte libre)",
+        "jobCv": "CV (PDF, optionnel)",
+        "jobStep1": "Source : CV PDF et/ou description de vos compétences.",
+        "jobStep2": "Objectif : précisez le poste recherché.",
+        "jobStep3": "Indexation : Yayra enregistre et prépare la présentation.",
+        "jobStep4": "Lien tracké : généré automatiquement pour LinkedIn, Facebook, WhatsApp…",
+        "jobStep5": "Vue recruteur : présentation reformulée à l'ouverture du lien.",
+        "jobStep6": "Contact : le recruteur peut vous joindre via le widget.",
+        "submitJob": "Créer le profil et le lien",
+        "jobLinkCreated": "Profil créé. Partagez ce lien tracké : {url}",
+        "profileComposed": "Présentation IA générée — visible sur le lien tracké et dans le widget.",
+        "eventEnds": "Fin événement : {date}",
+        "otherType": "Type de profil",
+        "otherSummary": "Résumé (offre, cause, bien, événement…)",
+        "otherDetails": "Détails (programme, services, specs, FAQ…)",
+        "otherPricing": "Tarifs / dons / budget (optionnel)",
+        "eventEndDate": "Date de fin (événement)",
+        "otherTypes": {
+          "freelance": "Freelance / prestataire",
+          "ngo": "Association / ONG",
+          "event": "Événement",
+          "real_estate": "Immobilier",
+          "artist": "Artiste / créateur",
+          "training": "Formation / cours",
+          "custom": "Autre"
+        },
+        "profileBadge": {
+          "job_search": "Emploi",
+          "other": "Autre"
+        }
+      },
+      "knowledge": {
+        "title": "Sources de connaissance",
+        "subtitle": "Site web crawlé + texte + PDF (menu, catalogue, tarifs). L'agent combine toutes les sources indexées.",
+        "webHint": "Le site est aussi crawlé automatiquement ; complétez avec texte ou PDF si besoin.",
+        "descriptionLabel": "Description de votre activité",
+        "descriptionLabelEmploi": "Description du poste ou du profil",
+        "descriptionPlaceholder": "Horaires, adresse, produits, services, prix indicatifs, livraison…",
+        "descriptionPlaceholderEmploi": "Missions, compétences, conditions, avantages, processus de candidature… (Markdown : titres, listes)",
+        "descriptionHint": "Texte indexé pour l'agent — titres et listes en Markdown sont pris en charge.",
+        "descriptionPreview": "Aperçu formaté",
+        "descriptionMinChars": "Encore {count} caractère(s) minimum pour enregistrer.",
+        "subtitleEmploi": "Offre d'emploi, page carrière ou profil candidat : texte + PDF + lien crawlé si présent.",
+        "saveDescription": "Enregistrer et indexer",
+        "saved": "Description indexée — l'agent peut s'en servir.",
+        "saveFailed": "Impossible d'indexer la description",
+        "documents": "Documents PDF",
+        "uploadPdf": "+ PDF",
+        "uploadDocument": "+ PDF",
+        "uploading": "Envoi…",
+        "uploadOk": "PDF indexé.",
+        "uploadFailed": "Échec de l'upload ou de l'indexation",
+        "pdfHint": "PDF uniquement (max 10 Mo, 10 fichiers). PowerPoint : exportez en PDF avant l'envoi.",
+        "noDocuments": "Aucun PDF — idéal pour menu, catalogue ou grille tarifs.",
+        "deleteConfirm": "Supprimer ce document et retirer son contenu de l'agent ?",
+        "statusReady": "{count} segment(s) indexé(s)",
+        "statusError": "Erreur d'indexation",
+        "statusProcessing": "Indexation…"
+      },
       "crawlPrefix": "Crawl :"
+    },
+    "integrationPage": {
+      "title": "Intégration",
+      "subtitle": "Clés widget et script pour afficher le chatbot sur votre site web.",
+      "noSites": "Aucun site. Ajoutez un site dans Sites pour obtenir une clé widget.",
+      "widgetKey": "Clé widget",
+      "copyKey": "Copier la clé",
+      "keyCopied": "Clé copiée",
+      "copyScript": "Copier le script",
+      "publicGuide": "Documentation complète (WordPress, Next.js…)",
+      "showGuide": "Guide d'intégration",
+      "hideGuide": "Masquer le guide"
     },
     "links": {
       "title": "Liens trackés",
       "subtitle": "Créez des liens par campagne (Facebook, Instagram…) et suivez les visites.",
       "newLink": "Nouveau lien",
+      "addLink": "+ Nouveau lien",
       "slug": "Slug",
       "source": "Source",
       "campaignName": "Nom de campagne",
@@ -198,6 +433,46 @@
       "country": "Pays",
       "interactions": "Interactions",
       "copyUrl": "Copier l'URL",
+      "copied": "Copié",
+      "shareOn": "Partager sur",
+      "sharePanelTitle": "Lien tracké créé",
+      "sharePanelHint": "Diffusez ce lien sur vos réseaux — les visites seront comptées.",
+      "shareContinue": "Voir mes profils",
+      "shareDismiss": "Fermer",
+      "shareDefaultMessage": "Découvrez ce profil et discutez en direct :",
+      "shareInstagramCopied": "Texte et lien copiés. Instagram s’ouvre : collez (Ctrl+V) dans story, bio ou message.",
+      "shareInstagramShared": "Menu de partage ouvert — choisissez Instagram ou une autre app.",
+      "shareFacebookCopied": "Texte et lien copiés dans le presse-papier. Dans Facebook, collez (Ctrl+V) votre message — l’URL du lien est aussi chargée dans la fenêtre de partage.",
+      "shareFacebookUrlOnly": "Fenêtre Facebook ouverte avec l’URL. Copie automatique impossible : utilisez « Copier » puis collez dans votre publication.",
+      "shareCopyFailed": "Copie impossible. Sélectionnez et copiez l’URL manuellement (bouton Copier).",
+      "shareInstagramPopupBlocked": "Autorisez les pop-ups pour ce site, puis recliquez sur Instagram. Le texte a été copié si possible.",
+      "shareInstagramDialogTitle": "Partager sur Instagram",
+      "shareInstagramDialogBody": "Instagram n’accepte pas le lien prérempli depuis un site web (contrairement à WhatsApp ou Threads). Le texte et le lien tracké sont copiés : vous les collez dans votre publication ou story.",
+      "shareInstagramStep1": "Le texte ci-dessous est déjà copié (sinon cliquez « Copier »).",
+      "shareInstagramStep2": "Ouvrez « Créer une publication » (connecté à Instagram).",
+      "shareInstagramStep3": "Ajoutez photo/vidéo si besoin, puis collez la légende (Ctrl+V).",
+      "shareInstagramStep4": "Publiez — le lien reste cliquable dans la légende.",
+      "shareInstagramTextLabel": "Texte + lien tracké à coller",
+      "shareInstagramCopiedShort": "Copié dans le presse-papier.",
+      "shareInstagramCopyBtn": "Copier à nouveau",
+      "shareInstagramOpenCreate": "Créer une publication",
+      "shareInstagramNativeShare": "Partager (app mobile)",
+      "shareInstagramNativeFailed": "Partage système indisponible — utilisez copier + publication.",
+      "shareNetworks": {
+        "whatsapp": "WhatsApp",
+        "facebook": "Facebook",
+        "linkedin": "LinkedIn",
+        "instagram": "Instagram",
+        "threads": "Threads"
+      },
+      "shareNetworksShort": {
+        "whatsapp": "WA",
+        "facebook": "FB",
+        "linkedin": "in",
+        "instagram": "IG",
+        "threads": "@"
+      },
+      "colShare": "Partager",
       "deleteConfirm": "Supprimer ce lien tracké ?",
       "noLinks": "Aucun lien tracké.",
       "subtitleExtended": "Créez des liens pour vos campagnes Facebook, Instagram, Google Ads, etc. Ajoutez une image d'aperçu visible quand le lien est partagé (WhatsApp, Facebook…).",
@@ -213,7 +488,7 @@
       "imageFailed": "Impossible d'envoyer l'image",
       "imageUpdateFailed": "Impossible de mettre à jour l'image",
       "deleteFailed": "Impossible de supprimer",
-      "emptyTable": "Aucun lien tracké. Créez-en un ci-dessus pour obtenir votre URL Facebook.",
+      "emptyTable": "Aucun lien tracké. Cliquez sur « + Nouveau lien » en haut pour en créer un.",
       "colImage": "Image",
       "colLabel": "Label / Slug",
       "colUrl": "URL",
@@ -261,11 +536,84 @@
       "status": "Statut",
       "page": "Page",
       "lastActivity": "Dernière activité",
-      "empty": "Aucune conversation pour le moment."
+      "empty": "Aucune conversation pour le moment.",
+      "detail": {
+        "back": "Retour aux conversations",
+        "transcript": "Fil de discussion",
+        "noMessages": "Aucun message pour le moment.",
+        "associatedLead": "Lead associé",
+        "viewLead": "Voir le lead",
+        "context": "Contexte",
+        "originPage": "Page d'origine",
+        "openPage": "Ouvrir la page",
+        "qualification": "Qualification",
+        "agent": "Agent IA",
+        "score": "Score",
+        "messages": "Messages",
+        "started": "Démarrée",
+        "lastUpdate": "Dernière activité",
+        "site": "Site",
+        "name": "Nom",
+        "email": "E-mail",
+        "phone": "Téléphone"
+      }
+    },
+    "inbox": {
+      "title": "Boîte conseiller",
+      "subtitle": "Même logique que l'app mobile : prendre la conversation, répondre au visiteur, rendre à l'IA.",
+      "pendingTitle": "En attente ({count})",
+      "pendingDesc": "Le visiteur demande un conseiller — le premier disponible prend la conversation.",
+      "pendingEmpty": "Aucune demande en attente.",
+      "activeTitle": "Mes conversations ({count})",
+      "activeDesc": "Conversations que vous avez prises en charge.",
+      "activeEmpty": "Aucune conversation active.",
+      "poolTitle": "Prises par d'autres conseillers",
+      "poolDesc": "Déjà assignées à un collègue — lecture seule.",
+      "takeConversation": "Prendre →",
+      "continueChat": "Continuer →",
+      "viewOnly": "Voir →",
+      "alertTitle": "Visiteur en attente d'un conseiller",
+      "alertBody": "Nouvelle demande sur {site} — un visiteur est en ligne.",
+      "alertOpen": "Ouvrir la conversation",
+      "alertDismiss": "Fermer l'alerte",
+      "enableNotify": "Activer les notifications navigateur",
+      "notifyDenied": "Notifications bloquées — autorisez-les dans les paramètres du navigateur.",
+      "loadFailed": "Impossible de charger la boîte conseiller.",
+      "apiHint": "Vérifiez que l'API (chatagentapi) tourne sur le port 8000.",
+      "dbHint": "Vérifiez DATABASE_URL dans chatagent/.env.local et que le schéma inclut handoff (schema.sql).",
+      "back": "Retour à la boîte",
+      "convTitle": "Conversation visiteur",
+      "convNotFound": "Conversation introuvable ou accès refusé.",
+      "statusLabel": "Handoff :",
+      "claimBtn": "Prendre la conversation",
+      "claiming": "Prise en charge…",
+      "claimFailed": "Prise en charge impossible.",
+      "claimHint": "Cliquez « Prendre la conversation » pour envoyer votre message d'accueil au visiteur (comme sur l'app mobile).",
+      "messagePlaceholder": "Votre message au visiteur…",
+      "sendBtn": "Envoyer",
+      "sending": "Envoi…",
+      "sendFailed": "Envoi impossible.",
+      "replyLocked": "Prenez la conversation pour répondre au visiteur.",
+      "releaseBtn": "Rendre à l'IA",
+      "releaseConfirm": "Rendre cette conversation à l'assistant IA ?",
+      "releaseFailed": "Impossible de rendre la conversation.",
+      "viewDashboard": "Fiche conversation",
+      "reasonDefault": "Passage conseiller",
+      "reasons": {
+        "user_request": "Le visiteur demande un conseiller",
+        "hot_lead": "Lead très chaud",
+        "ai_escalation": "L'IA a escaladé"
+      },
+      "status": {
+        "none": "Aucun",
+        "requested": "En attente de conseiller",
+        "active": "Conseiller actif",
+        "returned": "Retour IA"
+      }
     },
     "advisors": {
       "title": "Conseillers",
-      "subtitle": "Invitez des conseillers pour répondre aux handoffs depuis l'app mobile.",
+      "subtitle": "Invitez des conseillers — ils répondent aux handoffs depuis le site (Boîte conseiller) ou l'app mobile.",
       "addAdvisor": "Ajouter un conseiller",
       "displayName": "Nom affiché",
       "namePlaceholder": "Marie Dupont",
@@ -274,7 +622,7 @@
       "roleAgent": "Conseiller",
       "available": "Disponible",
       "unavailable": "Indisponible",
-      "inviteSent": "Invitation envoyée par email — le conseiller pourra se connecter à l'app mobile.",
+      "inviteSent": "Invitation envoyée — le conseiller se connecte au dashboard (Boîte conseiller) ou à l'app mobile.",
       "siteUpdated": "Site du conseiller mis à jour.",
       "advisorAdded": "Conseiller ajouté.",
       "subtitleExtended": "Invitez autant de conseillers que nécessaire sur un même site — ils reçoivent tous les handoffs et le premier disponible prend la conversation.",
@@ -282,7 +630,8 @@
       "step1": "Créez un site par page / marque (Dashboard → Sites)",
       "step2": "Installez le widget ou partagez un lien tracké (Dashboard → Liens)",
       "step3": "Invitez un ou plusieurs conseillers sur le même site",
-      "step4": "Chaque conseiller se connecte à l'app mobile — tous reçoivent la notification, le premier qui répond prend le visiteur",
+      "step4": "Répondez depuis Boîte conseiller (web) ou l'app mobile — tous reçoivent l'alerte, le premier qui prend la conversation répond au visiteur",
+      "openInbox": "Ouvrir la boîte conseiller →",
       "inviteTitle": "Inviter un conseiller",
       "assignedSite": "Site assigné",
       "createSiteFirst": "Créez d'abord un site",
@@ -332,6 +681,7 @@
       "welcomeMessage": "Message d'accueil",
       "welcomeHint": "Rédigez un message personnalisé, ou laissez vide pour une génération automatique selon la langue choisie.",
       "welcomeAutoHint": "Message auto généré depuis votre site — change avec la langue de l'agent.",
+      "welcomePreview": "Aperçu dans le widget",
       "defaultWelcome": "Bonjour ! Comment puis-je vous aider ?",
       "tone": "Ton",
       "language": "Langue",
@@ -438,11 +788,14 @@
       "error": "Erreur de connexion. Réessayez."
     },
     "signup": {
-      "title": "Créer votre agent IA",
-      "subtitle": "Entrez l'URL de votre site. L'analyse démarre automatiquement.",
+      "title": "Créer votre compte",
+      "subtitle": "Inscrivez-vous en quelques secondes. Vous configurerez votre site et votre activité depuis le tableau de bord.",
+      "submit": "Créer mon compte",
       "companyName": "Nom de l'entreprise",
       "siteUrl": "URL du site",
-      "submit": "Lancer mon agent",
+      "noWebsite": "Je n'ai pas de site web (description + documents)",
+      "businessDescription": "Décrivez votre activité",
+      "businessDescriptionPlaceholder": "Ex. : Restaurant italien à Lyon, horaires, spécialités, tarifs moyens, livraison…",
       "submitting": "Création en cours...",
       "hasAccount": "Déjà inscrit ?",
       "loginLink": "Se connecter",
@@ -459,7 +812,7 @@
       "backToLogin": "Retour à la connexion",
       "sendFailed": "Impossible d'envoyer l'email. Réessayez plus tard.",
       "sentBody": "Si un compte existe pour {email}, un email vient d'être envoyé. Vérifiez aussi vos spams.",
-      "gmailHint": "Gmail : consultez aussi l'onglet Promotions et la recherche « Supabase » ou « Reset password ». Les emails d'auth Supabase sont parfois filtrés par Gmail."
+      "gmailHint": "Gmail : vérifiez l'onglet Promotions et les spams. Recherchez « Yayra » ou « mot de passe »."
     },
     "resetPassword": {
       "title": "Nouveau mot de passe",
@@ -472,15 +825,16 @@
       "forgotLink": "Mot de passe oublié",
       "success": "Mot de passe mis à jour. Redirection vers le dashboard...",
       "newPassword": "Nouveau mot de passe",
-      "confirmPassword": "Confirmer le mot de passe"
+      "confirmPassword": "Confirmer le mot de passe",
+      "failed": "Impossible de mettre à jour le mot de passe"
     }
   },
   "home": {
     "hero": {
-      "badge": "Agent commercial IA · Embed · Leads qualifiés",
+      "badge": "Site crawlé · Lien tracké · Widget · App conseiller",
       "title": "Transformez vos visiteurs en",
       "titleHighlight": "clients qualifiés",
-      "subtitle": "{saasName} analyse votre site web, déploie un chatbot intelligent sur vos pages ou vos campagnes publicitaires, et vous alerte quand un prospect est prêt à acheter ou s'inscrire.",
+      "subtitle": "{saasName} : profil site web (crawl), profils Emploi & recrutement et Autre (présentation IA + PDF). Partagez en lien tracké ou widget, qualifiez les leads et alertez vos conseillers.",
       "ctaPrimary": "Créer mon agent gratuitement",
       "ctaSecondary": "Voir comment ça marche"
     },
@@ -490,44 +844,132 @@
       "widgetLight": "Widget léger",
       "leadScore": "Score lead"
     },
-    "preview": {
-      "title": "Un assistant qui connaît",
-      "titleHighlight": "votre",
-      "titleEnd": "entreprise",
-      "body": "Pas de configuration manuelle interminable : notre moteur lit vos pages produits, formations, tarifs et sessions. Claude rédige des réponses naturelles en 6 langues (français, anglais, italien, espagnol, portugais, allemand), avec vos liens d'inscription et boutons de contact.",
-      "bullets": [
-        "Message d'accueil généré après le crawl",
-        "Boutons session [[inscription]] automatiques",
-        "Dashboard : pays, campagnes, clics widget"
-      ]
+    "profilesSection": {
+      "title": "Site web, Emploi ou Autre — même chat intelligent",
+      "subtitle": "Choisissez le type de profil dans « Ajouter profil ». Le site web est disponible dès le plan Free ; Emploi & Autre se créent avec le plan Pro (aperçu et liens visibles avant upgrade).",
+      "setupDefaultTitle": "Étapes dans le dashboard",
+      "tabs": {
+        "website": "Site web",
+        "emploi": "Emploi & recrutement",
+        "autres": "Autres profils"
+      },
+      "planBadge": {
+        "website": "Free · Starter · Pro — crawl URL + lien tracké dès Free",
+        "emploi": "Plan Pro — candidat ou campagne RH",
+        "autres": "Plan Pro — freelance, ONG, événement, immobilier…"
+      }
     },
     "howItWorks": {
       "title": "Comment ça marche",
       "subtitle": "De l'inscription au premier lead qualifié — suivez le parcours en direct."
     },
     "demo": {
-      "chatPreview": {
-        "assistantTitle": "Assistant {saasName}",
-        "online": "En ligne",
-        "welcome": "Bonjour ! Je suis l'assistant de votre entreprise. Quelle formation vous intéresse ?",
-        "userMessage": "Cordiste IRATA au Togo, prochaine session ?",
-        "replyIntro": "Voici les sessions à venir :",
-        "sessionCta": "Mars 2026 — Inscription",
-        "footer": "Démo en direct — comme sur votre site"
+      "profiles": {
+        "website": {
+          "title": "Un assistant qui connaît",
+          "titleHighlight": "votre site",
+          "titleEnd": "",
+          "body": "Entrez l’URL : le crawl indexe pages, PDF et tarifs. L’agent répond en 6 langues avec vos liens d’inscription et sessions.",
+          "bullets": [
+            "Crawl automatique + description d’activité",
+            "Lien tracké /c/… dès le plan Free",
+            "Widget + logo à partir du Starter",
+            "Stats campagnes & handoff conseiller (Pro)"
+          ],
+          "setupTitle": "Création — onglet Site web",
+          "setupSteps": [
+            "Nom + URL du site",
+            "Crawl & message d’accueil",
+            "Liens trackés par campagne",
+            "Intégration widget (Starter+)"
+          ],
+          "chat": {
+            "assistantTitle": "Assistant {saasName}",
+            "online": "En ligne",
+            "welcome": "Bonjour 👋 Je connais les formations et tarifs publiés sur votre site. Dates, programme ou inscription ?",
+            "userMessage": "Cordiste IRATA au Togo, prochaine session ?",
+            "replyIntro": "Voici les sessions à venir (extrait de votre site) :",
+            "sessionCta": "Mars 2026 — S'inscrire",
+            "pills": ["Crawl site", "6 langues", "Lien /c/…", "Widget Starter+"],
+            "footer": "Démo site web — lien tracké ou widget"
+          }
+        },
+        "emploi": {
+          "title": "Profil",
+          "titleHighlight": "Emploi & recrutement",
+          "titleEnd": "",
+          "body": "Deux modes : candidat (CV, compétences, disponibilité) ou recruteur (offre, critères, process). Présentation publique IA + PDF, partage LinkedIn / WhatsApp via lien tracké.",
+          "bullets": [
+            "Mode candidat ou campagne de recrutement",
+            "Texte + PDF (CV, fiche de poste)",
+            "Message d’accueil « vitrine » pour recruteurs ou candidats",
+            "Pages dédiées Emploi dans le dashboard"
+          ],
+          "setupTitle": "Création — onglet Emploi (Pro)",
+          "setupSteps": [
+            "Choisir candidat ou recrutement",
+            "Rôle, compétences, contacts",
+            "Importer PDF & présentation IA",
+            "Copier le lien tracké à partager"
+          ],
+          "chat": {
+            "assistantTitle": "Amadou D. — Développeur full-stack",
+            "online": "Profil candidat",
+            "welcome": "Bonjour 👋 Je suis développeur React/Node, 4 ans d’expérience, basé à Paris, open remote UE. Voici mon parcours et mes projets récents.",
+            "userMessage": "Disponible pour une mission 6 mois dès mars ? Stack React ?",
+            "replyIntro": "Oui — React, TypeScript, Node. Disponible mi-mars, préférence remote ou hybride Paris :",
+            "sessionCta": "📄 CV & coordonnées",
+            "pills": ["Candidat / RH", "PDF CV", "Lien LinkedIn", "Plan Pro"],
+            "footer": "Démo Emploi — même chat que vos visiteurs sur /c/…"
+          }
+        },
+        "autres": {
+          "title": "Profils",
+          "titleHighlight": "Autre",
+          "titleEnd": "(freelance, ONG, événement…)",
+          "body": "Freelance, association, festival, immobilier, formation hors crawl : décrivez l’offre, tarifs, lieu ou dates. L’IA rédige la présentation publique ; vous partagez un lien tracké par canal.",
+          "bullets": [
+            "Sous-types : freelance, ONG, événement, immo, artiste…",
+            "Résumé offre + détails + tarifs / lieu",
+            "Expiration auto pour événements (date de fin)",
+            "Liste « Autres » dans le dashboard"
+          ],
+          "setupTitle": "Création — onglet Autre (Pro)",
+          "setupSteps": [
+            "Choisir le type de projet",
+            "Offre, détails, tarifs ou lieu",
+            "Date de fin si événement",
+            "Lien tracké pour campagnes"
+          ],
+          "chat": {
+            "assistantTitle": "Festival Lumière — Événement",
+            "online": "Billetterie ouverte",
+            "welcome": "Bonjour 👋 Festival arts & musique les 12-14 juin à Lyon : programmation, accès et tarifs groupes. Que souhaitez-vous savoir ?",
+            "userMessage": "Tarif groupe 15 personnes et horaires samedi ?",
+            "replyIntro": "Pass groupe −20 % dès 10 personnes. Samedi : scène principale dès 18h :",
+            "sessionCta": "Billetterie en ligne",
+            "pills": ["Événement", "Tarifs & lieu", "Lien campagne", "Plan Pro"],
+            "footer": "Démo Autre — idéal réseaux sans site complet"
+          }
+        }
       },
       "signupFlow": {
         "steps": [
           {
-            "title": "Connectez votre site",
-            "desc": "Inscription + crawl automatique de vos pages."
+            "title": "Compte & profil",
+            "desc": "Organisation puis Site, Emploi ou Autre (onglets Ajouter profil)."
           },
           {
-            "title": "Déployez partout",
-            "desc": "Widget prêt à coller sur votre site."
+            "title": "Crawl & connaissances",
+            "desc": "Pages lues, embeddings, message d’accueil prêt."
           },
           {
-            "title": "Convertissez",
-            "desc": "Premier lead qualifié dans le dashboard."
+            "title": "Partagez le chat",
+            "desc": "Lien tracké immédiat (Free) · widget + logo (Starter)."
+          },
+          {
+            "title": "Qualifiez & convertissez",
+            "desc": "Leads scorés, inbox conseiller, stats par campagne."
           }
         ],
         "demoName": "Mon Centre de Formation",
@@ -546,8 +988,12 @@
         "crawlEmbedding": "Analyse sémantique (IA)",
         "pageProgress": "Page {current}/{total} analysée",
         "indexing": "Indexation des connaissances pour le chat…",
-        "agentReady": "Agent prêt — widget généré",
-        "scriptHint": "Script à coller sur votre site",
+        "agentReady": "Agent prêt — lien tracké + clé widget",
+        "trackedLinkTitle": "Plan Free — lien tracké",
+        "trackedLinkHint": "Copiez l’URL depuis Liens trackés (Facebook, Instagram, QR code…).",
+        "trackedLinkExample": "https://votre-domaine.com/c/code?key=wk_…",
+        "scriptHint": "Plan Starter — script widget",
+        "scriptPlanHint": "Collez avant </body> sur WordPress, Next.js, HTML…",
         "newLead": "Nouveau lead qualifié",
         "leadDetail": "Togo · Formation cordiste · Budget OK",
         "leadScore": "Score 80/100 — notification envoyée",
@@ -559,16 +1005,24 @@
       "subtitle": "Tout ce qu'il faut pour vendre et qualifier, sans équipe technique.",
       "items": [
         {
-          "title": "Widget embed léger",
-          "desc": "Un script sur votre site. Le chat s'ouvre en bulle ou en page plein écran, sans ralentir vos pages."
+          "title": "Widget embed (Starter+)",
+          "desc": "Script léger sur votre site : bulle ou page plein écran, logo entreprise, guide d’intégration pas à pas."
         },
         {
-          "title": "IA formée sur votre site",
-          "desc": "Crawl automatique de vos pages, formations et FAQ. L'agent répond avec vos vrais tarifs et liens d'inscription."
+          "title": "IA formée sur votre contenu",
+          "desc": "Site crawlé, CV PDF (Emploi) ou fiche projet (Autre). L'agent ne répond qu'avec ce que vous avez fourni."
         },
         {
-          "title": "Liens trackés par campagne",
-          "desc": "Créez un slug par source (Facebook, Instagram, Google Ads…) et suivez visites et interactions."
+          "title": "Emploi & recrutement (Pro)",
+          "desc": "Profil candidat ou campagne RH : compétences, PDF, présentation publique IA, pages Emploi & liens trackés dédiés."
+        },
+        {
+          "title": "Autres profils (Pro)",
+          "desc": "Freelance, ONG, événement, immobilier… : offre structurée, date de fin pour events, chat partageable sans site complet."
+        },
+        {
+          "title": "Liens trackés (dès Free)",
+          "desc": "URL /c/votre-slug par campagne — chat sans installer de script. Stats de clics et d’ouvertures dans le dashboard."
         },
         {
           "title": "Qualification & scoring",
@@ -579,8 +1033,8 @@
           "desc": "Vos visiteurs peuvent parler au micro et écouter les réponses — idéal pour le mobile et l'accessibilité."
         },
         {
-          "title": "Handoff humain",
-          "desc": "Boutons WhatsApp, appel et email en un clic. L'historique de la conversation reste disponible."
+          "title": "Handoff humain (Pro+)",
+          "desc": "WhatsApp, appel, email dans le widget · boîte conseiller · app mobile avec push quand un visiteur demande un humain."
         }
       ]
     },
@@ -598,6 +1052,10 @@
         {
           "title": "Campagnes social ads",
           "desc": "Un lien /c/votre-slug par campagne. Voyez d'où viennent les clics et ce que font les visiteurs dans le chat."
+        },
+        {
+          "title": "Recrutement & projets",
+          "desc": "Profils Emploi et Autre (Pro) : candidats, campagnes RH, freelances, ONG, événements — avec présentation IA dédiée."
         }
       ]
     },
@@ -605,53 +1063,62 @@
       "title": "Un dashboard qui parle business",
       "subtitle": "KPIs, conversations, leads, répartition par pays, performance des liens trackés et interactions widget — tout en un seul endroit.",
       "tags": [
-        "Conversations en direct",
+        "Conversations & inbox conseiller",
         "Score lead 0–100",
         "Stats par pays",
-        "Clics WhatsApp / session",
-        "Liens Facebook & Instagram",
-        "Export leads"
+        "Liens trackés par campagne",
+        "Facturation & PDF (Stripe)",
+        "Support intégré"
       ],
       "cta": "Accéder au dashboard"
     },
     "pricing": {
       "title": "Tarifs simples",
-      "subtitle": "Commencez petit, passez Pro quand vos campagnes décollent.",
+      "subtitle": "Free pour tester en campagne · Starter pour le widget sur votre site · Pro pour l’humain et les profils avancés.",
+      "billingNote": "Paiement mensuel en USD (Stripe). Changez de plan à tout moment depuis le dashboard après inscription.",
       "popular": "Le plus choisi",
+      "freeLabel": "Gratuit",
+      "cta": "Commencer — {plan}",
       "choosePlan": "Choisir {plan}",
       "plans": [
         {
-          "name": "Starter",
-          "price": "29",
+          "name": "Free",
+          "price": "0",
           "features": [
-            "1 site",
-            "500 conversations/mois",
-            "Widget embed",
-            "Scoring leads",
-            "Dashboard KPIs"
+            "1 profil site web",
+            "Chat via lien tracké /c/…",
+            "Crawl + agent sur votre contenu",
+            "Aperçu Emploi / Autre / intégration"
+          ]
+        },
+        {
+          "name": "Starter",
+          "price": "10",
+          "features": [
+            "Widget sur votre site + logo",
+            "Script & guide d’intégration",
+            "Conversations & stats dashboard",
+            "Scoring leads"
           ]
         },
         {
           "name": "Pro",
-          "price": "79",
+          "price": "20",
           "popular": true,
           "features": [
-            "5 sites",
-            "Conversations illimitées",
-            "Liens trackés + image d'aperçu",
-            "WhatsApp, appel & email",
-            "Notifications temps réel",
-            "Stats pays & campagnes"
+            "Création profils Emploi & Autre",
+            "WhatsApp, appel & email (widget)",
+            "Boîte conseiller + app mobile",
+            "Liens trackés & stats campagnes"
           ]
         },
         {
           "name": "Agency",
-          "price": "199",
+          "price": "40",
           "features": [
-            "Sites illimités",
-            "Marque blanche",
-            "Multi-clients",
-            "API complète",
+            "Multi-organisations / clients",
+            "Toutes les fonctions Pro",
+            "Facturation centralisée",
             "Support prioritaire"
           ]
         }
@@ -680,6 +1147,14 @@
         {
           "q": "Quelles langues sont supportées ?",
           "a": "Français, anglais, italien, espagnol, portugais et allemand. L'agent détecte la langue du visiteur et répond dans la même langue."
+        },
+        {
+          "q": "Free vs Starter vs Pro — quelle différence ?",
+          "a": "Free : site web + lien tracké pour partager le chat (réseaux, QR). Starter : widget intégré sur votre site + logo. Pro : profils Emploi/Autre, contacts WhatsApp/appel/email, handoff conseiller et app mobile."
+        },
+        {
+          "q": "Comment contacter le support ?",
+          "a": "Une page Support est disponible dans le dashboard (message à l’équipe, réponse par e-mail). Les clients Agency bénéficient d’un traitement prioritaire."
         }
       ]
     },
@@ -695,8 +1170,9 @@
     "missingKey": "Lien incomplet : il manque la clé widget (?key=...). Copiez l'URL depuis Dashboard → Liens trackés → Copier.",
     "widgetMissing": "Fichier widget.js introuvable sur ce site",
     "loadError": "Erreur de chargement",
-    "apiCheck": "Vérifiez que l'API Render répond :",
-    "freePlanHint": "Plan Free : le premier appel peut prendre ~1 min (réveil).",
+    "configNotFoundHint": "Utilisez l’URL complète depuis Liens trackés (?key=…). En plan Free, le chat public fonctionne via ce lien ; l’intégration sur votre site nécessite le plan Starter.",
+    "apiCheck": "Vérifiez que l’API répond (local ou Render) :",
+    "freePlanHint": "Plan Free : premier appel Render ~1 min (réveil). En local, l’API doit tourner (chatagentapi → .\\start-api.ps1).",
     "reload": "Recharger"
   },
   "integration": {
@@ -712,7 +1188,7 @@
   },
   "setupOrg": {
     "title": "Finalisez votre compte",
-    "subtitle": "Votre compte existe mais l'organisation n'a pas encore été créée. Entrez les informations de votre entreprise pour continuer.",
+    "subtitle": "Indiquez le nom de votre entreprise. Ensuite, ajoutez votre site ou décrivez votre activité depuis Sites.",
     "submit": "Créer mon organisation",
     "submitting": "Création en cours...",
     "sessionExpired": "Session expirée — reconnectez-vous.",

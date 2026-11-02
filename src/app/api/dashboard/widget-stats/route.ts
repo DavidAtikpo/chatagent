@@ -12,13 +12,13 @@ async function getUserOrgSiteIds(userId: string) {
 
   if (!orgs?.length) return [];
 
-  const orgIds = orgs.map((o) => o.id);
+    const orgIds = (orgs as { id: string }[]).map((o) => o.id);
   const { data: sites } = await admin
     .from("sites")
     .select("id")
     .in("organization_id", orgIds);
 
-  return sites?.map((s) => s.id) ?? [];
+  return (sites as { id: string }[] | null)?.map((s) => s.id) ?? [];
 }
 
 export async function GET() {
